@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>五運六氣｜WYLQ-Audit 3.31.25</title>
+<!-- SECURITY: style attributes remain enabled for the existing UI. Only fixed/internal values may enter style attributes; never concatenate user-controlled or imported text into CSS. Prefer allowlisted classes or finite style tokens for future dynamic styling. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ceBYFv20zdosFKu3jQQK3zv52XMh8n2XG22dgyxU+I8='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'unsafe-inline'; style-src-elem 'sha256-nTve36kjXrhyWKUK37K4PdIsPgmWBaWjhLM3Oii5kDE='; style-src-attr 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta name="referrer" content="no-referrer" />
+<title>五運六氣｜WYLQ-Audit</title>
 <style>
 :root{--bg:#f5f1e8;--paper:#fffdf8;--ink:#29261f;--muted:#726c60;--line:#ddd4c4;--accent:#7b3f2f;--accent-2:#b18458;--green:#2d5a37;--warn:#8b611f;--risk:#9e2a2b;--purple:#5c1d78;--shadow:0 12px 40px rgba(57,43,25,.08);--radius:18px;--birth:#b18458;--target:#2d5a37;}
 *,*::before,*::after{box-sizing:border-box;min-width:0;}
@@ -36,7 +39,7 @@ label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-wei
 input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:15px;}
 .field{margin-bottom:15px;}
 .hint{margin:8px 0 0;font-size:12px;color:var(--muted);}
-.result-header{position:sticky;top:0;z-index:20;background:rgba(255,253,248,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.result-header{position:sticky;top:0;z-index:20;background:rgba(255,253,248,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 .back-btn{width:auto;border:1px solid var(--line);border-radius:9px;padding:8px 16px;background:#f0e9dc;color:var(--accent);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
 .back-btn:hover{background:var(--accent-2);color:#fff;border-color:var(--accent-2);}
 .result-meta{font-size:13px;color:var(--muted);font-family:"Noto Serif TC",serif;font-weight:600;}
@@ -164,7 +167,7 @@ tr:last-child td{border-bottom:0;}
 .benmai-card .bm-qi{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.05em;}
 .benmai-card .bm-name{font-family:"Noto Serif TC",serif;font-weight:800;font-size:17px;color:var(--accent);margin:3px 0 5px;}
 .benmai-card .bm-desc{font-size:12.5px;line-height:1.65;color:var(--ink);}
-.sixstep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;margin-top:12px;}
+.sixstep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px;margin-top:12px;}
 .sixstep-card{padding:14px 16px;border:1px solid var(--line);border-radius:13px;background:#fff;word-break:break-word;}
 .sixstep-card .ss-title{font-family:"Noto Serif TC",serif;font-size:15px;font-weight:800;color:var(--accent);margin-bottom:6px;}
 .sixstep-card .ss-row{font-size:12.5px;line-height:1.7;padding:4px 0;border-bottom:1px dashed var(--line);}
@@ -337,19 +340,27 @@ details.fold-block[open] > summary::before{transform:rotate(90deg);}
 @media (max-width:1024px){.imprint-grid{grid-template-columns:repeat(3,1fr);}.timeline{grid-template-columns:repeat(3,1fr);}.dual-model{grid-template-columns:1fr;}.pingqi-summary{grid-template-columns:1fr;}.dual-pathology-grid{grid-template-columns:1fr;}.caution-grid{grid-template-columns:1fr;}.tengan-card .tg-grid{grid-template-columns:1fr;}}
 @media (max-width:768px){main{padding:16px 12px 40px;}.panel{padding:16px;}.summary{grid-template-columns:1fr 1fr;}.imprint-grid{grid-template-columns:repeat(2,1fr);}.imprint-summary{grid-template-columns:1fr;}.flavor-grid,.six-axis,.chronicle-grid{grid-template-columns:1fr;}.timeline{grid-template-columns:1fr 1fr;}.pillars{grid-template-columns:1fr 1fr;}.fortune-summary{grid-template-columns:repeat(2,1fr);}.repair-grid{grid-template-columns:1fr;}.dual-model,.caution-grid,.dual-pathology-grid,.pingqi-summary,.tengan-card .tg-grid{grid-template-columns:1fr;}#matrix30Section > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important;}#pulseBenMaiSection > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important;}}
 @media (max-width:480px){.summary{grid-template-columns:1fr;}.imprint-grid{grid-template-columns:1fr;}.timeline{grid-template-columns:1fr;}.pillars{grid-template-columns:1fr;}.fortune-summary{grid-template-columns:1fr;}}
+.dim{color:var(--muted);}
+@media print{.result-header{position:static;}.back-btn{display:none;}.table-wrap{overflow:visible;}.card{box-shadow:none;break-inside:avoid;}}
+.script-startup-warning{max-width:960px;margin:12px auto;padding:12px 16px;border:1px solid #b18458;border-left:4px solid #9e2a2b;border-radius:10px;background:#fff7e6;color:#604b34;font-size:13px;line-height:1.6;}
+.form-error{margin-top:12px;font-size:13px;}
+.audit-history{margin-top:12px;padding-top:8px;border-top:1px solid #454558;}
+.audit-history>summary{cursor:pointer;color:#a6adc8;font-weight:700;padding:6px 0;}
+.audit-history[open]>summary{margin-bottom:8px;}
 </style>
 </head>
 <body>
+<div id="scriptStartupWarning" role="alert" class="script-startup-warning">⚠ 本工具需要 JavaScript。若瀏覽器已啟用 JavaScript，但介面仍無法操作，可能是安全政策阻止程式啟動；請從可信來源重新取得完整檔案，不要為了啟動而關閉 CSP。</div>
 
 <section id="view-input">
   <div class="input-wrap">
     <div class="input-hero">
-      <div class="eyebrow">WYLQ-AUDIT 3.31.25</div>
+      <div class="eyebrow" id="appVersionBadge">WYLQ-AUDIT</div>
       <h1>五運六氣推算</h1>
       <p class="subtitle">輸入生辰與分析目標年份，取得五運六氣推演結果。</p>
     </div>
 
-    <form id="birthForm" class="input-card" autocomplete="off" onsubmit="return window.handleSubmit(event)">
+    <form id="birthForm" class="input-card" autocomplete="off">
       <h2>輸入生辰與目標</h2>
       <div class="field"><label for="birth">出生日期（公曆）</label><input id="birth" type="date" value="2004-06-15" min="0001-01-01" max="3000-12-31" /></div>
       <div class="field"><label for="time">出生時間（台北時間 UTC+8）</label><input id="time" type="time" value="12:00" /></div>
@@ -397,19 +408,22 @@ details.fold-block[open] > summary::before{transform:rotate(90deg);}
         </div>
       </details>
       <button type="submit" id="runBtn" class="primary-btn" disabled>開始推算 →</button>
+      <div id="formError" class="notice caution-layer form-error" role="alert" aria-live="assertive" hidden></div>
     </form>
 
-    <div class="input-notice">⚠️ 安全提示：本系統產出之弱臟定位、格局劇烈度、脈位推算均屬傳統模型推演，不可替代醫療診斷。</div>
+    <div class="input-notice">⚠️ 安全提示：本系統產出之弱臟定位、格局劇烈度、脈位推算均屬傳統模型推演，不可替代醫療診斷。本單檔版本不主動發送網路請求；出生資料在本頁計算，不由程式上傳。</div>
   </div>
 </section>
 
 <section id="view-result" hidden>
   <header class="result-header">
-    <button type="button" id="backToInput" class="back-btn" onclick="return window.handleBack(event)">← 返回修改</button>
+    <button type="button" id="backToInput" class="back-btn">← 返回修改</button>
     <div class="result-meta" id="resultMeta"></div>
   </header>
   <main>
     <div class="wrap">
+      <div class="notice caution-layer" id="resultDisclaimer" role="note" style="margin-bottom:14px;"><b>⚠ 安全提示：</b>本結果為傳統五運六氣模型推演，不是醫療診斷，亦非個人化處方；不應僅憑推算結果自行用藥、停藥或延誤就醫。此單檔版本不主動發送網路請求；請仍以可信來源取得檔案。</div>
+      <div class="notice transition" id="precisionNotice" role="status" hidden style="margin-bottom:14px;"></div>
       <div class="card summary" id="summary"></div>
       <div class="card panel section" id="auditSection"><h2>算法審計軌跡</h2><div class="audit-terminal" id="auditLog"></div></div>
       <div class="card panel section birth-section" id="birthSection"></div>
@@ -436,22 +450,100 @@ details.fold-block[open] > summary::before{transform:rotate(90deg);}
       <div class="card panel section" id="herbsSection"></div>
       <div class="card panel section" id="herbDirectionSection"></div>
       <div class="footer">
-        模型版本 WYLQ-Audit 3.31.25
+        模型版本 <span id="versionFooter">WYLQ-Audit</span><br>本結果屬傳統模型推演，不可替代醫療診斷；用藥與就醫請諮詢合格醫療專業人員。
       </div>
     </div>
   </main>
 </section>
 
 <script>
-console.log('[WYLQ] 3.31.25 開始執行');
+{const warning=document.getElementById('scriptStartupWarning');if(warning)warning.remove();}
+const APP_VERSION='3.31.35-security';
+console.log('[WYLQ] '+APP_VERSION+' 開始執行');
 
+function setFormError(message){const el=document.getElementById('formError');if(!el)return;el.textContent=message||'';el.hidden=!message;}
 function showView(name){const isInput=name==='input';document.getElementById('view-input').hidden=!isInput;document.getElementById('view-result').hidden=isInput;requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));}
 function safeVal(id,fb){const el=document.getElementById(id);if(!el)return fb;const v=el.value;return(v===undefined||v===null||v==='')?fb:v;}
+// Security boundary: validate values again in the calculation layer; HTML controls alone are not trusted.
+const INPUT_ENUMS=Object.freeze({
+  timeMode:Object.freeze(['traditional-precision','astronomical','source']),
+  pulseObserved:Object.freeze(['none','expected','reverse-instead','inch-cubit-reverse','left-right-reverse','single-part','excess-rapid','renying-cunkou']),
+  depressionEvidence:Object.freeze(['none','yes','no']),
+  southNorthMode:Object.freeze(['wangbing','huo','astronomy','halfyear'])
+});
+function strictDateValue(v){
+  if(typeof v!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(v))return false;
+  const [y,m,d]=v.split('-').map(Number);
+  if(!Number.isInteger(y)||y<1||y>3000||m<1||m>12||d<1||d>31)return false;
+  const probe=new Date(v+'T00:00:00Z');
+  return Number.isFinite(probe.getTime())&&probe.getUTCFullYear()===y&&probe.getUTCMonth()+1===m&&probe.getUTCDate()===d;
+}
+function strictTimeValue(v){
+  if(typeof v!=='string'||!/^\d{2}:\d{2}$/.test(v))return false;
+  const [h,m]=v.split(':').map(Number);return h>=0&&h<=23&&m>=0&&m<=59;
+}
+function validateBirthInputs(){
+  const birth=safeVal('birth',''),time=safeVal('time','12:00');
+  if(!strictDateValue(birth))return '出生日期格式或日期值無效；請重新選擇有效日期（公元 1–3000 年）。';
+  if(!strictTimeValue(time))return '出生時間格式無效；請使用 24 小時制重新選擇時間。';
+  const mode=document.getElementById('timeMode');
+  if(!mode||!INPUT_ENUMS.timeMode.includes(String(mode.value)))return '時間／交司基準含無效值，請重新選擇後再試。';
+  return '';
+}
+function validateSecurityInputs(){
+  const birthError=validateBirthInputs();if(birthError)return birthError;
+  const target=safeVal('target','');
+  if(!/^\d{1,4}$/.test(String(target).trim())||Number(target)<1||Number(target)>3000)return '目標年份須為 1–3000 之間的整數。';
+  for(const id of Object.keys(INPUT_ENUMS)){
+    const el=document.getElementById(id);if(!el||!INPUT_ENUMS[id].includes(String(el.value)))return '進階選項含無效值，請重新選擇後再試。';
+  }
+  return '';
+}
+
 function pad(n){return String(n).padStart(2,'0');}
 function twDate(y,m,d,time='00:00:00'){return new Date(`${String(y).padStart(4,'0')}-${pad(m)}-${pad(d)}T${time}+08:00`);}
 function addDays(date,days){return new Date(date.getTime()+days*86400000);}
 function round6(x){return Math.round(x*1e6)/1e6;}
-function fmtCount(v){return v===Math.floor(v)?String(v):v.toFixed(1);}
+function fmtCount(v){if(typeof v!=='number'||!Number.isFinite(v))return'—';return v===Math.floor(v)?String(v):v.toFixed(1);}
+document.title='五運六氣｜WYLQ-Audit '+APP_VERSION;
+{const _b=document.getElementById('appVersionBadge');if(_b)_b.textContent='WYLQ-AUDIT '+APP_VERSION;const _f=document.getElementById('versionFooter');if(_f)_f.textContent='WYLQ-Audit '+APP_VERSION;}
+function fmtYear(y){return y>=1?String(y):'公元前'+(1-y)+'年（天文紀年 '+y+'）';}
+/* 3.31.28：保留既有 ΔT（TT−UT）近似模型；本版未更動核心天文公式。 */
+function deltaTSeconds(date){
+  const y=1970+date.getTime()/31556952000;let t,u;
+  if(y<-500){u=(y-1820)/100;return -20+32*u*u;}
+  if(y<500){u=y/100;return 10583.6-1014.41*u+33.78311*u**2-5.952053*u**3-0.1798452*u**4+0.022174192*u**5+0.0090316521*u**6;}
+  if(y<1600){u=(y-1000)/100;return 1574.2-556.01*u+71.23472*u**2+0.319781*u**3-0.8503463*u**4-0.005050998*u**5+0.0083572073*u**6;}
+  if(y<1700){t=y-1600;return 120-0.9808*t-0.01532*t*t+t**3/7129;}
+  if(y<1800){t=y-1700;return 8.83+0.1603*t-0.0059285*t*t+0.00013336*t**3-t**4/1174000;}
+  if(y<1860){t=y-1800;return 13.72-0.332447*t+0.0068612*t*t+0.0041116*t**3-0.00037436*t**4+0.0000121272*t**5-1.699e-7*t**6+8.75e-10*t**7;}
+  if(y<1900){t=y-1860;return 7.62+0.5737*t-0.251754*t*t+0.01680668*t**3-0.0004473624*t**4+t**5/233174;}
+  if(y<1920){t=y-1900;return -2.79+1.494119*t-0.0598939*t*t+0.0061966*t**3-0.000197*t**4;}
+  if(y<1941){t=y-1920;return 21.20+0.84493*t-0.076100*t*t+0.0020936*t**3;}
+  if(y<1961){t=y-1950;return 29.07+0.407*t-t*t/233+t**3/2547;}
+  if(y<1986){t=y-1975;return 45.45+1.067*t-t*t/260-t**3/718;}
+  if(y<2005){t=y-2000;return 63.86+0.3345*t-0.060374*t*t+0.0017275*t**3+0.000651814*t**4+0.00002373599*t**5;}
+  if(y<2050){t=y-2000;return 62.92+0.32217*t+0.005589*t*t;}
+  if(y<2150)return -20+32*((y-1820)/100)**2-0.5628*(2150-y);
+  u=(y-1820)/100;return -20+32*u*u;
+}
+function precisionNoticeText(birthRegimeYear,targetYear){
+  const years=[birthRegimeYear,targetYear].filter(Number.isFinite);
+  const msgs=[];
+  const extreme=years.some(y=>y<500||y>2500);
+  const distant=years.some(y=>y<1000||y>2150);
+  const historical=years.some(y=>y<1800);
+  if(extreme){
+    msgs.push('節氣採簡化太陽黃經公式並使用 ΔT 近似修正。公元 500 年以前或 2500 年以後，ΔT 的歷史重建／未來外推不確定性可能達數小時以上；不可將節氣附近的年界判定視為精確天文時刻。');
+  }else if(distant){
+    msgs.push('節氣採簡化太陽黃經公式並使用 ΔT 近似修正。1000 年以前或 2150 年以後，ΔT 外推及模型殘差可能達數十分鐘至數小時，未保證固定誤差上限；臨近節氣／年界時請審慎判讀。');
+  }else if(historical){
+    msgs.push('節氣採簡化太陽黃經公式並使用 ΔT 近似修正。1800 年以前未逐年以高精度天文曆表校準，可能存在十數分鐘以上殘差；臨近節氣／年界時請審慎判讀。');
+  }
+  if(years.some(y=>y<1583))msgs.push('1582 年以前之日期一律依外推格里曆處理，未換算歷史上實際施行的儒略曆或其他紀年慣例。');
+  if(birthRegimeYear<1)msgs.push('出生時刻歸入 '+fmtYear(birthRegimeYear)+'；此處採天文紀年作內部運算，公元 0 年對應公元前 1 年。');
+  return msgs.join('<br>');
+}
 
 const GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -657,7 +749,7 @@ const CLINICAL_PROTOCOL_3STEP=[
 const FIVE_FLAVORS={
   肝:{element:'木',desire:'肝欲散（喜條達升發）',suffering:'肝苦急',tonify:'辛味（辛主發散）',purge:'酸味（酸主收斂）',tonifyHerbs:'川芎、細辛、柴胡、防風、香附',purgeHerbs:'烏梅、山茱萸、白芍',diet:'宜辛溫疏泄，如蔥、薑、韭菜。'},
   心:{element:'火',desire:'心欲軟（火性剛燥喜軟）',suffering:'心苦緩',tonify:'鹹味（鹹能軟堅）',purge:'甘味（甘性緩和）',tonifyHerbs:'芒硝、海藻、玄參',purgeHerbs:'人參、黃芪、茯苓',diet:'宜適量鹹味軟堅之品。'},
-  脾:{element:'土',desire:'脾欲緩（喜甘緩和中）',suffering:'脾苦濕',tonify:'甘味（甘能補中）',purge:'苦味（苦能燥能瀉）',tonifyHerbs:'人參、黨參、黃芪、白術、大棗、山藥',purgeHerbs:'蒼術、厚朴、黃連、黃柏',diet:'宜甘溫健脾，如山藥、大棗、扁豆。'},
+  脾:{element:'土',desire:'脾欲緩（喜甘緩和中）',suffering:'脾苦濕',tonify:'甘味（甘能補中）',purge:'苦味（苦能燥能瀉）',tonifyHerbs:'人參、黨參、黃芪、白朮、大棗、山藥',purgeHerbs:'蒼朮、厚朴、黃連、黃柏',diet:'宜甘溫健脾，如山藥、大棗、扁豆。'},
   肺:{element:'金',desire:'肺欲收（喜清肅收斂）',suffering:'肺苦氣上逆',tonify:'酸味（酸主收斂）',purge:'辛味（辛主宣散）',tonifyHerbs:'五味子、烏梅、白芍、五倍子',purgeHerbs:'麻黃、桔梗、白芷',diet:'宜酸潤收斂，如烏梅、五味子、梨。'},
   腎:{element:'水',desire:'腎欲堅（喜封藏堅固）',suffering:'腎苦燥',tonify:'苦味（苦能堅陰）',purge:'鹹味（鹹能軟堅滲瀉）',tonifyHerbs:'黃柏、知母、玄參',purgeHerbs:'芒硝、海藻、昆布',diet:'宜苦味堅陰，如苦瓜。'}
 };
@@ -668,14 +760,14 @@ const CONSTITUTION_PROFILES={
 };
 const DYNAMIC_CASES={'丁卯':{trigger:'木不及逢陽明燥金司天',result:'肝大虛、肺過實、心受累',advice:'酸甘溫潤柔肝養血。'},'丁酉':{trigger:'木不及逢陽明燥金司天',result:'肝大虛、肺過實、心受累',advice:'酸甘溫潤柔肝養血。'},'己巳':{trigger:'土不及逢厥陰風木司天',result:'脾大虛、肝過實、肺受累',advice:'辛溫苦甘強健脾土。'},'己亥':{trigger:'土不及逢厥陰風木司天',result:'脾大虛、肝過實、肺受累',advice:'辛溫苦甘強健脾土。'},'辛丑':{trigger:'水不及逢太陰濕土司天',result:'腎大虛、脾過實、肝受累',advice:'大溫堅陰與燥濕。'},'辛未':{trigger:'水不及逢太陰濕土司天',result:'腎大虛、脾過實、肝受累',advice:'大溫堅陰與燥濕。'}};
 const SANYIN_FORMULAS={
-  '甲':{formula:'附子山茱萸湯',herbalType:'大辛大熱，甘酸燥濕溫陽',indication:'土太過・雨濕勝・腎水受邪'},'乙':{formula:'紫菀湯',herbalType:'清瀉肺熱，宣降肺氣',indication:'金不及・炎火乃行・火乘肺虛'},'丙':{formula:'川連茯苓湯',herbalType:'苦寒清心、淡滲瀉火',indication:'水太過・寒氣勝・心火受邪'},'丁':{formula:'蓯蓉牛膝湯',herbalType:'酸甘溫潤，養肝抗燥',indication:'木不及・燥氣勝・肝木虛'},'戊':{formula:'麥門冬湯',herbalType:'甘寒酸苦，清肺瀉火',indication:'火太過・炎暑勝・肺金受邪'},'己':{formula:'白術厚朴湯',herbalType:'辛溫苦甘，燥濕健脾',indication:'土不及・風乘脾虛'},'庚':{formula:'牛膝木瓜湯',herbalType:'酸甘溫潤，舒筋養肝',indication:'金太過・燥氣勝・肝木受邪'},'辛':{formula:'五味子湯',herbalType:'酸苦鹹甘，大溫堅陰封藏',indication:'水不及・土勝腎虛'},'壬':{formula:'苓術湯',herbalType:'辛甘苦溫，健脾理肝',indication:'木太過・風氣勝・脾土受邪'},'癸':{formula:'黃芪茯神湯',herbalType:'甘溫益氣，溫振心陽',indication:'火不及・寒乃大行・水乘心虛'}
+  '甲':{formula:'附子山茱萸湯',herbalType:'大辛大熱，甘酸燥濕溫陽',indication:'土太過・雨濕勝・腎水受邪'},'乙':{formula:'紫菀湯',herbalType:'清瀉肺熱，宣降肺氣',indication:'金不及・炎火乃行・火乘肺虛'},'丙':{formula:'川連茯苓湯',herbalType:'苦寒清心、淡滲瀉火',indication:'水太過・寒氣勝・心火受邪'},'丁':{formula:'蓯蓉牛膝湯',herbalType:'酸甘溫潤，養肝抗燥',indication:'木不及・燥氣勝・肝木虛'},'戊':{formula:'麥門冬湯',herbalType:'甘寒酸苦，清肺瀉火',indication:'火太過・炎暑勝・肺金受邪'},'己':{formula:'白朮厚朴湯',herbalType:'辛溫苦甘，燥濕健脾',indication:'土不及・風乘脾虛'},'庚':{formula:'牛膝木瓜湯',herbalType:'酸甘溫潤，舒筋養肝',indication:'金太過・燥氣勝・肝木受邪'},'辛':{formula:'五味子湯',herbalType:'酸苦鹹甘，大溫堅陰封藏',indication:'水不及・土勝腎虛'},'壬':{formula:'苓術湯',herbalType:'辛甘苦溫，健脾理肝',indication:'木太過・風氣勝・脾土受邪'},'癸':{formula:'黃芪茯神湯',herbalType:'甘溫益氣，溫振心陽',indication:'火不及・寒乃大行・水乘心虛'}
 };
 const SANYIN_QI_FORMULAS={
   '巳亥':{title:'巳亥之歲（厥陰風木司天，少陽相火在泉）',formula:'敷和湯',mods:[['初之氣','加鼠粘子'],['二之氣','加麥門冬、山藥'],['三之氣','加紫菀'],['四之氣','加澤瀉、山梔仁'],['五、終之氣','依正方']]},
   '子午':{title:'子午之歲（少陰君火司天，陽明燥金在泉）',formula:'正陽湯',mods:[['初之氣','加麻黃、茯苓、車前子'],['二之氣','加白薇、玄參、川芎、白芍'],['三之氣','加麻仁、杏仁'],['四之氣','加荊芥、茵陳'],['五之氣','依正方'],['終之氣','加蘇子']]},
   '丑未':{title:'丑未之歲（太陰濕土司天，太陽寒水在泉）',formula:'備化湯',mods:[['初之氣','依正方'],['二之氣','去附子，加天麻、防風'],['三之氣','加澤瀉'],['四、五、終之氣','依正方']]},
   '寅申':{title:'寅申之歲（少陽相火司天，厥陰風木在泉）',formula:'升明湯',mods:[['初之氣','加白薇、玄參'],['二之氣','加丁香'],['三之氣','加赤芍、漏蘆、升麻'],['四之氣','加茯苓'],['五之氣','依正方'],['終之氣','加五味子']]},
-  '卯酉':{title:'卯酉之歲（陽明燥金司天，少陰君火在泉）',formula:'審平湯',mods:[['初之氣','加白茯苓、制半夏、紫蘇、生姜'],['二之氣','加玄參、白薇'],['三之氣','去遠志、山茱萸、白術，加丹參、澤瀉'],['四之氣','去遠志、白術，加酸棗仁、車前子'],['五、終之氣','依正方']]},
+  '卯酉':{title:'卯酉之歲（陽明燥金司天，少陰君火在泉）',formula:'審平湯',mods:[['初之氣','加白茯苓、制半夏、紫蘇、生姜'],['二之氣','加玄參、白薇'],['三之氣','去遠志、山茱萸、白朮，加丹參、澤瀉'],['四之氣','去遠志、白朮，加酸棗仁、車前子'],['五、終之氣','依正方']]},
   '辰戌':{title:'辰戌之歲（太陽寒水司天，太陰濕土在泉）',formula:'靜順湯',mods:[['初之氣','去附子，加枸杞子'],['二之氣','依前入附子、枸杞子'],['三之氣','去附子、木瓜、干姜，加人參、枸杞、地榆、香白芷、生姜'],['四之氣','依正方加石榴皮'],['五之氣','依正方'],['終之氣','去牛膝，加當歸、白芍、炒阿膠']]}
 };
 
@@ -725,7 +817,7 @@ const REPAIR_WINDOW = {
 const CLINICAL_CAUTION_MATRIX = {
   '心':{weak:{bornYears:'癸年（火不及/伏明）、丙年（水過克火）、辰戌/丑未水旺年',bornCondition:'心火/心陽天生偏弱，水克心火',postDisease:'心系實證',postSymptoms:'後天逢少陰/少陽司天或火運太過之年，感受熱邪、痰火擾心、血瘀阻絡，表現為高熱谵語、狂躁、胸痹實痛、心脈瘀阻等實證',forbidden:'切不可大劑量苦寒峻瀉（如過用大黃、黃連、苦參暴瀉心火）',consequence:'心為君主之官，弱臟心氣受苦寒暴瀉，極易致「心陽暴脫、神門脈絕、汗出如油」之危候',therapy:'清熱不傷陽，活血祛痰兼護心氣',herbs:'茯神、遠志、麥冬清心守神，配合少許丹參、半夏活血化痰，甘溫守中',formula:'小瀉心湯配甘草、清心蓮子飲加減'},strong:{bornYears:'戊年（火太過/赫曦）、子午少陰君火司天、三火重疊年',bornCondition:'心火/相火天生偏亢',postDisease:'心系虛證',postSymptoms:'後天大病、大汗或勞倦後，表現為心氣虛、心陰虛（如心悸、怔忡、失眠多夢、神疲）',forbidden:'切不可大劑量辛溫峻補（如大劑量附子、肉桂、鹿茸、人參純陽大補）',consequence:'強臟心火本亢，純陽峻補會激發先天伏火，致「火上澆油、狂越谵妄、衄血吐血」',therapy:'酸甘化陰、苦甘堅陰',herbs:'酸棗仁、白芍、麥冬、生地甘寒滋陰養心',formula:'酸棗仁湯、炙甘草湯去桂枝加麥冬、生地'}},
   '肝':{weak:{bornYears:'丁年（木不及/委和）、庚年（金過伐木）、卯酉燥金年',bornCondition:'肝木天生疏泄無力、肝血本虛，金克肝木',postDisease:'肝系實證',postSymptoms:'後天逢風木暴動、肝鬱化火、肝陽上亢實證（如暴怒、頭痛目赤、脅痛如刺、眩暈）',forbidden:'切不可大劑量辛香平肝或苦寒伐木（如過用川芎、香附、羌活、龍膽草大劑峻瀉）',consequence:'肝木本虛，大劑攻伐必致「肝陰枯涸、筋脈失養、抽搐痙攣、太衝脈絕」',therapy:'酸甘柔肝、養血平肝',herbs:'白芍、當歸、枸杞、木瓜酸甘柔肝，配合少許天麻、鉤藤平肝',formula:'蓯蓉牛膝湯、鎮肝熄風湯重用芍藥甘草'},strong:{bornYears:'壬年（木太過/發生）、巳亥風木司天、同天符木旺年',bornCondition:'肝氣天生勃發、風木偏亢',postDisease:'肝系虛證',postSymptoms:'後天精血虧虛、久病表現為肝血虛、目暗肢麻、體倦失眠',forbidden:'切不可大劑量辛溫燥烈大補（如巴戟天、仙茅、肉桂大劑溫補）',consequence:'強臟肝木喜條達抑降，溫燥峻補極易助木作惡，引發「木火刑金、風陽暴升、中風卒倒、血溢於上」',therapy:'滋水涵木、甘潤補血',herbs:'阿膠、熟地、杞子甘潤滋陰，少佐柴胡/青皮微疏氣機，使補而不滯',formula:'一貫煎、杞菊地黃丸加減'}},
-  '脾':{weak:{bornYears:'己年（土不及/卑監）、壬年（木過乘土）、巳亥/寅申木旺年',bornCondition:'脾胃本自怯弱、中氣易陷，木克脾土',postDisease:'脾胃實證',postSymptoms:'後天飲食停滯、濕熱內阻、腸胃積滯（如腹脹實痛、便秘、瀉下不爽）',forbidden:'切不可大劑量峻下攻積（如大承氣湯、巴豆、大黃峻攻下瀉）',consequence:'弱臟脾土中氣本虛，大劑峻攻必致「脾氣潰脫、中氣下陷、瀉利不止、四肢厥逆、足不任身」',therapy:'消補兼施、健脾導滯',herbs:'白術、茯苓、炙甘草護持中氣，微加枳實、山楂、神曲輕柔導滯',formula:'異功散加減、白術厚朴湯'},strong:{bornYears:'甲年（土太過/敦阜）、丑未太陰濕土司天、三土相臨年',bornCondition:'脾土天生厚實、濕土偏盛',postDisease:'脾胃虛證',postSymptoms:'後天久病食少、體倦神疲之虛象',forbidden:'切不可大劑量甘溫峻補（如大劑量黃耆、黨參、熟地、甘草過重滋補）',consequence:'強臟脾土最忌甘壅濕盛，大甘峻補必致「甘壅中滿、脾胃痞塞、濕熱內結、腹脹不食」',therapy:'淡滲健脾、苦溫燥濕',herbs:'茯苓、薏苡仁、陳皮、蒼術理氣滲濕，輔以少許人參健脾，補而不滯',formula:'平胃散、參苓白術散加減'}},
+  '脾':{weak:{bornYears:'己年（土不及/卑監）、壬年（木過乘土）、巳亥/寅申木旺年',bornCondition:'脾胃本自怯弱、中氣易陷，木克脾土',postDisease:'脾胃實證',postSymptoms:'後天飲食停滯、濕熱內阻、腸胃積滯（如腹脹實痛、便秘、瀉下不爽）',forbidden:'切不可大劑量峻下攻積（如大承氣湯、巴豆、大黃峻攻下瀉）',consequence:'弱臟脾土中氣本虛，大劑峻攻必致「脾氣潰脫、中氣下陷、瀉利不止、四肢厥逆、足不任身」',therapy:'消補兼施、健脾導滯',herbs:'白朮、茯苓、炙甘草護持中氣，微加枳實、山楂、神曲輕柔導滯',formula:'異功散加減、白朮厚朴湯'},strong:{bornYears:'甲年（土太過/敦阜）、丑未太陰濕土司天、三土相臨年',bornCondition:'脾土天生厚實、濕土偏盛',postDisease:'脾胃虛證',postSymptoms:'後天久病食少、體倦神疲之虛象',forbidden:'切不可大劑量甘溫峻補（如大劑量黃耆、黨參、熟地、甘草過重滋補）',consequence:'強臟脾土最忌甘壅濕盛，大甘峻補必致「甘壅中滿、脾胃痞塞、濕熱內結、腹脹不食」',therapy:'淡滲健脾、苦溫燥濕',herbs:'茯苓、薏苡仁、陳皮、蒼朮理氣滲濕，輔以少許人參健脾，補而不滯',formula:'平胃散、參苓白朮散加減'}},
   '肺':{weak:{bornYears:'乙年（金不及/從革）、戊年（火過刑金）、子午/寅申火旺年',bornCondition:'肺氣清肅天生不足、皮毛不固，火克肺金',postDisease:'肺系實證',postSymptoms:'後天外感風寒/風熱閉肺、痰熱阻肺（如發熱、咳嗽氣喘、痰多黃稠）',forbidden:'切不可大劑量峻宣峻瀉（如大劑量麻黃大發汗、葶苈子峻瀉肺氣）',consequence:'肺金本虛，峻宣峻瀉必致「肺氣耗散、衛外失守、虛脫汗出不止、太淵脈絕」',therapy:'輕宣潤肺、祛邪兼益氣',herbs:'桑葉、杏仁、百合、沙參輕宣降氣，配合人參、甘草護持肺氣',formula:'桑菊飲加減、紫菀湯、麥門冬湯'},strong:{bornYears:'庚年（金太過/堅成）、卯酉陽明燥金司天年',bornCondition:'肺金收肅太過、肅殺燥氣偏盛',postDisease:'肺系虛證',postSymptoms:'後天久咳傷氣、少氣懶言、乾咳無痰之虛證',forbidden:'切不可過早酸收峻補或溫燥補肺（如大劑量訶子、五味子過早酸收，或溫燥補氣）',consequence:'燥金強臟最忌收殺閉邪，過早酸收溫補必致「燥氣內鬱、火熱內生、咳嗽反甚、咽乾口瘡」',therapy:'甘潤清補、開宣補肺',herbs:'麥冬、玉竹、阿膠甘潤補肺，配合少許桔梗、杏仁開宣肺氣，補而不閉',formula:'沙參麥冬湯、清燥救肺湯加減'}},
   '腎':{weak:{bornYears:'辛年（水不及/涸流）、甲年（土過克水）、辰戌/丑未土旺年',bornCondition:'腎精先天匱乏、封藏失職，土克腎水',postDisease:'腎系實證',postSymptoms:'後天膀胱濕熱、下焦結石、水濕停聚實證（如尿頻尿急尿痛、水腫實證）',forbidden:'切不可大劑量峻利淡滲或苦寒峻瀉（如大劑量甘遂、芫花、澤瀉過劑通利）',consequence:'腎水本虛，峻利傷陰、暴瀉傷陽，必致「命門火衰、腎氣潰脫、精關不固、太溪脈絕」',therapy:'通利不忘補腎、分清瀉濁',herbs:'茯苓、車前子利水，配合山藥、熟地、山茱萸兼顧腎體',formula:'濟生腎氣丸加減、五味子湯'},strong:{bornYears:'丙年（水太過/流衍）、辰戌太陽寒水司天年',bornCondition:'寒水天生封藏過度、陽氣內郁',postDisease:'腎系虛證',postSymptoms:'後天表現為腰膝酸軟、陽氣不振、畏寒肢冷之虛象',forbidden:'切不可大劑大熱峻補命門（如大劑附子、乾薑、肉桂過量純陽峻補）',consequence:'水強之體寒水偏盛，大熱峻補易引發「寒熱相搏、格陽於上、浮熱上沖、面赤頭痛」',therapy:'微溫化氣、引火歸原',herbs:'桂枝、巴戟天微溫化氣，輔以熟地、山藥滋陰，淡滲利水',formula:'八味地黃丸微用桂附'}}
 };
@@ -874,7 +966,7 @@ function yunOfGan(gan){return YUN_MAP[gan];}
 /* 3.31.9：固定 UTC+8 取曆法欄位。原版用 Intl 'Asia/Taipei'，會套入台灣歷史夏令時間(1946–1961、1974–1975、1979)與 1896 前 LMT(+08:06)，與 twDate 固定 +08:00 不一致。 */
 function taipeiDateParts(date){const d=new Date(date.getTime()+8*3600000);return{year:d.getUTCFullYear(),month:d.getUTCMonth()+1,day:d.getUTCDate(),hour:d.getUTCHours(),minute:d.getUTCMinutes(),second:d.getUTCSeconds()};}
 function jdFromDate(date){return date.getTime()/86400000+2440587.5;}
-function solarLongitude(date){const T=(jdFromDate(date)-2451545)/36525;const L0=(280.46646+36000.76983*T+0.0003032*T*T)%360;const M=(357.52911+35999.05029*T-0.0001537*T*T)%360;const Mr=M*Math.PI/180;const C=(1.914602-0.004817*T-0.000014*T*T)*Math.sin(Mr)+(0.019993-0.000101*T)*Math.sin(2*Mr)+0.000289*Math.sin(3*Mr);const trueLong=L0+C;const omega=(125.04-1934.136*T)*Math.PI/180;return((trueLong-0.00569-0.00478*Math.sin(omega))%360+360)%360;}
+function solarLongitude(date){const T=(jdFromDate(date)+deltaTSeconds(date)/86400-2451545)/36525;const L0=(280.46646+36000.76983*T+0.0003032*T*T)%360;const M=(357.52911+35999.05029*T-0.0001537*T*T)%360;const Mr=M*Math.PI/180;const C=(1.914602-0.004817*T-0.000014*T*T)*Math.sin(Mr)+(0.019993-0.000101*T)*Math.sin(2*Mr)+0.000289*Math.sin(3*Mr);const trueLong=L0+C;const omega=(125.04-1934.136*T)*Math.PI/180;return((trueLong-0.00569-0.00478*Math.sin(omega))%360+360)%360;}
 const SOLAR_TERM_WINDOW={
   0:  [3,15, 3,30],
   60: [5,15, 5,30],
@@ -886,9 +978,29 @@ const SOLAR_TERM_WINDOW={
   240:[11,18,12,1],
   300:[1, 3, 1,26]
 };
+const _solarTermCache=new Map();
+const SOLAR_TERM_CACHE_LIMIT=2048; // 限制記憶體；使用 LRU，快取值存毫秒數並回傳新的 Date 複本。
 function findSolarTerm(year,targetDeg){
   if(arguments.length<2)targetDeg=300;
-  if(!Number.isFinite(targetDeg))throw new Error('findSolarTerm: targetDeg 必須為有限數字');
+  if(!Number.isFinite(year)||!Number.isInteger(year)||year<0||year>3002)throw new RangeError('findSolarTerm: year 必須是 0–3002 的整數（含內部年界緩衝年）');
+  if(!Number.isFinite(targetDeg))throw new TypeError('findSolarTerm: targetDeg 必須為有限數字');
+  const normalizedDeg=((targetDeg%360)+360)%360;
+  const key=year+'|'+normalizedDeg;
+  if(_solarTermCache.has(key)){
+    const t=_solarTermCache.get(key);
+    _solarTermCache.delete(key);
+    _solarTermCache.set(key,t); // 命中時更新最近使用順序（LRU）
+    return new Date(t);
+  }
+  const t=_findSolarTermRaw(year,normalizedDeg).getTime();
+  if(_solarTermCache.size>=SOLAR_TERM_CACHE_LIMIT)_solarTermCache.delete(_solarTermCache.keys().next().value);
+  _solarTermCache.set(key,t);
+  return new Date(t);
+}
+function _findSolarTermRaw(year,targetDeg){
+  if(arguments.length<2)targetDeg=300;
+  if(!Number.isFinite(year)||!Number.isInteger(year)||year<0||year>3002)throw new RangeError('findSolarTerm: year 必須是 0–3002 的整數（含內部年界緩衝年）');
+  if(!Number.isFinite(targetDeg))throw new TypeError('findSolarTerm: targetDeg 必須為有限數字');
   const target=((targetDeg%360)+360)%360;
   const w=SOLAR_TERM_WINDOW[target];
   if(!w)throw new Error('findSolarTerm: 未設定搜尋視窗 '+target);
@@ -911,7 +1023,6 @@ function findSolarTerm(year,targetDeg){
   throw new Error('findSolarTerm: 搜尋視窗內未找到 '+target+'° '+year);
 }
 function sexagenaryDay(date){const anchor=twDate(2000,1,7,'00:00:00');const p=taipeiDateParts(date);const localMidnight=twDate(p.year,p.month,p.day,'00:00:00');const days=Math.round((localMidnight.getTime()-anchor.getTime())/86400000);const idx=((days%60)+60)%60;return{index:idx,gan:GAN[idx%10],zhi:ZHI[idx%12],gz:GAN[idx%10]+ZHI[idx%12]};}
-function hourBranch(date){const p=taipeiDateParts(date);const h=p.hour+p.minute/60+p.second/3600;if(h>=23||h<1)return'子';return ZHI[Math.floor((h+1)/2)%12];}
 function hourGan(dayGan,branch){const dayIdx=GAN.indexOf(dayGan);const ziStart=[0,2,4,6,8,0,2,4,6,8][dayIdx];const bi=ZHI.indexOf(branch);return GAN[(ziStart+bi)%10];}
 function monthStemForYearStem(yearGan,monthBranch){const startStem={甲:'丙',己:'丙',乙:'戊',庚:'戊',丙:'庚',辛:'庚',丁:'壬',壬:'壬',戊:'甲',癸:'甲'}[yearGan];const startIdx=GAN.indexOf(startStem);const branchIdx=ZHI.indexOf(monthBranch);return GAN[(startIdx+(branchIdx-2+12)%12)%10];}
 function exchangeGroup(zhi){if(['子','辰','申'].includes(zhi))return{label:'子、辰、申',zodiacTime:'寅初初刻',hour:3};if(['丑','巳','酉'].includes(zhi))return{label:'丑、巳、酉',zodiacTime:'巳初初刻',hour:9};if(['寅','午','戌'].includes(zhi))return{label:'寅、午、戌',zodiacTime:'申初初刻',hour:15};return{label:'亥、卯、未',zodiacTime:'亥初初刻',hour:21};}
@@ -973,14 +1084,23 @@ function fiveYunWindowsFixed(y){const starts=[twDate(y,1,21),twDate(y,4,4),twDat
 function sixQiWindowsFixed(y){const starts=[twDate(y,1,21),twDate(y,3,21),twDate(y,5,21),twDate(y,7,23),twDate(y,9,23),twDate(y,11,23)];return starts.map((start,i)=>({start,end:i<5?starts[i+1]:twDate(y+1,1,21),index:i}));}
 function activeFiveYunWindows(y){return CALC_TIME_MODE==='source'?fiveYunWindowsFixed(y):fiveYunWindowsExact(y);}
 function activeSixQiWindows(y){return CALC_TIME_MODE==='source'?sixQiWindowsFixed(y):sixQiWindowsExact(y);}
-function phaseInWindows(date,windows){for(let i=0;i<windows.length;i++)if(date>=windows[i].start&&date<windows[i].end)return{index:i,start:windows[i].start,end:windows[i].end};return null;}
+function phaseInWindows(date,windows,label='時間區間'){
+  if(!(date instanceof Date)||!Number.isFinite(date.getTime()))throw new TypeError(label+'判定收到無效日期');
+  if(!Array.isArray(windows)||windows.length===0)throw new RangeError(label+'判定沒有可用時間區間');
+  const matches=[];
+  for(let i=0;i<windows.length;i++){
+    const w=windows[i];
+    if(!w||!(w.start instanceof Date)||!(w.end instanceof Date)||!Number.isFinite(w.start.getTime())||!Number.isFinite(w.end.getTime())||w.start.getTime()>=w.end.getTime())throw new RangeError(label+'第 '+(i+1)+' 個時間區間無效');
+    if(date>=w.start&&date<w.end)matches.push({index:Number.isInteger(w.index)?w.index:i,start:w.start,end:w.end});
+  }
+  if(matches.length!==1)throw new RangeError(label+'時間區間覆蓋異常：日期 '+date.toISOString()+' 命中 '+matches.length+' 個區間');
+  return matches[0];
+}
 function fiveYunPhase(date){
   const y=regimeYear(date);
   const windows=activeFiveYunWindows(y);
-  const p=phaseInWindows(date,windows);
-  if(p)return{...p,year:y,transition:false};
-  const lastW=windows[4];
-  return{...lastW,year:y,transition:false};
+  const phase=phaseInWindows(date,windows,'五運');
+  return {...phase,year:y,transition:false};
 }
 function annualYunPhase(date){
   const calYear=taipeiDateParts(date).year;
@@ -995,12 +1115,12 @@ function annualYunPhase(date){
       const isCurrentCalYear=(y===calYear);const regimeY=regimeYear(date);const isSyncRegime=(y===regimeY);
       const isPhaseShifted=!isSyncRegime;
       const phaseShiftDirection=isPhaseShifted?(y>regimeY?'歲運先於年界':'年界先於歲運'):'同步';
-      return{year:y,gan:gz.gan,gz:gz.gz,yunStart,yunEnd,state:`${y}年歲運（${gz.gz}）`,isCalYear:isCurrentCalYear,isPhaseShifted,isOverlap:isPhaseShifted,phaseShiftDirection,note:isSyncRegime?'歲運年與目前選定年界同步':`歲運${phaseShiftDirection}`};
+      return{year:y,gan:gz.gan,gz:gz.gz,yunStart,yunEnd,state:`${y}年歲運（${gz.gz}）`,isCalYear:isCurrentCalYear,isPhaseShifted,isOverlap:isPhaseShifted,phaseShiftDirection,note:isSyncRegime?'歲運年與目前選定年界同步':`${phaseShiftDirection}`};
     }
   }
   return null;
 }
-function sixQiPhase(date){const y=regimeYear(date);let p=phaseInWindows(date,activeSixQiWindows(y));if(!p)p={...activeSixQiWindows(y)[5],index:5};return{...p,year:y};}
+function sixQiPhase(date){const y=regimeYear(date);const phase=phaseInWindows(date,activeSixQiWindows(y),'六氣');return{...phase,year:y};}
 function regimeYear(date){const y=taipeiDateParts(date).year;const gz=gzForYear(y);const start=activeAnnualBoundaryDate(y,gz.gan,gz.zhi);return date>=start?y:y-1;}
 function sexagenaryYear(date){const y=regimeYear(date);const gi=((y-4)%10+10)%10,zi=((y-4)%12+12)%12;return{year:y,gan:GAN[gi],zhi:ZHI[zi],gz:GAN[gi]+ZHI[zi]};}
 
@@ -1134,11 +1254,12 @@ function analyzeFiveElementImprint(factors){
   }else{
     desc=`出生時有效氣化因素（${countedFactors.length}項${skippedFactors.length?`，已排除 ${skippedFactors.length} 項與司天/在泉同氣去重項`:''}）最高僅 ${fmtCount(maxCount)} 權重票（占總權重 ${(maxCount/totalWeight*100).toFixed(0)}%），未達「至少半數（≥50%）」的特異體質門檻（需 ≥ ${fmtCount(minThreshold)}）。`;
   }
+  if(isSpecial&&dominantTie)desc+=`<br><span style="color:var(--warn);">⚠ 本次為並列最高（${dominantElements.join('、')}各 ${fmtCount(maxCount)} 權重票）；弱臟判定沿用既有規則，取先出現者「${dominantElement}」所克之臟，其餘並列元素請人工複核。</span>`;
   return{factors,countedFactors,skippedFactors,counts,qiCounts,thermalDelta,thermalBias,thermalDesc,isSpecial,overlapCount:maxCount,totalWeight,minThreshold,dominantElement,dominantElements,dominantTie,weakElement,weakOrgan,dualPathology,desc};
 }
 function detectConstitutionConflict(zhiGroup,fiveImprint){const typeInfo=QI_TYPE_BY_ZHI_GROUP[zhiGroup];if(!typeInfo)return null;if(!fiveImprint.isSpecial)return{status:'no-imprint',typeInfo,conflict:false,note:'五要素未達特異門檻，僅以地支分型呈現。'};const dominant=fiveImprint.dominantElement;const inBias=typeInfo.bias.includes(dominant);if(inBias){return{status:'concordant',typeInfo,conflict:false,dominant,note:`地支體質分型「${typeInfo.type}」（傾向${typeInfo.bias.join('、')}）與五要素烙印主導「${dominant}」協和，兩條證據鏈一致。`};}return{status:'conflict',typeInfo,conflict:true,dominant,note:`地支體質分型「${typeInfo.type}」（傾向${typeInfo.bias.join('、')}）與五要素烙印主導「${dominant}」衝突：前者為先天定性，後者為五要素綜合定量，本系統保留兩者並列，不以其中一條靜默覆寫另一條。`};}
 
-const SCENARIO={SELF_REFERENCE:'selfReference',CROSS_YEAR:'crossYear',TARGET_ONLY:'targetOnly'};
+const SCENARIO={SELF_REFERENCE:'selfReference',CROSS_YEAR:'crossYear'};
 function matchPattern9(birth,target,scenario){scenario=scenario||SCENARIO.CROSS_YEAR;if(scenario===SCENARIO.SELF_REFERENCE){return{matches:[],scenario,note:'出生年自身對照不適用九模式（先天=後天，會產生循環論證）。'};}const matches=[];const roles=birth.roles||resolveBirthOrganRoles(birth);const weaks=roles.baseWeak;const strongs=roles.baseStrong;const bYunEl=birth.yun.element;const bDeg=birth.yun.degree;const bIsPingQi=birth.eras.isTruePingQi||birth.eras.isSecondaryPingQi;const tYunEl=target.yunAnnual.element;const tSiEl=ELEMENT_OF_QI[target.siTian];const tZqEl=ELEMENT_OF_QI[target.zaiQuan];const backQi=[{el:tYunEl,name:'歲運',period:'全年'},{el:tSiEl,name:'司天',period:'上半年'},{el:tZqEl,name:'在泉',period:'下半年'}];const isCrossYear=!!(target.year&&birth.by&&target.year!==birth.by.year);const m1Hits=[];weaks.forEach(w=>{backQi.forEach(b=>{if(b.el===w.el)m1Hits.push({weak:w,back:b});});});if(m1Hits.length>0){const rows=m1Hits.map(h=>{const tag=h.weak.mechanism==='純扶衰'?'<span class="hit-mech">[純扶衰]</span>':'<span class="hit-mech">[扶弱抗乘]</span>';return `<div class="hit-row">${h.back.name}${h.back.el}（${h.back.period}） → 弱臟${ORGAN[h.weak.el]}（${h.weak.el}）${tag}</div>`;}).join('');matches.push({code:'TONG_QI_ZHU',title:'同氣相助',reason:rows+(bIsPingQi?`<div class="hit-row" style="color:var(--muted);">出生年為平氣背景，偏性稍減。</div>`:'')});}const m2Hits=[];strongs.forEach(s=>{backQi.forEach(b=>{if(b.el===s.el)m2Hits.push(`${b.name}${b.el}（${b.period}） → 強臟${ORGAN[s.el]}（${s.role}）`);});});if(m2Hits.length>0){matches.push({code:'TONG_QI_CHONG',title:'同氣重疊',reason:m2Hits.map(r=>`<div class="hit-row">${r}</div>`).join('')+`<div class="hit-row">同氣相求，過亢自極。</div>`});}const m3Hits=[];weaks.forEach(w=>{backQi.forEach(b=>{if(SHENG[b.el]===w.el)m3Hits.push(`${b.name}${b.el}（${b.period}） → 生 弱臟${ORGAN[w.el]}`);});});if(m3Hits.length>0){matches.push({code:'MU_ZI',title:'母氣資助',reason:m3Hits.map(r=>`<div class="hit-row">${r}</div>`).join('')+`<div class="hit-row">母健子安，弱藏得養。</div>`});}const m4Hits=[];weaks.forEach(w=>{backQi.forEach(b=>{if(SHENG[w.el]===b.el)m4Hits.push(`弱臟${ORGAN[w.el]}（${w.el}） → 生子氣於 ${b.name}${b.el}（${b.period}）`);});});if(m4Hits.length>0){matches.push({code:'ZI_XIE',title:'子氣洩氣',reason:m4Hits.map(r=>`<div class="hit-row">${r}</div>`).join('')+`<div class="hit-row">子盜母氣，虛上加虛。</div>`});}const m5Hits=[];weaks.forEach(w=>{backQi.forEach(b=>{if(KE[b.el]===w.el){const tag=(w.kind==='太過被克'&&isCrossYear)?'<span class="hit-mech" style="color:var(--warn);">[加重原有克勢]</span>':'<span class="hit-mech" style="color:var(--risk);">[新克]</span>';m5Hits.push(`${b.name}${b.el}（${b.period}） 克 弱臟${ORGAN[w.el]}${tag}`);}});});if(m5Hits.length>0){matches.push({code:'QI_KE_WEAK',title:'歲氣克弱藏',reason:m5Hits.map(r=>`<div class="hit-row">${r}</div>`).join('')+`<div class="hit-row">乘虛侵毒，發病風險高。</div>`});}const m6Hits=[];strongs.forEach(s=>{backQi.forEach(b=>{if(KE[b.el]===s.el)m6Hits.push(`${b.name}${b.el}（${b.period}） 克 強臟${ORGAN[s.el]}（${s.role}）`);});});if(m6Hits.length>0){matches.push({code:'QI_YI_SHENG',title:'歲氣抑過盛（天助修復窗口）',reason:m6Hits.map(r=>`<div class="hit-row">${r}</div>`).join('')+`<div class="hit-row">高者抑之，偏性中和。</div>`+`<div class="hit-row" style="color:var(--green);font-weight:700;">✦ 此為後天歲氣折抑先天偏亢之「天助修復窗口」，是調理先天失衡臟腑的最佳天時。</div>`});}const m7Hits=[];if(bDeg==='不及'){const iKeEl=KE[bYunEl];backQi.forEach(b=>{if(b.el===iKeEl)m7Hits.push(`${b.name}${b.el}（${b.period}）過旺，反侮先天${ORGAN[bYunEl]}（本氣）`);});}else{const controller=Object.keys(KE).find(k=>KE[k]===bYunEl);if(controller){backQi.forEach(b=>{if(b.el===controller)m7Hits.push(`${b.name}${b.el}（${b.period}）當令，先天${ORGAN[bYunEl]}本氣反侮${ORGAN[controller]}，後天加重`);});}}if(m7Hits.length>0){matches.push({code:'FAN_WU',title:'反侮陵侮',reason:m7Hits.map(r=>`<div class="hit-row">${r}</div>`).join('')+`<div class="hit-row">氣機逆亂，虛實夾雜。</div>`});}const m8Hits=[];if(birth.yufa&&birth.yufa.active){m8Hits.push(`先天鬱氣在${birth.yufa.yuOrgan}（${birth.yufa.yuElement}），郁極乃發`);}if(bDeg==='太過'){const controller=Object.keys(KE).find(k=>KE[k]===bYunEl);if(controller){backQi.forEach(b=>{if(b.el===controller)m8Hits.push(`${b.name}${b.el}（${b.period}）作復氣，觸發子復母仇`);});}}if(m8Hits.length>0){matches.push({code:'SHENG_FU_YU',title:'勝復郁發',reason:m8Hits.map(r=>`<div class="hit-row">${r}</div>`).join('')+`<div class="hit-row">郁極乃發，發病多急暴。</div>`});}if(bDeg==='不及'&&birth.dynConst.tianXingActive){matches.push({code:'TIAN_XING_HUA',title:'天刑轉化',reason:`<div class="hit-row">出生逢天刑強克校正，先天弱臟已轉為複合格局。</div>`});}return{matches,scenario,note:null};}
 
 /* 3.31.8：勝復狀態機。
@@ -1158,17 +1279,102 @@ function calcShengFu(yunEl,degree,opts={}){
   const recoveryStrength=active?'候選（依勝氣強度比例）':'無';
   return{yunEl,degree,winner,recovery,reverse,controller,controlled,active,pingQiBlocksAutoRecovery,winnerStrength,recoveryStrength,winnerLabel:winner?`${winner}（${ORGAN[winner]}）`:'—',recoveryLabel:recovery?`${recovery}（${ORGAN[recovery]}）`:'—',reverseLabel:reverse?`${reverse}（${ORGAN[reverse]}）`:'—',desc:degree==='太過'?`太過：${yunEl}本氣有餘，先看所勝${winner}受制；勝甚時再看所不勝${recovery}來復。`:`不及：${yunEl}本氣不足，先看克我${winner}為勝氣；勝甚時再看本運之子${recovery}來復；另檢查所勝${reverse}反侮。`};
 }
-function calcYuFaAudit(yunEl,degree,siTianEl,zaiQuanEl,hasDepression){if(!hasDepression)return{active:false,desc:'未提供鬱氣證據，不作郁發候選。'};const keBy=Object.keys(KE).find(k=>KE[k]===yunEl)||null;const keTo=KE[yunEl];const candidates=[];if(keBy&&KE[siTianEl]===yunEl){candidates.push(yunEl);}if(keTo&&KE[yunEl]===siTianEl){candidates.push(siTianEl);}if(candidates.length===0)return{active:false,desc:'無明確被壓抑之氣，郁發未成立。'};// 現行五行 KE 為單向克制環（無二循環），故『司天克運』與『運克司天』兩候選條件互斥；保留首候選以兼容未來規格擴展。
+function calcYuFaAudit(yunEl,degree,siTianEl,zaiQuanEl,hasDepression){if(!hasDepression)return{active:false,desc:'未提供鬱氣證據，不作郁發候選。'};const candidates=[];if(KE[siTianEl]===yunEl){candidates.push(yunEl);}if(KE[yunEl]===siTianEl){candidates.push(siTianEl);}if(candidates.length===0)return{active:false,desc:'無明確被壓抑之氣，郁發未成立。'};// 現行五行 KE 為單向克制環（無二循環），故『司天克運』與『運克司天』兩候選條件互斥；保留首候選以兼容未來規格擴展。
   const yuel=candidates[0];return{active:true,yuElement:yuel,yuOrgan:ORGAN[yuel],timing:YU_FA_TIMING[yuel],omen:YU_FA_OMENS[yuel],treatment:FIVE_YU_TREATMENT[yuel],candidateCount:candidates.length,candidates:candidates.slice(),desc:`鬱氣在${ORGAN[yuel]}（${yuel}），依五郁理論，郁極乃發，待時而作。`};}
 
 function auditDynamicConstitution(gan,zhi,suiYun,siTian,isPingQiBackground,birthPhaseIndex){const yunEle=suiYun.element;const isExcess=(suiYun.degree==='太過');const siTianEle=ELEMENT_OF_QI[siTian];const weakInfo=getWeakSet(yunEle,suiYun.degree);const strongInfo=getStrongSet(yunEle,suiYun.degree);const weakElements=weakInfo.map(w=>w.el);const strongElements=strongInfo.map(s=>s.el);const baseWeakElement=weakElements[0];const primaryWeakOrgan=ORGAN[baseWeakElement];let roleBreakdown={};let weakOrganDesc=weakInfo.map(w=>`${ORGAN[w.el]}（${w.el}：${w.role}）`).join(' & ');let strongOrganDesc=strongInfo.map(s=>`${ORGAN[s.el]}（${s.el}：${s.role}）`).join('、');const dynamicDetail=[];if(isExcess){roleBreakdown={coreStrong:{role:'核心強臟（本氣過實）',element:yunEle,organ:ORGAN[yunEle],mech:`本運${yunEle}太過。`,tone:'strong1'},coreWeak:{role:'核心弱臟（所勝受邪）',element:weakElements[0],organ:ORGAN[weakElements[0]],mech:`${yunEle}克${weakElements[0]}。`,tone:'weak1'}};dynamicDetail.push(`<b>第一層（太過年）：</b>本氣【${ORGAN[yunEle]}】盛；所勝【${ORGAN[weakElements[0]]}】受邪為弱臟。`);}else{const controller=Object.keys(KE).find(k=>KE[k]===yunEle);roleBreakdown={coreWeak:{role:'核心弱臟①（本氣自虛）',element:yunEle,organ:ORGAN[yunEle],mech:`本運${yunEle}不及。`,tone:'weak1'},collateralWeak:{role:'連帶弱臟②（母虛及子）',element:SHENG[yunEle],organ:ORGAN[SHENG[yunEle]],mech:`${yunEle}生${SHENG[yunEle]}，母虛不能生子。`,tone:'weak2'},keMe:{role:'第一強臟①（剋我乘虛・勝氣）',element:controller,organ:ORGAN[controller],mech:`${controller}克${yunEle}。`,tone:'strong1'},iKe:{role:'第二強臟②（我克反侮・妄行）',element:KE[yunEle],organ:ORGAN[KE[yunEle]],mech:`${yunEle}虛不制${KE[yunEle]}。`,tone:'strong2'}};dynamicDetail.push(`<b>第一層（不及年）：</b>本氣【${ORGAN[yunEle]}】虛；其子【${ORGAN[SHENG[yunEle]]}】連帶弱；剋我者【${ORGAN[controller]}】為勝氣；我克者【${ORGAN[KE[yunEle]]}】反侮。`);}if(isPingQiBackground){dynamicDetail.push(`<b>第二層：</b>出生年被判為平氣背景。`);}const isUpperHalf=birthPhaseIndex<=2;const isTianXing=(!isExcess&&isUpperHalf&&KE[siTianEle]===yunEle);if(isTianXing){dynamicDetail.push(`<b>第三層（天刑氣伐）：</b>本臟極虛，司天偏實，子氣受累。（僅出生於上半年司天當令期間啟動；全年結構天刑請見異化欄）`);const specialKey=gan+zhi;if(DYNAMIC_CASES[specialKey]){const c=DYNAMIC_CASES[specialKey];dynamicDetail.push(`<b>案例校正：</b>${c.trigger} → <b>${c.result}</b>。${c.advice}`);}}return{baseWeakElement,primaryWeakOrgan,baseStrongElements:strongElements,weakElements,weakOrganDesc,strongOrganDesc,auditLevel:isTianXing?'第三層：複合弱臟（天刑校正）':'第一層：年干標準偏性',dynamicDetail,roleBreakdown,isExcess,tianXingActive:isTianXing,upperHalf:isUpperHalf,weakInfo,strongInfo};}
 
+/* 3.31.34：明確列出並遞迴凍結靜態資料表；這可防止意外修改，不是對 DevTools／已執行惡意程式的安全邊界。 */
+function deepFreeze(obj, seen=new WeakSet()){
+  if(obj===null || (typeof obj!=='object' && typeof obj!=='function')) return obj;
+  if(seen.has(obj)) return obj;
+  seen.add(obj);
+  for(const key of Reflect.ownKeys(obj)){
+    const value=obj[key];
+    if(value!==null && (typeof value==='object' || typeof value==='function')) deepFreeze(value,seen);
+  }
+  return Object.freeze(obj);
+}
+for(const table of [
+  GAN,
+  ZHI,
+  YUN_MAP,
+  HEAVEN_TO_QI,
+  QI_OPPOSITE,
+  ELEMENT_OF_QI,
+  ORGAN,
+  HOST_QI,
+  YUN_ORDER,
+  HOST_YUN_NAMES,
+  QI_PHASES,
+  SHENG,
+  KE,
+  ZHI_ELEMENT,
+  SUIHUI_POSITIONS,
+  LEI_SUIHUI_POSITIONS,
+  SI_ZHENG_POSITIONS,
+  ERA_NAMES,
+  GAN_HEHE,
+  GAN_YEARS_MAP,
+  PINGQI_MATRIX_60,
+  WANGBING_QIHUA,
+  WANGBING_DIZHI,
+  SUWEN_8,
+  ZHU_BU_YING_SAN_SHUO,
+  PING_MAI_SI_ZE,
+  SI_SE_SI_HOU,
+  QI_BEN_MAI,
+  SITIAN_ZAIQUAN_MAI,
+  GUEST_QI_TABLE,
+  SITIAN_MATRIX_BY_YEAR,
+  PATTERN_9,
+  SHENG_FU_TIME_RULE,
+  YU_FA_TIMING,
+  YU_FA_OMENS,
+  FIVE_YU_TREATMENT,
+  CLINICAL_PROTOCOL_3STEP,
+  FIVE_FLAVORS,
+  CONSTITUTION_PROFILES,
+  DYNAMIC_CASES,
+  SANYIN_FORMULAS,
+  SANYIN_QI_FORMULAS,
+  TEN_GAN_DETAILED_CONSTITUTION,
+  QI_TYPE_BY_ZHI_GROUP,
+  SPECIAL_DUAL_PATHOLOGY,
+  REPAIR_WINDOW,
+  CLINICAL_CAUTION_MATRIX,
+  YINYANG_25_PERSONS,
+  SHAPE_COLOR_RELATION,
+  XU_FENG_RULES,
+  SOUTH_NORTH_SYSTEMS,
+  SOUTH_NORTH_PULSE,
+  SIZE_REVERSE,
+  YIN_YANG_JIAO,
+  SIX_STEP_PULSE,
+  SOLAR_TERM_WINDOW,
+  WEIGHT,
+  FORTUNE_RELATION_LABELS,
+  SCENARIO,
+]) {
+  deepFreeze(table);
+}
+
 function calculate(){
+  const ids=['resultMeta','precisionNotice','summary','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'];
+  const snap=ids.map(id=>{const el=document.getElementById(id);return el?{innerHTML:el.innerHTML,hidden:!!el.hidden}:null;});
+  let ok=false;
+  try{ok=_calculateCore();}
+  finally{if(ok!==true)ids.forEach((id,i)=>{const el=document.getElementById(id),state=snap[i];if(el&&state){el.innerHTML=state.innerHTML;el.hidden=state.hidden;}});}
+  return ok;
+}
+function _calculateCore(){
+  const securityInputError=validateSecurityInputs();if(securityInputError){setFormError(securityInputError);return false;}
   ['summary','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
-  const birthDateInput=safeVal('birth','');const timeInput=safeVal('time','12:00');const targetYear=Number(safeVal('target','2026'));
+  const birthDateInput=safeVal('birth','');const timeInput=safeVal('time','12:00');const targetRaw=safeVal('target','');if(!/^\d+$/.test(String(targetRaw).trim())){setFormError('目標年份必須為整數（不接受小數、字母或空白）。');return false;}const targetYear=Number(targetRaw);
   CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));
   const bdate=new Date(`${birthDateInput}T${timeInput}:00+08:00`);
-  if(Number.isNaN(bdate.getTime())){alert('日期格式錯誤');return false;}
+  if(Number.isNaN(bdate.getTime())){setFormError('日期格式錯誤');return false;}
+  {const _by=Number(String(birthDateInput).split('-')[0]);if(!Number.isInteger(_by)||_by<1||_by>3000||!Number.isInteger(targetYear)||targetYear<1||targetYear>3000){setFormError('出生年份與目標年份須為 1–3000 之間的整數。');return false;}}
   const pulseObserved=safeVal('pulseObserved','none');const depEvidence=safeVal('depressionEvidence','none');const southNorthMode=safeVal('southNorthMode','wangbing');
   const by=sexagenaryYear(bdate);
   const exchangeAudit=approxExchangeAudit(by.year,by.gan,by.zhi);
@@ -1219,10 +1425,12 @@ function calculate(){
   const target={year:targetYear,gz:tgz,yunAnnual:tYunAnnual,siTian:targetSiTian,zaiQuan:targetZaiQuan,qi:tqi,phaseWindows:activeSixQiWindows(targetYear),yunWindows:activeFiveYunWindows(targetYear),hostYun:hostYunSequence(tgz.gan),guestYun:guestYunSequence(tgz.gan),exchangeAudit:targetExchangeAudit,shengfu:calcShengFu(ty[0],ty[1],{isTruePingQi:targetEras.isTruePingQi,isSecondaryPingQi:targetEras.isSecondaryPingQi,isPseudoPingQi:targetEras.isPseudoPingQi,hasWinEvidence:!targetEras.isTruePingQi&&!targetEras.isSecondaryPingQi&&!targetEras.isPseudoPingQi,guestHostOnly:false}),yufa:calcYuFaAudit(ty[0],ty[1],tSiEl,tZqEl,depEvidence==='yes'),eras:targetEras,hetero,homo,severity,southNorthMode};
   target.hostSteps=HOST_QI.map((q,i)=>{const j=guestHostJudgement(tqi[i],q);const w=target.phaseWindows[i];return{phase:QI_PHASES[i],host:q,guest:tqi[i],relation:relation(ELEMENT_OF_QI[tqi[i]],ELEMENT_OF_QI[q]),judgement:j,start:w.start,end:w.end};});
   target.southNorth=southNorthPulseFor(tgz.gan,tgz.zhi,southNorthMode,targetDate);
-  document.getElementById('resultMeta').innerHTML=`生辰 <b>${by.year}（${by.gz}）</b>｜目標 <b>${targetYear}（${tgz.gz}）</b>｜<span style="color:var(--accent-2)">WYLQ-Audit 3.31.24</span>`;
+  if(southNorthMode==='halfyear'){target.southNorthHalf={first:southNorthPulseFor(tgz.gan,tgz.zhi,southNorthMode,twDate(targetYear,3,1)),second:southNorthPulseFor(tgz.gan,tgz.zhi,southNorthMode,twDate(targetYear,10,1))};target.southNorth=target.southNorthHalf.first;}
+  document.getElementById('resultMeta').innerHTML=`出生所屬運氣年 <b>${fmtYear(by.year)}（${by.gz}）</b>｜目標 <b>${targetYear}（${tgz.gz}）</b>｜<span style="color:var(--accent-2)">WYLQ-Audit ${APP_VERSION}</span>`;
   try{
+    {const pn=document.getElementById('precisionNotice');if(pn){const txt=precisionNoticeText(by.year,targetYear);/* SAFETY: txt is generated only by precisionNoticeText() from numbers and fixed literals; never concatenate user-controlled text here. */pn.innerHTML=txt?('<b>ℹ 精度提示：</b>'+txt):'';pn.hidden=!txt;}}
     renderSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderChronicleSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);renderPulseBenMai(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderHerbDirection(birth);
-  }catch(renderErr){console.error('[WYLQ] 渲染錯誤：',renderErr);alert('渲染階段發生錯誤：'+(renderErr&&renderErr.message?renderErr.message:String(renderErr)));return false;}
+  }catch(renderErr){console.error('[WYLQ] 渲染失敗（E-CALC-002）：',renderErr);setFormError('推算未完成（錯誤代碼 E-CALC-002）。輸出生成時發生錯誤；技術細節已記錄於開發者主控台。');return false;}
   return true;
 }
 
@@ -1232,14 +1440,14 @@ function renderSummary(birth,target){
   const baseOrgan=birth.roles.baseWeak.map(w=>w.organ).join('、');
   const imprintOrgan=birth.roles.imprintWeak.length?birth.roles.imprintWeak.map(w=>w.organ).join('、'):'未達門檻';
   document.getElementById('summary').innerHTML=`
-    <div class="summary-group-label birth"><span class="dot"></span>◉ 出生稟賦（先天 · ${birth.by.year}）</div>
-    <div class="stat birth-stat"><span>出生年干支</span><strong>${birth.by.gz} 年</strong><small>${birth.by.year} · ${birth.yun.element}運${birth.yun.degree}</small></div>
+    <div class="summary-group-label birth"><span class="dot"></span>◉ 出生稟賦（先天運氣年 · ${fmtYear(birth.by.year)}）</div>
+    <div class="stat birth-stat"><span>出生年干支</span><strong>${birth.by.gz} 年</strong><small>${fmtYear(birth.by.year)} · ${birth.yun.element}運${birth.yun.degree}</small></div>
     <div class="stat birth-stat"><span>出生年紀名</span><strong>${birth.eras.finalName}之紀</strong><small>${birth.eras.eraClass}${birth.eras.pingQiSource?'｜平氣：'+birth.eras.pingQiSource:''}${birth.eras.homofication?'｜結構：'+birth.eras.homofication:''}</small></div>
     <div class="stat birth-stat"><span>出生年十級格局</span><strong style="color:${bsc}">${birth.severity.label}</strong><small>${birth.severity.patternName}</small></div>
     <div class="stat birth-stat"><span>出生年司天</span><strong style="font-size:14px;">${HEAVEN_TO_QI[birth.by.zhi]}</strong><small>主上半年</small></div>
     <div class="stat birth-stat"><span>出生年在泉</span><strong style="font-size:14px;">${QI_OPPOSITE[HEAVEN_TO_QI[birth.by.zhi]]}</strong><small>主下半年</small></div>
     <div class="stat birth-stat"><span>出生年南北政</span><strong style="color:var(--accent);">${birth.southNorth.effective?birth.southNorth.effective.pulse:'歲半分段'}</strong><small>${birth.southNorth.classification.politics}</small></div>
-    <div class="stat birth-stat"><span>歲運交司狀態</span><strong style="font-size:12.5px;">${birth.annualYun?birth.annualYun.state:'—'}</strong><small>歲運年干＝${birth.annualYun?birth.annualYun.gan:'—'}${birth.annualYun&&birth.annualYun.isPhaseShifted?'｜歲運較年界提前／延後（±13日交司）':''}</small></div>
+    <div class="stat birth-stat"><span>歲運交司狀態</span><strong style="font-size:12.5px;">${birth.annualYun?birth.annualYun.state:'—（未取得）'}</strong><small>歲運年干＝${birth.annualYun?birth.annualYun.gan:'—（未取得）'}${birth.annualYun&&birth.annualYun.isPhaseShifted?'｜歲運較年界提前／延後（±13日交司）':''}</small></div>
     <div class="summary-group-label birth sub"><span class="dot"></span>◈ 先天角色解析（統一解析器）</div>
     <div class="stat birth-stat"><span>年干基底弱臟（終身底色）</span><strong style="font-size:13px;color:var(--risk);">${baseOrgan}</strong><small>第一層（隱性）</small></div>
     <div class="stat birth-stat"><span>五要素烙印弱臟（當前顯性）</span><strong style="font-size:13px;color:var(--purple);">${imprintOrgan}</strong><small>第二層（加權後）</small></div>
@@ -1263,7 +1471,8 @@ function renderSummary(birth,target){
 }
 function renderAudit(birth,target){
   const lines=[];
-  lines.push(`<div class="title"><span>算法審計軌跡</span><span>WYLQ-Audit 3.31.25</span></div>`);
+  lines.push(`<div class="title"><span>算法審計軌跡</span><span>WYLQ-Audit ${APP_VERSION}</span></div>`);
+  const historyLines=[];
   lines.push(`<div>⓪ 時間／交司基準：<span class="hl4">${calcTimeModeLabel()}</span>｜年界與干德符交司審計採雙層時間軸：${CALC_TIME_MODE==='traditional-precision'?'年界＝大寒之日套歲支組傳統交司時辰；干德符同用該傳統交司時刻。':CALC_TIME_MODE==='astronomical'?'年界＝黃經300°大寒天文瞬間；干德符仍以歲支組傳統交司時刻取月／日／時干。':'年界＝固定1/21 00:00 速查近似；干德符審計仍取歲支組傳統交司時刻。'}</div>`);
   lines.push(`<div>① 出生年干：<span class="hl">${birth.by.gan}</span> → 歲運：<span class="hl">${birth.yun.element}${birth.yun.degree}</span><span class="src-classical"> [classical]</span></div>`);
   const thirdYunNote=['亥','卯','未'].includes(birth.by.zhi)?'芒種+11（亥卯未年）':'芒種+10';
@@ -1302,28 +1511,33 @@ function renderAudit(birth,target){
   lines.push(`<div>   • 強臟「我克」= <span class="hl2">+0.5</span>（強臟克後天氣被反侮 → 過亢得抑）</div>`);
   lines.push(`<div>   • 三檔警示：<span class="src-program">none / watch / warning</span>；warning 含凶性臟腑 + 過矯（normalized > +0.6）</div>`);
   lines.push(`<div>   • 干德符月干：<span class="hl3">真實月柱</span>（上一年年干推丑月）</div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.2]</span> 主運回歸大寒起；跨年邊界改用下一年歲支組時刻；五要素去重；六步改用 normalizedScore</div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.4]</span> 歲運狀態機跨年三年掃描修正；平氣三層標籤拆解；patternClassOf 補平氣局；歲運交司邊界說明</div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.5]</span> 主運/六氣時間軸改為依太陽黃經精確交司：<span class="hl2">主運</span>（大寒、春分+13、芒種+10、處暑+7、立冬+4）；<span class="hl2">六氣</span>（大寒300°、春分0°、小滿60°、大暑120°、秋分180°、小雪240°）</div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.7]</span> 五要素烙印：三之氣/終之氣司天/在泉疊加 ×1.5（與六步 merged:1.5 一致）；觸發閾值改為「總權重過半」動態判定；五氣分布顯示分數；UI 加註量綱說明</div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.7]</span> 干德符限陰年不及；干德符下游真正進入平氣分類；勝復 active 狀態機（正平氣／勝氣證據／客主之氣分閘）；亥卯未三運 +11；halfyear 年初邊界修正；timeMode 切換失效確認；強臟我克文字＋程序量化標記</div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.9]</span> 修正：①時間欄位固定 UTC+8（排除 Intl 台灣歷史夏令時間／LMT 偏移）；②五要素烙印「出生客氣」非疊加時權重 0→1（原版列為有效票卻不計票，且誤顯示「含 1 項疊加×1.5」）；③歲運交司 isOverlap 改與運氣年(大寒起算)比對，原版以日曆年比對造成大寒前誤報、真過渡窗反而漏報；④節氣精度文字 ±1→±10 分鐘；⑤出生年限制 1–3000</div>`);
-lines.push(`<div>   • <span class="hl3">[3.31.11]</span> 修正：①互動分析強臟統一使用 sixStepStrong；②移除未被呼叫的 activeMonthBranch 及其僅供該函式使用的月令輔助碼；③handleSubmit 補出生年 1–3000 二次驗證；④補充干德符月／日／時干任一合干的審計取捨說明。<span class="src-program"> [defensive / audit provenance]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.11]</span> 語義與精度範圍校正：①活躍 UI 的「過半」統一明確為「至少半數（≥50%）」；②節氣時刻改採條件性近似精度聲明，不對公元 1–3000 年全域宣稱 ±10 分鐘；③補充遠古／遠未來受 ΔT 等時間尺度因素、地球自轉不均與簡化黃經模型限制；④正式區分 classical 經典結構／資料層、imprint 五要素烙印層與 program_synthesis 程序量化／模型假設層，不將數值權重解讀為《內經》原典明文。<span class="src-program"> [audit scope / model provenance]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.12]</span> 維護與一致性修正：①確認 activeMonthBranch 及其月令輔助路徑已於上一版移除，本版不重複處理；②移除經全檔引用掃描確認僅有宣告、無任何呼叫者的 fmt 與 QI_TYPE_TO_ELEMENT_BIAS 死代碼；③exactExchangeAudit 加入記憶化，避免同次 calculate() 對相同（年／干／支）重複搜尋大寒；④互動、藥物方向、臨床提示統一取 sixStepStrong；⑤復氣與三因司天方顯示加入防禦性 null 保護；⑥特異體質門檻文字明確為 max(2, 總權重半數)。<span class="src-program"> [maintenance / defensive]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.14]</span> 模型規格封閉：①原「precision」正式定義為「傳統交司精確近似」並保留舊值 compatibility normalization；②新增「純天文黃經年界」模式，年界直接採黃經300°大寒天文瞬間；③年界時間軸與干德符／歲運交司傳統審計時間軸正式分流；④五運／六氣首尾窗口與 regimeYear 統一由 activeAnnualBoundaryDate 決定；⑤annualYunPhase 明確保留傳統交司時刻，作為獨立歲運交司狀態軸，不與主運／運氣年年界強制同步；⑥移除全檔掃描確認無呼叫者的 exactYunStart 死代碼；⑦ exactExchangeAudit cache 於本版採64條上限、超限清空；後續3.31.15改為有序淘汰設計；⑧保留「資料速查基準」原有固定1/21行為；⑨ UI／審計軌跡明示三種基準、雙層時間軸及 astronomical 模式下可能的時點錯開。<span class="src-program"> [model contract / maintenance / backward compatibility]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.15]</span> 工程性維護：①exactExchangeAudit cache 改為 512 條 LRU 式有序淘汰，命中時更新新近順序，避免「滿64條即全清」造成批次掃描鋸齒式重算；②findSolarTerm 加入 targetDeg 有限數值防護，拒絕 null／NaN／非數字等非預期輸入；③歲運過渡 UI 改採中性措辭「較年界提前／延後」，不再以「錯開」暗示異常。未改變既有三模式核心數學規則。<span class="src-program"> [defensive / performance / wording-only]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.16]</span> 文字與防禦性維護：①出生區歲運交司說明改採中性「歲運提前／延後交司」措辭；②編年表移除孤立「⚠」並改為同步／提前／延後語義標記；③WANGBING_QIHUA／WANGBING_DIZHI 與 SUWEN_8 改由既有資料陣列驅動可見文獻對照內容；移除僅作彙整、無程式讀取的 WANGBING_REPORTED；④exactExchangeAudit cache 命中改用 Map.has()，不依賴快取值 truthiness。未改變三模式核心計算規則。<span class="src-program"> [maintenance / wording / defensive]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.17]</span> 發布維護：修正算法審計軌跡標題版本號；補齊上一版審計條目語句分號；未改變任何核心運算、時間軸或既有資料表。<span class="src-program"> [maintenance / release]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.18]</span> 邏輯維護：①確立 Matrix30 場景框強臟來源應統一取 <code>sixStepStrong</code>；②normalizedScore 在精確 ±0.5 邊界採閉區間判定（≥+0.5 吉、≤−0.5 凶）；③干德符交司審計移除數學上不可能命中的「月干」合干實際命中分支，保留真實月柱欄位作審計展示；④<code>traditional-precision</code> 與天文大寒瞬間可能存在時刻先後差，仍依既定模型 A 保留傳統歲支交司時間軸，不在本版擅改年界。<span class="src-program"> [maintenance / boundary / audit]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.19]</span> 文件一致性維護：①實際落實 Matrix30 場景框強臟來源改取 <code>sixStepStrong</code>；②修正 3.31.17／3.31.18 歷史審計標籤；③更新④d 干德符取捨說明，使其與現行日干／時干命中邏輯一致。<span class="src-program"> [maintenance / audit consistency]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.20]</span> 版本一致性維護：①同步輸入介面 eyebrow 與開始／結束 console.log 版本標識；②同步摘要中的「六步強臟集合」語義標籤；未改變任何核心運算、時間軸或資料表。<span class="src-program"> [maintenance / version / wording-only]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.21]</span> 邏輯與防禦維護：①annualYunPhase 新增 <code>isPhaseShifted</code> 與方向欄位，明確表示獨立歲運時間軸與運氣年年界的相位差，保留 <code>isOverlap</code> 作相容別名；②勝復閘門不再把次平氣／偽平氣自動視為「已有勝氣證據」，正／次／偽平氣均不自動啟動階段復氣；③王冰報表拆為 6 年齊化組與 10 年地支組資料陣列，顯示值不變；④confirmBirthData 的暫時 CALC_TIME_MODE 切換改以 try/finally 保證例外時恢復原模式；未改變三模式年界定義與其餘核心運算規則。<span class="src-program"> [maintenance / semantic / defensive]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.22]</span> 語義一致性維護：①階段復氣相關 UI／審計說明同步為「非平氣年且有勝氣證據」；②歲運相位差說明改以「運氣年年界」為基準，不再將其誤稱為與主運切換的差異；③保留 <code>annualYunPhase</code>、三模式年界、六步量化與既有資料表不變。<span class="src-program"> [maintenance / wording / semantic]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.23]</span> 一致性維護：①同步當前版本標識至 3.31.23；②將階段復氣說明中的歷史版本標記改為「自 3.31.21 起」，避免誤認為當前版本；③出生區歲運相位差文字改為直接顯示實際 <code>phaseShiftDirection</code>；④移除僅作彙整且無程式讀取的 <code>WANGBING_REPORTED</code>，保留其兩組來源陣列與既有可見文獻內容；未改變核心運算、時間軸或資料表語義。<span class="src-program"> [maintenance / wording / dead-code cleanup]</span></div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.24]</span> 深度審計封閉：①確認 calcYuFaAudit 現行五行克制環下兩候選條件互斥，保留首候選僅作未來規格擴展相容；②對五要素烙印新增並列最大元素之審計欄位，但不改既有 dominantElement 取值；③明示 calcThreeEras「正歲會」優先於同化之既有結構優先序；④未改變 halfyear 6/15 代理、findSolarTerm 模型、南北政模式或任何核心量化規則。<span class="src-program"> [audit / documentation / no-core-model-change]</span></div>
-  <div class="dim">—— 層級標記：<span class="src-classical">classical</span>＝古典結構／經典資料；<span class="src-imprint">imprint</span>＝五要素烙印；<span class="src-program">program_synthesis</span>＝程序量化／模型假設；數值權重與閾值不主張為《內經》原典明文。</div>`);
-  lines.push(`<div>   • <span class="hl3">[3.31.25]</span> 審計封閉維護：①確認 3.31.24 <code>renderAudit</code> 末端層級標記為同一模板字面量的跨行續接，非 SyntaxError，不作假修復；②將目標年份格式驗證收斂為非負整數輸入，與後續 1–3000 邊界判定一致；③未改變任何核心五運六氣、時間軸、權重或資料表規則。<span class="src-program"> [audit / defensive / maintenance-only]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.2]</span> 主運回歸大寒起；跨年邊界改用下一年歲支組時刻；五要素去重；六步改用 normalizedScore</div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.4]</span> 歲運狀態機跨年三年掃描修正；平氣三層標籤拆解；patternClassOf 補平氣局；歲運交司邊界說明</div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.5]</span> 主運/六氣時間軸改為依太陽黃經精確交司：<span class="hl2">主運</span>（大寒、春分+13、芒種+10、處暑+7、立冬+4）；<span class="hl2">六氣</span>（大寒300°、春分0°、小滿60°、大暑120°、秋分180°、小雪240°）</div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.7]</span> 五要素烙印：三之氣/終之氣司天/在泉疊加 ×1.5（與六步 merged:1.5 一致）；觸發閾值改為「總權重過半」動態判定；五氣分布顯示分數；UI 加註量綱說明</div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.7]</span> 干德符限陰年不及；干德符下游真正進入平氣分類；勝復 active 狀態機（正平氣／勝氣證據／客主之氣分閘）；亥卯未三運 +11；halfyear 年初邊界修正；timeMode 切換失效確認；強臟我克文字＋程序量化標記</div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.9]</span> 修正：①時間欄位固定 UTC+8（排除 Intl 台灣歷史夏令時間／LMT 偏移）；②五要素烙印「出生客氣」非疊加時權重 0→1（原版列為有效票卻不計票，且誤顯示「含 1 項疊加×1.5」）；③歲運交司 isOverlap 改與運氣年(大寒起算)比對，原版以日曆年比對造成大寒前誤報、真過渡窗反而漏報；④節氣精度文字 ±1→±10 分鐘；⑤出生年限制 1–3000</div>`);
+historyLines.push(`<div>   • <span class="hl3">[3.31.11]</span> 修正：①互動分析強臟統一使用 sixStepStrong；②移除未被呼叫的 activeMonthBranch 及其僅供該函式使用的月令輔助碼；③handleSubmit 補出生年 1–3000 二次驗證；④補充干德符月／日／時干任一合干的審計取捨說明。<span class="src-program"> [defensive / audit provenance]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.11]</span> 語義與精度範圍校正：①活躍 UI 的「過半」統一明確為「至少半數（≥50%）」；②節氣時刻改採條件性近似精度聲明，不對公元 1–3000 年全域宣稱 ±10 分鐘；③補充遠古／遠未來受 ΔT 等時間尺度因素、地球自轉不均與簡化黃經模型限制；④正式區分 classical 經典結構／資料層、imprint 五要素烙印層與 program_synthesis 程序量化／模型假設層，不將數值權重解讀為《內經》原典明文。<span class="src-program"> [audit scope / model provenance]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.12]</span> 維護與一致性修正：①確認 activeMonthBranch 及其月令輔助路徑已於上一版移除，本版不重複處理；②移除經全檔引用掃描確認僅有宣告、無任何呼叫者的 fmt 與 QI_TYPE_TO_ELEMENT_BIAS 死代碼；③exactExchangeAudit 加入記憶化，避免同次 calculate() 對相同（年／干／支）重複搜尋大寒；④互動、藥物方向、臨床提示統一取 sixStepStrong；⑤復氣與三因司天方顯示加入防禦性 null 保護；⑥特異體質門檻文字明確為 max(2, 總權重半數)。<span class="src-program"> [maintenance / defensive]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.14]</span> 模型規格封閉：①原「precision」正式定義為「傳統交司精確近似」並保留舊值 compatibility normalization；②新增「純天文黃經年界」模式，年界直接採黃經300°大寒天文瞬間；③年界時間軸與干德符／歲運交司傳統審計時間軸正式分流；④五運／六氣首尾窗口與 regimeYear 統一由 activeAnnualBoundaryDate 決定；⑤annualYunPhase 明確保留傳統交司時刻，作為獨立歲運交司狀態軸，不與主運／運氣年年界強制同步；⑥移除全檔掃描確認無呼叫者的 exactYunStart 死代碼；⑦ exactExchangeAudit cache 於本版採64條上限、超限清空；後續3.31.15改為有序淘汰設計；⑧保留「資料速查基準」原有固定1/21行為；⑨ UI／審計軌跡明示三種基準、雙層時間軸及 astronomical 模式下可能的時點錯開。<span class="src-program"> [model contract / maintenance / backward compatibility]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.15]</span> 工程性維護：①exactExchangeAudit cache 改為 512 條 LRU 式有序淘汰，命中時更新新近順序，避免「滿64條即全清」造成批次掃描鋸齒式重算；②findSolarTerm 加入 targetDeg 有限數值防護，拒絕 null／NaN／非數字等非預期輸入；③歲運過渡 UI 改採中性措辭「較年界提前／延後」，不再以「錯開」暗示異常。未改變既有三模式核心數學規則。<span class="src-program"> [defensive / performance / wording-only]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.16]</span> 文字與防禦性維護：①出生區歲運交司說明改採中性「歲運提前／延後交司」措辭；②編年表移除孤立「⚠」並改為同步／提前／延後語義標記；③WANGBING_QIHUA／WANGBING_DIZHI 與 SUWEN_8 改由既有資料陣列驅動可見文獻對照內容；移除僅作彙整、無程式讀取的 WANGBING_REPORTED；④exactExchangeAudit cache 命中改用 Map.has()，不依賴快取值 truthiness。未改變三模式核心計算規則。<span class="src-program"> [maintenance / wording / defensive]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.17]</span> 發布維護：修正算法審計軌跡標題版本號；補齊上一版審計條目語句分號；未改變任何核心運算、時間軸或既有資料表。<span class="src-program"> [maintenance / release]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.18]</span> 邏輯維護：①確立 Matrix30 場景框強臟來源應統一取 <code>sixStepStrong</code>；②normalizedScore 在精確 ±0.5 邊界採閉區間判定（≥+0.5 吉、≤−0.5 凶）；③干德符交司審計移除數學上不可能命中的「月干」合干實際命中分支，保留真實月柱欄位作審計展示；④<code>traditional-precision</code> 與天文大寒瞬間可能存在時刻先後差，仍依既定模型 A 保留傳統歲支交司時間軸，不在本版擅改年界。<span class="src-program"> [maintenance / boundary / audit]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.19]</span> 文件一致性維護：①實際落實 Matrix30 場景框強臟來源改取 <code>sixStepStrong</code>；②修正 3.31.17／3.31.18 歷史審計標籤；③更新④d 干德符取捨說明，使其與現行日干／時干命中邏輯一致。<span class="src-program"> [maintenance / audit consistency]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.20]</span> 版本一致性維護：①同步輸入介面 eyebrow 與開始／結束 console.log 版本標識；②同步摘要中的「六步強臟集合」語義標籤；未改變任何核心運算、時間軸或資料表。<span class="src-program"> [maintenance / version / wording-only]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.21]</span> 邏輯與防禦維護：①annualYunPhase 新增 <code>isPhaseShifted</code> 與方向欄位，明確表示獨立歲運時間軸與運氣年年界的相位差，保留 <code>isOverlap</code> 作相容別名；②勝復閘門不再把次平氣／偽平氣自動視為「已有勝氣證據」，正／次／偽平氣均不自動啟動階段復氣；③王冰報表拆為 6 年齊化組與 10 年地支組資料陣列，顯示值不變；④confirmBirthData 的暫時 CALC_TIME_MODE 切換改以 try/finally 保證例外時恢復原模式；未改變三模式年界定義與其餘核心運算規則。<span class="src-program"> [maintenance / semantic / defensive]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.22]</span> 語義一致性維護：①階段復氣相關 UI／審計說明同步為「非平氣年且有勝氣證據」；②歲運相位差說明改以「運氣年年界」為基準，不再將其誤稱為與主運切換的差異；③保留 <code>annualYunPhase</code>、三模式年界、六步量化與既有資料表不變。<span class="src-program"> [maintenance / wording / semantic]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.23]</span> 一致性維護：①同步當前版本標識至 3.31.23；②將階段復氣說明中的歷史版本標記改為「自 3.31.21 起」，避免誤認為當前版本；③出生區歲運相位差文字改為直接顯示實際 <code>phaseShiftDirection</code>；④移除僅作彙整且無程式讀取的 <code>WANGBING_REPORTED</code>，保留其兩組來源陣列與既有可見文獻內容；未改變核心運算、時間軸或資料表語義。<span class="src-program"> [maintenance / wording / dead-code cleanup]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.24]</span> 深度審計封閉：①確認 calcYuFaAudit 現行五行克制環下兩候選條件互斥，保留首候選僅作未來規格擴展相容；②對五要素烙印新增並列最大元素之審計欄位，但不改既有 dominantElement 取值；③明示 calcThreeEras「正歲會」優先於同化之既有結構優先序；④未改變 halfyear 6/15 代理、findSolarTerm 模型、南北政模式或任何核心量化規則。<span class="src-program"> [audit / documentation / no-core-model-change]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.25]</span> 審計封閉維護：①確認 3.31.24 <code>renderAudit</code> 末端層級標記為同一模板字面量的跨行續接，非 SyntaxError，不作假修復；②將目標年份格式驗證收斂為非負整數輸入，與後續 1–3000 邊界判定一致；③未改變任何核心五運六氣、時間軸、權重或資料表規則。<span class="src-program"> [audit / defensive / maintenance-only]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.27]</span> 合併修正版：①結果頁新增常駐安全聲明；②歲半前後模式之目標年改並列歲半前／後兩組；③節氣黃經加入 ΔT 修正、新增年代精度提示，並為 findSolarTerm 加入快取；④五運／六氣時間窗無匹配時改為明確報錯，不再靜默回退；⑤calculate 失敗時還原先前結果、錯誤僅提示一次，並補年份範圍驗證；⑥並列最大元素提示、annualYun 空值措辭、歲運 note 重複字樣、版本字串統一（APP_VERSION）；⑦CSS：.dim、sixstep-grid 窄螢幕、-webkit-backdrop-filter、列印樣式。⑧時間窗改為「恰好匹配一個」並檢查區間有效性；⑨錯誤改以表單內行內提示（role=alert）取代 alert()；⑩歷史維護紀錄預設收合；⑪版本字串全數由 APP_VERSION 統一寫入；⑫歲半前結果直接取 first。未刪減任何既有功能、推演規則或資料表。<span class="src-program"> [correctness / defensive / no-rule-removal]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.28]</span> 防禦性修補：①節氣快取改為真正 LRU，命中時更新最近使用順序；②五運／六氣階段函式移除嚴格匹配後的死碼；③全頁出生運氣年顯示統一使用 fmtYear；④歲半前／後分別執行尺寸反與陰陽交矩陣匹配；⑤計算回滾同時恢復 precisionNotice.hidden；⑥層級標記移出預設收合的歷史紀錄；⑦直接呼叫計算核心時拒絕空白目標年；⑧異常訊息不再直接向使用者洩漏內部例外文字；⑨ΔT 精度提示採分層保守措辭；⑩移除用於去重提示的全域 _calcAlerted 旗標，改以行內錯誤文字判斷是否需補預設訊息。未修改五運六氣權重及既有資料表。<span class="src-program"> [defensive / display / audit consistency]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.34]</span> 安全加固：① CSP 新增 <code>script-src-attr 'none'</code>；②唯一 <code>style</code> 區塊以 SHA-256 白名單限制，保留既有 style attributes 與舊版 fallback；③提交／返回事件處理器改為局部常數；④清理資料表凍結迴圈的無效 typeof 守衛；⑤補充 precisionNotice 的 HTML 輸出安全註解。未改變核心運算規則、資料表與時間軸。<span class="src-program"> [security / no-model-change]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.31.35]</span> 發佈前安全維護：①核對最終 script／style 的 UTF-8 SHA-256 與 CSP meta 值逐位相符，並將 hash 正負向回歸測試納入 CI；②新增啟動警示，僅在 CSP 核准的主程式開始執行後移除，避免雜湊失配時介面靜默無反應；③將出生日期／時間／時間基準檢查抽成 <code>validateBirthInputs</code>，確認出生資料不再依賴目標年份，完整枚舉與目標年份仍由計算核心驗證；④註明 style attributes 僅應接收內部固定值，動態外觀優先使用 allowlisted CSS classes；⑤不凍結內建原型、不使用 HTML 內自雜湊，避免造成相容性風險或錯把同檔案提供的雜湊當成獨立信任根。未修改五運六氣運算公式、權重、資料表及時間軸。<span class="src-program"> [security / release-verification / no-model-change]</span></div>`);
+  lines.push(`<div class="dim">—— 層級標記：<span class="src-classical">classical</span>＝古典結構／經典資料；<span class="src-imprint">imprint</span>＝五要素烙印；<span class="src-program">program_synthesis</span>＝程序量化／模型假設；數值權重與閾值不主張為《內經》原典明文。</div>`);
+  lines.push(`<details class="audit-history"><summary>開發者版本維護紀錄（${historyLines.length} 項，預設收合）</summary>${historyLines.join('')}</details>`);
   document.getElementById('auditLog').innerHTML=lines.join('');
 }
 function renderBirthSection(birth){
@@ -1527,7 +1741,7 @@ function renderSpecialDualPathologySection(birth){
 }
 function renderMatrix30Section(birth,target){
   const birthKey=birth.by.gz;const targetKey=target.gz.gz;const isCrossYear=target.year!==birth.by.year;
-  const targetResult=isCrossYear?matchPattern9(birth,target,SCENARIO.CROSS_YEAR):{matches:[],scenario:SCENARIO.TARGET_ONLY,note:'目標年與出生年相同，無跨年對照。'};
+  const targetResult=isCrossYear?matchPattern9(birth,target,SCENARIO.CROSS_YEAR):{matches:[],scenario:SCENARIO.SELF_REFERENCE,note:'目標年與出生年相同，無跨年對照。'};
   const birthPhaseIdx=birth.phase.index;const isUpperHalfBirth=birthPhaseIdx<=2;
   const birthHostQi=HOST_QI[birthPhaseIdx];const birthGuestQiAtMoment=birth.guestQi[birthPhaseIdx];
   const birthSelfHtml=`
@@ -1537,7 +1751,7 @@ function renderMatrix30Section(birth,target){
     </div>
     <div class="scenario-box"><div class="sc-title">🕐 出生時點氣位（${isUpperHalfBirth?'上半年':'下半年'}）</div>
       <div class="sc-row"><b>時點主運：</b>${HOST_YUN_NAMES[birth.fivePhase.index]}</div>
-      <div class="sc-row"><b>歲運交司：</b>${birth.annualYun?birth.annualYun.state:'—'}（年干＝${birth.annualYun?birth.annualYun.gan:'—'}）</div>
+      <div class="sc-row"><b>歲運交司：</b>${birth.annualYun?birth.annualYun.state:'—（未取得）'}（年干＝${birth.annualYun?birth.annualYun.gan:'—（未取得）'}）</div>
       <div class="sc-row"><b>時點氣位：</b>${QI_PHASES[birthPhaseIdx]}</div>
       <div class="sc-row"><b>時點主氣：</b>${birthHostQi}（${ELEMENT_OF_QI[birthHostQi]}）</div>
       <div class="sc-row"><b>時點客氣：</b>${birthGuestQiAtMoment}（${ELEMENT_OF_QI[birthGuestQiAtMoment]}）${birthPhaseIdx===2||birthPhaseIdx===5?'<span class="tag dup" style="margin-left:6px;">同司天/在泉·疊加已計入（客氣不另計）</span>':''}</div>
@@ -1568,7 +1782,7 @@ function renderMatrix30Section(birth,target){
     <div class="notice"><b>3.31.8 平氣標籤（方藥中原著對齊）：</b>戊辰/戊戌/庚寅標「正平氣（齊化）」；丁巳/乙卯標「天符·同化正平氣」；己酉標「小逆（次平氣）」；己卯標「小逆（偽平氣·兼化）」；癸巳/癸卯/癸酉/庚子/庚午依原著單列。色票判定：<b>先判平氣，再判天符</b>（避免「天符·同化正平氣」被誤歸天符色）。</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;">
       <div style="padding:16px;border:1.5px solid var(--accent-2);border-radius:14px;background:#fffaf0;">
-        <h3 style="margin-top:0;">出生年 ${birthKey}（${birth.by.year}）</h3>
+        <h3 style="margin-top:0;">出生所屬運氣年 ${birthKey}（${fmtYear(birth.by.year)}）</h3>
         ${SITIAN_MATRIX_BY_YEAR[birthKey]?`<div><b>司天：</b>${SITIAN_MATRIX_BY_YEAR[birthKey].si}｜<b>在泉：</b>${SITIAN_MATRIX_BY_YEAR[birthKey].zq}</div><div style="margin-top:6px;"><b>格局：</b>${SITIAN_MATRIX_BY_YEAR[birthKey].pattern}</div>`:''}
         ${birthSelfHtml}
       </div>
@@ -1613,7 +1827,7 @@ function renderPattern9Section(birth,target){
   const patternHtml=PATTERN_9.map(p=>{const m=matches.find(x=>x.code===p.code);return `<div class="interaction-row"${m?' style="background:#fdf8ef;border-left:3px solid var(--green);"':''}><div class="interaction-head"><span class="interaction-title">${p.name}</span><span class="tag ${m?'good':'warn'}">${m?'★ 本盤命中':'未命中'}</span></div><div class="interaction-body"><b>條件：</b>${p.cond}<br><b>機制：</b>${p.mechanism}<br><b>預後：</b>${p.outcome}<br><b>調養：</b>${p.advice}${m?`<div class="hit-card" style="margin-top:8px;"><h4>▶ 本盤判定</h4>${m.reason}</div>`:''}</div></div>`;}).join('');
   document.getElementById('pattern9Section').innerHTML=`
     <h2>十、9大交互模式（三氣層）</h2>
-    <div class="notice"><b>當前場景：</b>${isCrossYear?`跨年對照（${birth.by.year} × ${target.year}）`:'出生年自身對照'}。<br><b>本盤命中：</b>${matches.length} 個模式${result.note?`<br><span style="color:var(--warn);">${result.note}</span>`:''}<br><b>邊界說明：</b>九模式只判斷歲運、司天、在泉三者（使用年干基底弱臟集合）；六步動態見「六步逐氣吉凶」（使用六步弱臟集合）。<b>3.31.8 明示：兩模組各取所需，不強制統一。</b></div>
+    <div class="notice"><b>當前場景：</b>${isCrossYear?`跨年對照（${fmtYear(birth.by.year)} × ${target.year}）`:'出生年自身對照'}。<br><b>本盤命中：</b>${matches.length} 個模式${result.note?`<br><span style="color:var(--warn);">${result.note}</span>`:''}<br><b>邊界說明：</b>九模式只判斷歲運、司天、在泉三者（使用年干基底弱臟集合）；六步動態見「六步逐氣吉凶」（使用六步弱臟集合）。<b>3.31.8 明示：兩模組各取所需，不強制統一。</b></div>
     <h3>先天元素集合（九模式視角）</h3>${sumHtml}
     <h3>九模式逐項判定</h3>${patternHtml}`;
 }
@@ -1691,7 +1905,7 @@ function renderChronicleSection(birth,target){
   document.getElementById('chronicleSection').innerHTML=`
     <h2>十五、編年對照</h2>
     <div class="chronicle-grid">
-      <div class="chronicle-card birth"><span class="chron-badge birth">出生</span><h3>${birth.by.year} 年（${birth.by.gz}）</h3><div class="chronicle-main">${birth.yun.element}運${birth.yun.degree}</div><div class="chronicle-note">${birth.eras.finalType}｜${birth.eras.finalName}之紀${birth.eras.homofication?'｜結構：'+birth.eras.homofication:''}</div><div class="chronicle-note">司天：${HEAVEN_TO_QI[birth.by.zhi]}｜在泉：${QI_OPPOSITE[HEAVEN_TO_QI[birth.by.zhi]]}</div><div class="chronicle-note">時點主運：${HOST_YUN_NAMES[birth.fivePhase.index]}｜歲運交司：${birth.annualYun?birth.annualYun.state:'—'}${birth.annualYun&&birth.annualYun.isPhaseShifted?'（歲運提前／延後交司）':'（與年界同步）'}｜時點氣位：${QI_PHASES[birth.phase.index]}</div></div>
+      <div class="chronicle-card birth"><span class="chron-badge birth">出生</span><h3>出生運氣年 ${fmtYear(birth.by.year)}${birth.by.year>=1?' 年':''}（${birth.by.gz}）</h3><div class="chronicle-main">${birth.yun.element}運${birth.yun.degree}</div><div class="chronicle-note">${birth.eras.finalType}｜${birth.eras.finalName}之紀${birth.eras.homofication?'｜結構：'+birth.eras.homofication:''}</div><div class="chronicle-note">司天：${HEAVEN_TO_QI[birth.by.zhi]}｜在泉：${QI_OPPOSITE[HEAVEN_TO_QI[birth.by.zhi]]}</div><div class="chronicle-note">時點主運：${HOST_YUN_NAMES[birth.fivePhase.index]}｜歲運交司：${birth.annualYun?birth.annualYun.state:'—'}${!birth.annualYun?'（未取得）':birth.annualYun.isPhaseShifted?'（歲運提前／延後交司）':'（與年界同步）'}｜時點氣位：${QI_PHASES[birth.phase.index]}</div></div>
       <div class="chronicle-card target"><span class="chron-badge target">目標</span><h3>${target.year} 年（${target.gz.gz}）</h3><div class="chronicle-main">${target.yunAnnual.element}運${target.yunAnnual.degree}</div><div class="chronicle-note">${target.eras.finalType}｜${target.eras.finalName}之紀</div><div class="chronicle-note">司天：${target.siTian}｜在泉：${target.zaiQuan}</div><div class="chronicle-note">嚴重度：${target.severity.label}</div></div>
     </div>`;
 }
@@ -1872,36 +2086,41 @@ function renderSouthNorth(birth,target,pulseObserved,mode){
   else if(pulseObserved==='single-part'){obsJudge='<div class="notice" style="border-left-color:var(--warn);">ℹ️ 單部不應／單部反應，屬非反非交。</div>';}
   else if(pulseObserved==='excess-rapid'){obsJudge='<div class="notice" style="border-left-color:var(--risk);">🚨 不應反見暴數洪實，危重病脈。</div>';}
   else if(pulseObserved==='renying-cunkou'){obsJudge='<div class="notice" style="border-left-color:var(--risk);">🚨 人迎—寸口比例異常（溢陽／溢陰／關格）。</div>';}
-  const targetPolitics=tSN.classification.politics;const targetKey=tSN.classification.key;
-  const targetMatchLabel=`${targetPolitics}${targetKey}年`;
-  const sizeReverseMatch=SIZE_REVERSE.filter(x=>x.year===targetMatchLabel);
-  const yinYangJiaoMatch=YIN_YANG_JIAO.filter(x=>x.year===targetMatchLabel);
-  const isSizeReverseTarget=(targetKey==='子午'||targetKey==='卯酉');
-  const isYinYangJiaoTarget=(targetKey==='巳亥'||targetKey==='寅申'||targetKey==='丑未'||targetKey==='辰戌');
-  const matchSummary=`<div class="notice" style="background:#eaf3ec;border-left-color:var(--green);font-size:12.5px;"><b>目標年命中：</b>${targetMatchLabel} → 病理反型 <b>${tSN.reverseType}</b>（${isSizeReverseTarget?'尺寸反類':isYinYangJiaoTarget?'陰陽交類':'—'}）</div><div class="notice" style="background:#f7f4ec;border-left-color:var(--muted);font-size:11.5px;margin-top:6px;">⚠ 本矩陣顯示的是「歲氣結構上可能出現的反型」，是否真正形成死候仍須依<b>實測脈象</b>與四診綜合判斷。歲半模式目前以目標年 6/15 為代理日期，判定為北政。</div>`;
-  const sizeReverseTable=isSizeReverseTarget?`<h4>尺寸反（上下易位 · 目標年命中）</h4><div class="table-wrap"><table><tr><th>類型</th><th>常態</th><th>反象</th></tr>${sizeReverseMatch.map(x=>`<tr style="background:#fdf8ef;font-weight:700;"><td>${x.year} <span class="tag good">★ 命中</span></td><td>${x.normal}</td><td>${x.reverse}</td></tr>`).join('')}</table></div><details style="margin-top:8px;"><summary style="padding:8px 12px;background:#fdf8ef;border-radius:8px;font-weight:700;color:var(--muted);font-size:12.5px;">▶ 展開完整尺寸反 4 種可能</summary><div class="table-wrap" style="margin-top:8px;"><table><tr><th>類型</th><th>常態</th><th>反象</th></tr>${SIZE_REVERSE.map(x=>`<tr${x.year===targetMatchLabel?' style="background:#fdf8ef;font-weight:700;"':''}><td>${x.year}${x.year===targetMatchLabel?' ★':''}</td><td>${x.normal}</td><td>${x.reverse}</td></tr>`).join('')}</table></div></details>`:'';
-  const yinYangJiaoTable=isYinYangJiaoTarget?`<h4>陰陽交（左右易位 · 目標年命中）</h4><div class="table-wrap"><table><tr><th>類型</th><th>常態</th><th>反象</th></tr>${yinYangJiaoMatch.map(x=>`<tr style="background:#fdf8ef;font-weight:700;"><td>${x.year} <span class="tag good">★ 命中</span></td><td>${x.normal}</td><td>${x.reverse}</td></tr>`).join('')}</table></div><details style="margin-top:8px;"><summary style="padding:8px 12px;background:#fdf8ef;border-radius:8px;font-weight:700;color:var(--muted);font-size:12.5px;">▶ 展開完整陰陽交 8 種可能</summary><div class="table-wrap" style="margin-top:8px;"><table><tr><th>類型</th><th>常態</th><th>反象</th></tr>${YIN_YANG_JIAO.map(x=>`<tr${x.year===targetMatchLabel?' style="background:#fdf8ef;font-weight:700;"':''}><td>${x.year}${x.year===targetMatchLabel?' ★':''}</td><td>${x.normal}</td><td>${x.reverse}</td></tr>`).join('')}</table></div></details>`:'';
+  const renderPathologyMatrix=(sn,periodLabel)=>{
+    const politics=sn.classification.politics,key=sn.classification.key;
+    const matchLabel=`${politics}${key}年`;
+    const sizeMatch=SIZE_REVERSE.filter(x=>x.year===matchLabel);
+    const yinYangMatch=YIN_YANG_JIAO.filter(x=>x.year===matchLabel);
+    const isSize=(key==='子午'||key==='卯酉');
+    const isYinYang=(key==='巳亥'||key==='寅申'||key==='丑未'||key==='辰戌');
+    const summary=`<div class="notice" style="background:#eaf3ec;border-left-color:var(--green);font-size:12.5px;"><b>${periodLabel}命中：</b>${matchLabel} → 病理反型 <b>${sn.reverseType}</b>（${isSize?'尺寸反類':isYinYang?'陰陽交類':'—'}）</div><div class="notice" style="background:#f7f4ec;border-left-color:var(--muted);font-size:11.5px;margin-top:6px;">⚠ 本矩陣顯示的是「歲氣結構上可能出現的反型」，是否真正形成死候仍須依<b>實測脈象</b>與四診綜合判斷。</div>`;
+    const sizeTable=isSize?`<h4>尺寸反（上下易位 · ${periodLabel}命中）</h4><div class="table-wrap"><table><tr><th>類型</th><th>常態</th><th>反象</th></tr>${sizeMatch.map(x=>`<tr style="background:#fdf8ef;font-weight:700;"><td>${x.year} <span class="tag good">★ 命中</span></td><td>${x.normal}</td><td>${x.reverse}</td></tr>`).join('')}</table></div><details style="margin-top:8px;"><summary style="padding:8px 12px;background:#fdf8ef;border-radius:8px;font-weight:700;color:var(--muted);font-size:12.5px;">▶ 展開完整尺寸反 4 種可能</summary><div class="table-wrap" style="margin-top:8px;"><table><tr><th>類型</th><th>常態</th><th>反象</th></tr>${SIZE_REVERSE.map(x=>`<tr${x.year===matchLabel?' style="background:#fdf8ef;font-weight:700;"':''}><td>${x.year}${x.year===matchLabel?' ★':''}</td><td>${x.normal}</td><td>${x.reverse}</td></tr>`).join('')}</table></div></details>`:'';
+    const yinYangTable=isYinYang?`<h4>陰陽交（左右易位 · ${periodLabel}命中）</h4><div class="table-wrap"><table><tr><th>類型</th><th>常態</th><th>反象</th></tr>${yinYangMatch.map(x=>`<tr style="background:#fdf8ef;font-weight:700;"><td>${x.year} <span class="tag good">★ 命中</span></td><td>${x.normal}</td><td>${x.reverse}</td></tr>`).join('')}</table></div><details style="margin-top:8px;"><summary style="padding:8px 12px;background:#fdf8ef;border-radius:8px;font-weight:700;color:var(--muted);font-size:12.5px;">▶ 展開完整陰陽交 8 種可能</summary><div class="table-wrap" style="margin-top:8px;"><table><tr><th>類型</th><th>常態</th><th>反象</th></tr>${YIN_YANG_JIAO.map(x=>`<tr${x.year===matchLabel?' style="background:#fdf8ef;font-weight:700;"':''}><td>${x.year}${x.year===matchLabel?' ★':''}</td><td>${x.normal}</td><td>${x.reverse}</td></tr>`).join('')}</table></div></details>`:'';
+    return `<section style="margin-top:12px;"><h4>${periodLabel}｜${matchLabel}</h4>${summary}${sizeTable}${yinYangTable}</section>`;
+  };
   const sanShuoHtml=ZHU_BU_YING_SAN_SHUO.map(s=>`<div class="shou-card"><div class="sc-name">${s.name}</div><div>${s.content}</div></div>`).join('');
-  const halfyearNote=mode==='halfyear'?'<div class="notice" style="border-left-color:var(--accent-2);margin-top:8px;"><b>歲半前後分劃：</b>大寒至大暑為歲半前（北政），大暑至隔年大寒為歲半後（南政）。<span style="color:var(--warn);font-weight:700;">3.31.8 已知限制：目標年目前以 6/15 為代理日期，會固定判為北政；建議未來加入「目標日期」輸入後，再依實際日期判定。</span></div>':'';
+  const halfyearNote=mode==='halfyear'?'<div class="notice" style="border-left-color:var(--accent-2);margin-top:8px;"><b>歲半前後分劃：</b>大寒至大暑為歲半前（北政），大暑至隔年大寒為歲半後（南政）。本版分別計算兩段分類及各自的病理矩陣；請依實際分析時點擇一參照。</div>':'';
+  const targetMatrices=target.southNorthHalf
+    ? renderPathologyMatrix(target.southNorthHalf.first,'歲半前（大寒至大暑）')+renderPathologyMatrix(target.southNorthHalf.second,'歲半後（大暑至次年大寒）')
+    : renderPathologyMatrix(tSN,'目標年');
   document.getElementById('southNorthSection').innerHTML=`
     <h2>二十一、南北政脈診</h2>
     <div class="notice">劃分體系：<b>${modeInfo.name}</b>｜${modeInfo.rule}</div>
     ${halfyearNote}
     <div class="southnorth-hero">
       <div><span class="label">出生年</span>${birth.by.gz}｜${bSN.classification.politics}</div>
-      <div><span class="label">目標年</span>${target.gz.gz}｜${tSN.classification.politics}</div>
+      <div><span class="label">目標年（歲半前）</span>${target.gz.gz}｜${tSN.classification.politics}</div>
       <div><span class="label">當位不應</span>${tSN.effective?tSN.effective.pulse:'—'}</div>
       <div><span class="label">病理反型</span>${tSN.reverseType}</div>
     </div>
     <h3>出生年南北政</h3>${renderEff(bSN)}
-    <h3>目標年南北政</h3>${renderEff(tSN)}
+    <h3>目標年南北政${target.southNorthHalf?'（歲半前 · 大寒至大暑）':''}</h3>${renderEff(tSN)}${target.southNorthHalf?`<h3>目標年南北政（歲半後 · 大暑至次年大寒）</h3>${renderEff(target.southNorthHalf.second)}`:''}
     <h3>實測脈象判定</h3>${obsJudge}
-    <h3>病理死候矩陣（目標年命中）</h3>
-    ${matchSummary}
-    ${sizeReverseTable}
-    ${yinYangJiaoTable}
+    <h3>病理死候矩陣（依各時段分別命中）</h3>
+    ${targetMatrices}
     <h3>「諸不應者反其診則見矣」三說詮釋</h3>${sanShuoHtml}`;
 }
+
 function renderHerbs(birth,target){
   const birthF=SANYIN_FORMULAS[birth.by.gan];const targetF=SANYIN_FORMULAS[target.gz.gan];
   const birthQ=SANYIN_QI_FORMULAS[qiGroupOf(birth.by.zhi)];const targetQ=SANYIN_QI_FORMULAS[qiGroupOf(target.gz.zhi)];
@@ -1930,37 +2149,39 @@ function renderHerbDirection(birth){
 let birthConfirmed=false;let confirmedBirthKey='';
 function currentBirthKey(){return `${document.getElementById('birth').value}|${document.getElementById('time').value||'12:00'}`;}
 function setBirthConfirmation(ok,message){birthConfirmed=ok;const status=document.getElementById('birthConfirmStatus');const run=document.getElementById('runBtn');const btn=document.getElementById('confirmBirth');if(status){status.className=`confirm-status ${ok?'confirmed':'unconfirmed'}`;status.textContent=message;}if(btn){btn.textContent=ok?'✓ 已確認出生資料':'確認出生資料';btn.classList.toggle('confirmed',ok);}if(run){run.disabled=!ok;run.setAttribute('aria-disabled',String(!ok));}}
-function confirmBirthData(){const birth=document.getElementById('birth').value;const time=document.getElementById('time').value||'12:00';if(!birth){setBirthConfirmation(false,'請先輸入出生日期。');document.getElementById('birth')?.focus();return;}const _by=Number(String(birth).split('-')[0]);if(!(_by>=1&&_by<=3000)){setBirthConfirmation(false,'出生年份請在 1–3000 之間。');return;}const dt=new Date(`${birth}T${time}:00+08:00`);if(Number.isNaN(dt.getTime())){setBirthConfirmation(false,'出生日期或時間格式無效。');return;}confirmedBirthKey=`${birth}|${time}`;const savedMode=CALC_TIME_MODE;CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));let preview,modeLabel;try{preview=sexagenaryYear(dt);modeLabel=calcTimeModeLabel();}finally{CALC_TIME_MODE=savedMode;}setBirthConfirmation(true,`已確認：${birth} ${time}（台北時間）｜運氣年 ${preview.gz}（${modeLabel}）。`);}
+let _lastConfirmTs=0;
+const CONFIRM_COOLDOWN_MS=500;
+function confirmBirthData(){const now=Date.now();if(now-_lastConfirmTs<CONFIRM_COOLDOWN_MS){setFormError('操作過於頻繁，請稍候半秒再試。');return;}_lastConfirmTs=now;const birth=document.getElementById('birth').value;const time=document.getElementById('time').value||'12:00';const securityInputError=validateBirthInputs();if(securityInputError){setBirthConfirmation(false,securityInputError);setFormError(securityInputError);return;}const dt=new Date(`${birth}T${time}:00+08:00`);if(Number.isNaN(dt.getTime())){setBirthConfirmation(false,'出生日期或時間格式無效。');return;}confirmedBirthKey=`${birth}|${time}`;const savedMode=CALC_TIME_MODE;CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));let preview,modeLabel;try{preview=sexagenaryYear(dt);modeLabel=calcTimeModeLabel();}catch(err){console.error('[WYLQ] 出生資料確認失敗：',err);setBirthConfirmation(false,'無法確認這組出生資料。');setFormError('無法確認這組出生資料；請檢查日期、時間與交司基準。');return;}finally{CALC_TIME_MODE=savedMode;}setBirthConfirmation(true,`已確認：${birth} ${time}（台北時間）｜運氣年 ${preview.gz}（${modeLabel}）。`);}
 function invalidateBirthConfirmation(){if(!birthConfirmed)return;birthConfirmed=false;confirmedBirthKey='';setBirthConfirmation(false,'出生資料已變更，請重新確認。');}
-window.handleSubmit=function(e){
+let _lastSubmitTs=0;
+const SUBMIT_COOLDOWN_MS=500;
+const handleSubmit=function(e){
   if(e&&e.preventDefault)e.preventDefault();
+  const now=Date.now();if(now-_lastSubmitTs<SUBMIT_COOLDOWN_MS){setFormError('操作過於頻繁，請稍候半秒再試。');return false;}_lastSubmitTs=now;
+  setFormError('');
   try{
     const birthEl=document.getElementById('birth');
-    if(!birthEl||!birthEl.value){alert('請輸入出生日期。');if(birthEl)birthEl.focus();return false;}
-    const birthYear=Number(String(birthEl.value).split('-')[0]);
-    if(!Number.isInteger(birthYear)||birthYear<1||birthYear>3000){alert('出生年份請在 1–3000 之間。');birthEl.focus();return false;}
-    const tEl=document.getElementById('target');
-    const raw=tEl?tEl.value:'';
-    if(!/^\d+$/.test(String(raw).trim())){alert('目標年份必須為整數（不接受小數、字母或空白）。');if(tEl)tEl.focus();return false;}
-    const ty=Number(raw);
-    if(!Number.isFinite(ty)||ty<1||ty>3000){alert('目標年份請輸入 1 至 3000 之間的整數。');if(tEl)tEl.focus();return false;}
+    if(!birthEl||!birthEl.value){setFormError('請輸入出生日期。');if(birthEl)birthEl.focus();return false;}
     const currentKey=currentBirthKey();
     if(!birthConfirmed||confirmedBirthKey!==currentKey){setBirthConfirmation(false,'請先確認目前的出生日期與時間。');return false;}
     const ok=calculate();
     if(ok===true)showView('result');
-    else alert('推算未完成，請查看 console 取得詳細錯誤。');
-  }catch(err){console.error('[WYLQ] 錯誤：',err);alert('推算過程發生錯誤：'+(err&&err.message?err.message:String(err)));}
+    else if(!document.getElementById('formError')?.textContent)setFormError('推算未完成（錯誤代碼 E-CALC-003）。請檢查輸入資料；技術細節已記錄於開發者主控台。');
+  }catch(err){console.error('[WYLQ] 推算失敗（E-CALC-001）：',err);setFormError('推算未完成（錯誤代碼 E-CALC-001）。請檢查輸入日期、時間基準及目標年份；技術細節已記錄於開發者主控台。');}
   return false;
 };
-window.handleBack=function(e){if(e&&e.preventDefault)e.preventDefault();showView('input');setTimeout(()=>{const el=document.getElementById('birth');if(el)el.focus();},50);return false;};
+const handleBack=function(e){if(e&&e.preventDefault)e.preventDefault();showView('input');setTimeout(()=>{const el=document.getElementById('birth');if(el)el.focus();},50);return false;};
+document.getElementById('birthForm').addEventListener('submit',handleSubmit);
+document.getElementById('backToInput').addEventListener('click',handleBack);
 document.getElementById('confirmBirth').addEventListener('click',confirmBirthData);
-document.getElementById('birth').addEventListener('input',invalidateBirthConfirmation);
-document.getElementById('time').addEventListener('input',invalidateBirthConfirmation);
+document.getElementById('birth').addEventListener('input',()=>{setFormError('');invalidateBirthConfirmation();});
+document.getElementById('time').addEventListener('input',()=>{setFormError('');invalidateBirthConfirmation();});
+document.getElementById('target').addEventListener('input',()=>setFormError(''));
 /* 3.31.8：交司基準切換會改變運氣年判定，應失效確認 */
-document.getElementById('timeMode').addEventListener('change',invalidateBirthConfirmation);
+document.getElementById('timeMode').addEventListener('change',()=>{setFormError('');invalidateBirthConfirmation();});
 setBirthConfirmation(false,'尚未確認出生資料；請輸入生日／時間後按「確認出生資料」。');
 showView('input');
-console.log('[WYLQ] 3.31.25 執行完畢');
+console.log('[WYLQ] '+APP_VERSION+' 執行完畢');
 </script>
 </body>
 </html>
