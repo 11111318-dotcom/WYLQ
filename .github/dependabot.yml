@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # Keep SHA-pinned GitHub Actions current; updates arrive as PRs for CI validation.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    open-pull-requests-limit: 5
