@@ -63,6 +63,30 @@ check(not p.resources, "no external/media resource URL attributes")
 check('name="referrer"' in html and 'content="no-referrer"' in html, "Referrer-Policy meta is no-referrer")
 for marker in MARKERS: check(marker in html, f"required protection present: {marker}")
 script=scripts[0][1] if len(scripts)==1 else ""
+INPUT_GUARDRAILS = (
+    ("strict YYYY-MM-DD input pattern", r"!/^\d{4}-\d{2}-\d{2}$/.test(v)"),
+    ("real calendar date round-trip validation", "probe.getUTCFullYear()===y&&probe.getUTCMonth()+1===m&&probe.getUTCDate()===d"),
+    ("strict HH:MM input pattern", r"!/^\d{2}:\d{2}$/.test(v)"),
+    ("24-hour time range validation", "h>=0&&h<=23&&m>=0&&m<=59"),
+    ("target year integer range validation", r"!/^\d{1,4}$/.test(String(target).trim())||Number(target)<1||Number(target)>3000"),
+    ("advanced options restricted to allowlisted values", "!INPUT_ENUMS[id].includes(String(el.value))"),
+    ("calculation core validates inputs before rendering", "const securityInputError=validateSecurityInputs();if(securityInputError){setFormError(securityInputError);return false;}"),
+    ("form errors use textContent rather than HTML parsing", "el.textContent=message||'';"),
+)
+for label, invariant in INPUT_GUARDRAILS:
+    check(invariant in script, label)
+
+render_start = script.find("function renderSummary(")
+render_end = script.find("function currentBirthKey(", render_start)
+check(render_start >= 0 and render_end > render_start, "HTML renderer audit boundaries are present")
+if render_start >= 0 and render_end > render_start:
+    renderers = script[render_start:render_end]
+    raw_input_reference = re.search(
+        r"\b(?:birthDateInput|timeInput|targetRaw)\b|\bsafeVal\s*\(|"
+        r"document\.getElementById\(\s*['\"](?:birth|time|target|timeMode|pulseObserved|depressionEvidence|southNorthMode)['\"]\s*\)\s*\.value",
+        renderers,
+    )
+    check(not raw_input_reference, "HTML renderers do not directly reference raw form input values")
 check(not re.search(r"window\.handle(?:Submit|Back)\s*=",script), "submit/back handlers are not writable window globals")
 check(not re.search(r"\btypeof\s+table\s*!==\s*['\"]undefined['\"]",script), "no ineffective typeof table guard")
 check("SAFETY: txt is generated only by precisionNoticeText()" in script, "precisionNotice HTML sink has safety annotation")

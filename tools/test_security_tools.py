@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -132,6 +133,130 @@ extra_hash_source, count = re.subn(
 if count != 1:
     raise SystemExit("FAIL test setup: could not locate script-src hash")
 updater_refuses("multiple script-src sources", extra_hash_source, "script-src must contain exactly one SHA-256 source")
+
+def checker_rejects_after_hash_repair(label: str, changed: str, expected_phrase: str) -> None:
+    with tempfile.TemporaryDirectory() as td:
+        fixture = write_fixture(td, changed)
+        updated = run_updater(fixture)
+        if updated.returncode != 0:
+            raise SystemExit(f"FAIL {label}: updater could not prepare mutated fixture\n{updated.stdout}{updated.stderr}")
+        result = run_checker(fixture)
+        output = result.stdout + result.stderr
+        if result.returncode == 0 or expected_phrase not in output:
+            raise SystemExit(f"FAIL {label}: output guard did not reject mutation\n{output}")
+        print(f"PASS {label}: output guard rejected mutation")
+
+
+# Verify the CI checker detects regressions in the app's actual input/output guards.
+validation_gate = "const securityInputError=validateSecurityInputs();if(securityInputError){setFormError(securityInputError);return false;}"
+if validation_gate not in original_html:
+    raise SystemExit("FAIL test setup: calculation validation gate not found")
+rejected_mutation(
+    "missing calculation validation gate",
+    original_html.replace(validation_gate, "", 1),
+    "calculation core validates inputs before rendering",
+)
+
+text_sink = "el.textContent=message||'';"
+if text_sink not in original_html:
+    raise SystemExit("FAIL test setup: safe form-error text sink not found")
+rejected_mutation(
+    "form error changed from textContent to innerHTML",
+    original_html.replace(text_sink, "el.innerHTML=message||'';", 1),
+    "form errors use textContent rather than HTML parsing",
+)
+
+summary_sink = "document.getElementById('summary').innerHTML=" + chr(96)
+if summary_sink not in original_html:
+    raise SystemExit("FAIL test setup: summary HTML sink not found")
+unsafe_renderer = original_html.replace(summary_sink, summary_sink + "$" + "{targetRaw}", 1)
+checker_rejects_after_hash_repair(
+    "raw form value interpolated into HTML renderer",
+    unsafe_renderer,
+    "HTML renderers do not directly reference raw form input values",
+)
+
+# Execute the production validator functions themselves with a mocked DOM in Node.
+start_marker = "const INPUT_ENUMS=Object.freeze({"
+end_marker = "function pad(n){"
+start = original_html.find(start_marker)
+end = original_html.find(end_marker, start)
+if start < 0 or end <= start:
+    raise SystemExit("FAIL test setup: unable to isolate production input validators")
+validator_source = original_html[start:end]
+if not shutil.which("node"):
+    print("NOTE Node.js unavailable; runtime input-validation cases skipped")
+else:
+    harness = r"""
+const defaults = {
+  birth: "2004-06-15",
+  time: "12:00",
+  target: "2026",
+  timeMode: "traditional-precision",
+  pulseObserved: "none",
+  depressionEvidence: "none",
+  southNorthMode: "wangbing"
+};
+const values = { ...defaults };
+const document = {
+  getElementById(id) {
+    return Object.prototype.hasOwnProperty.call(values, id) ? { value: values[id] } : null;
+  }
+};
+function safeVal(id, fallback) {
+  const el = document.getElementById(id);
+  if (!el) return fallback;
+  const value = el.value;
+  return value === undefined || value === null || value === "" ? fallback : value;
+}
+"""
+    harness += validator_source
+    harness += r"""
+function check(label, overrides, expectedValid, removeControl) {
+  for (const key of Object.keys(values)) delete values[key];
+  Object.assign(values, defaults, overrides || {});
+  if (removeControl) delete values[removeControl];
+  const message = validateSecurityInputs();
+  const actualValid = message === "";
+  if (actualValid !== expectedValid) {
+    console.error("FAIL " + label + ": " + (message || "unexpected validation success"));
+    process.exitCode = 1;
+    return;
+  }
+  console.log("PASS " + label);
+}
+check("valid baseline accepted", {}, true);
+check("valid lower target boundary accepted", { target: "1" }, true);
+check("valid upper target boundary accepted", { target: "3000" }, true);
+check("impossible calendar date rejected", { birth: "2024-02-30" }, false);
+check("malformed birth date rejected", { birth: "2004-6-15" }, false);
+check("HTML payload in birth date rejected", { birth: "2004-06-15<img src=x onerror=alert(1)>" }, false);
+check("hour 24 rejected", { time: "24:00" }, false);
+check("minute 60 rejected", { time: "12:60" }, false);
+check("malformed time rejected", { time: "1:00" }, false);
+check("HTML payload in target year rejected", { target: "<img src=x onerror=alert(1)>" }, false);
+check("zero target year rejected", { target: "0" }, false);
+check("target year above upper bound rejected", { target: "3001" }, false);
+check("fractional target year rejected", { target: "2026.5" }, false);
+check("invalid time mode rejected", { timeMode: "<script>" }, false);
+check("invalid observed pulse enum rejected", { pulseObserved: "<script>" }, false);
+check("invalid depression evidence enum rejected", { depressionEvidence: "<script>" }, false);
+check("invalid south/north mode enum rejected", { southNorthMode: "<script>" }, false);
+check("missing allowlisted control rejected", {}, false, "pulseObserved");
+"""
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".js", delete=False) as js_file:
+        js_file.write(harness)
+        js_path = Path(js_file.name)
+    try:
+        node_result = subprocess.run(["node", str(js_path)], capture_output=True, text=True, timeout=30)
+        if node_result.returncode != 0:
+            raise SystemExit("FAIL runtime input-validation tests\n" + node_result.stdout + node_result.stderr)
+        print(node_result.stdout.rstrip())
+        print("PASS production input validators rejected malformed and HTML-like form inputs")
+    finally:
+        js_path.unlink(missing_ok=True)
+
+
 
 with tempfile.TemporaryDirectory() as td:
     production_fixture = write_fixture(td, original_html)
