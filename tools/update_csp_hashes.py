@@ -144,7 +144,7 @@ def replace_target_hash(parts: list[str], directive: str, new_hash: str) -> list
 
 def find_raw_content_value(raw_tag: str) -> tuple[int, int, str]:
     """Return raw value boundaries for one double-quoted content attribute."""
-    matches = list(re.finditer(r"(?is)(?<![\w:-])content\s*=\s*([""'])(.*?)\1", raw_tag))
+    matches = list(re.finditer(r'''(?is)(?<![\w:-])content\s*=\s*(["'])(.*?)\1''', raw_tag))
     if len(matches) != 1:
         raise ValueError("CSP meta tag must have exactly one quoted content attribute")
     match = matches[0]
