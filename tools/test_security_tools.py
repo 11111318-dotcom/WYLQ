@@ -119,8 +119,8 @@ if count != 1:
 rejected_mutation("unsafe script-src source", unsafe_script, "script-src does not allow unsafe-inline/unsafe-eval")
 
 unsafe_style_attr, count = re.subn(
-    r"(style-src-attr\\s+)'none'",
-    r"\\1'unsafe-inline'",
+    r"(style-src-attr\s+)'none'",
+    r"\1'unsafe-inline'",
     original_html, count=1, flags=re.I,
 )
 if count != 1:
