@@ -11,7 +11,7 @@ REQUIRED = {
     "object-src": {"'none'"}, "media-src": {"'none'"},
     "worker-src": {"'none'"}, "manifest-src": {"'none'"},
     "base-uri": {"'none'"}, "form-action": {"'none'"},
-    "script-src-attr": {"'none'"}, "style-src-attr": {"'unsafe-inline'"},
+    "script-src-attr": {"'none'"}, "style-src-attr": {"'none'"},
 }
 MARKERS = ("INPUT_ENUMS", "strictDateValue", "strictTimeValue",
            "validateSecurityInputs", "validateBirthInputs", "scriptStartupWarning",
@@ -59,6 +59,7 @@ if len(p.csp)==1:
         h=base64.b64encode(hashlib.sha256(styles[0][1].encode("utf-8")).digest()).decode()
         check(d.get("style-src-elem")=={"'sha256-"+h+"'"}, "CSP style SHA-256 matches exact UTF-8 content")
 check(not p.handlers, "no inline HTML event-handler attributes")
+check(not re.search(r"\sstyle\s*=", html, re.I), "no inline style attributes")
 check(not p.resources, "no external/media resource URL attributes")
 check('name="referrer"' in html and 'content="no-referrer"' in html, "Referrer-Policy meta is no-referrer")
 for marker in MARKERS: check(marker in html, f"required protection present: {marker}")
@@ -71,10 +72,19 @@ INPUT_GUARDRAILS = (
     ("target year integer range validation", r"!/^\d{1,4}$/.test(String(target).trim())||Number(target)<1||Number(target)>3000"),
     ("advanced options restricted to allowlisted values", "!INPUT_ENUMS[id].includes(String(el.value))"),
     ("calculation core validates inputs before rendering", "const securityInputError=validateSecurityInputs();if(securityInputError){setFormError(securityInputError);return false;}"),
-    ("form errors use textContent rather than HTML parsing", "el.textContent=message||'';"),
 )
 for label, invariant in INPUT_GUARDRAILS:
     check(invariant in script, label)
+
+form_error_start = script.find("function setFormError(message){")
+form_error_end = script.find("\nfunction ", form_error_start)
+form_error_body = script[form_error_start:form_error_end] if form_error_start >= 0 and form_error_end > form_error_start else ""
+check(
+    "document.getElementById('formError');if(el){el.textContent=text;" in form_error_body
+    and "document.getElementById('resultError');if(resultEl){resultEl.textContent=text;" in form_error_body
+    and not re.search(r"\.(?:innerHTML|outerHTML)\s*=|insertAdjacentHTML\s*\(", form_error_body),
+    "form errors use textContent rather than HTML parsing",
+)
 
 render_start = script.find("function renderSummary(")
 render_end = script.find("function currentBirthKey(", render_start)
@@ -92,8 +102,11 @@ check(not re.search(r"\btypeof\s+table\s*!==\s*['\"]undefined['\"]",script), "no
 check("SAFETY: txt is generated only by precisionNoticeText()" in script, "precisionNotice HTML sink has safety annotation")
 for pat,label in [(r"\beval\s*\(","eval()"),(r"\bnew\s+Function\b","new Function"),(r"\bXMLHttpRequest\b","XMLHttpRequest"),(r"\bWebSocket\s*\(","WebSocket"),(r"\bEventSource\s*\(","EventSource"),(r"\bsendBeacon\s*\(","sendBeacon"),(r"\blocalStorage\b|\bsessionStorage\b|\bindexedDB\b|document\.cookie","persistence API")]:
     check(not re.search(pat,script), f"no {label} in main script")
+# The v2 timeline, observation panel, and static-reference wrapper add nine
+# reviewed sinks over the previous 34-sink baseline. Keep this hard ceiling;
+# do not raise it without reviewing every newly introduced assignment.
 count=len(re.findall(r"\.innerHTML\s*=",script))
-check(count<=34, f"innerHTML sink count remains within reviewed baseline (34; current {count})")
+check(count<=43, f"innerHTML sink count remains within reviewed baseline (43; current {count})")
 if len(scripts)==1 and shutil.which("node"):
     with tempfile.NamedTemporaryFile("w",encoding="utf-8",suffix=".js",delete=False) as f: f.write(script); js=Path(f.name)
     try:
