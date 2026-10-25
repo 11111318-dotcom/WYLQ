@@ -118,6 +118,19 @@ if count != 1:
     raise SystemExit("FAIL test setup: could not locate script-src hash")
 rejected_mutation("unsafe script-src source", unsafe_script, "script-src does not allow unsafe-inline/unsafe-eval")
 
+unsafe_style_attr, count = re.subn(
+    r"(style-src-attr\\s+)'none'",
+    r"\\1'unsafe-inline'",
+    original_html, count=1, flags=re.I,
+)
+if count != 1:
+    raise SystemExit("FAIL test setup: could not locate style-src-attr none policy")
+rejected_mutation(
+    "unsafe style-src-attr source",
+    unsafe_style_attr,
+    "CSP style-src-attr is",
+)
+
 if "INPUT_ENUMS" not in original_html:
     raise SystemExit("FAIL test setup: INPUT_ENUMS marker is missing from source HTML")
 missing_marker = original_html.replace("INPUT_ENUMS", "INPUT_ENUM")
@@ -157,12 +170,12 @@ rejected_mutation(
     "calculation core validates inputs before rendering",
 )
 
-text_sink = "el.textContent=message||'';"
+text_sink = "el.textContent=text;"
 if text_sink not in original_html:
     raise SystemExit("FAIL test setup: safe form-error text sink not found")
 rejected_mutation(
     "form error changed from textContent to innerHTML",
-    original_html.replace(text_sink, "el.innerHTML=message||'';", 1),
+    original_html.replace(text_sink, "el.innerHTML=text;", 1),
     "form errors use textContent rather than HTML parsing",
 )
 
