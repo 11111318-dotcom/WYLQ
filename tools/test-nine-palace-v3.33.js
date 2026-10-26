@@ -319,8 +319,8 @@ function evaluatePingQiForZaiGong(eras, isYinYear, zaiGongNum, homo = null) {
       return `⚠️ 本年雖具干德符條件，然因命中太乙天符／天符等高階同氣偏勝格局（${blockedList}），依高階格局保護規則未改判平氣；「災${zaiGongNum}宮」維持原典警示，且應另按高階格局審視其偏勝之勢。`;
     }
     // 🔴 F-02 修正：eras 非空且未觸發干德符時，若陰干年命中太乙天符／天符（如乙酉、己丑、己未、丁亥），優先提示高階同氣偏勝雙重結構
-    if (homo && (homo.isTaiYi || homo.isTianFu)) {
-      const yinHomoTag = homo.isTaiYi ? "太乙天符" : "天符";
+    if (homo && (homo.isTaiYi || homo.isTianFu || homo.isTongTianFu)) {
+      const yinHomoTag = homo.isTaiYi ? "太乙天符" : homo.isTianFu ? "天符" : "同天符";
       return `⚠️ 本年為歲運不及兼「${yinHomoTag}」高階同氣偏勝格局；依高階格局保護規則，「災${zaiGongNum}宮」維持原典警示，並應按「不及本氣 + 高階同氣」雙重結構審視其偏勝與勝復之勢。`;
     }
     if (isMitigatedPingQi) {
@@ -678,6 +678,13 @@ function runAllTests() {
     const withErasResult = computeYearZaiGongInfo(gz, { isTruePingQi: false, isSecondaryPingQi: false, isPseudoPingQi: false }, homo);
     assert.ok(withErasResult.平氣連動裁定.includes(expectedTag), `eras 非空且無干德符時，${gz} 應提示 ${expectedTag}`);
   }
+
+  const yinTongTianFu = computeYearZaiGongInfo(
+    "丁卯",
+    { isTruePingQi: false, isSecondaryPingQi: false, isPseudoPingQi: false },
+    { isTongTianFu: true }
+  );
+  assert.ok(yinTongTianFu.平氣連動裁定.includes("同天符"), "eras 非空時陰干分支也必須完整處理 isTongTianFu 標記");
 
   const yiYouBlocked = computeYearZaiGongInfo("乙酉", { isTruePingQi: false, dynamicPingQiBlockedByHighTier: true }, { isTaiYi: true });
   assert.ok(yiYouBlocked.平氣連動裁定.includes("乙酉、己丑、己未、丁亥"), "干德符被高階格局攔截時應列出攔截清單");
