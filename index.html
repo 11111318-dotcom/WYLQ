@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-SwCRqPDV/8Xsjd5O9dZNWtiGcmKyVDFkffN8wuKdBzE='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-bodUv0h/H8Lf9j+p+5oBuayvvUxxd4nwmweyhvzYuq4='; style-src-elem 'sha256-bodUv0h/H8Lf9j+p+5oBuayvvUxxd4nwmweyhvzYuq4='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-0r90v8E3XPdhPRXkcU9N4mF22bys1KP4VLzzxlWR62M='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-960y8tmiYd0nz0gjjxZ3zX70ouEXiX6AHL5mQdD3Kw8='; style-src-elem 'sha256-960y8tmiYd0nz0gjjxZ3zX70ouEXiX6AHL5mQdD3Kw8='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -380,10 +380,6 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
 /* 3.31.65: keyboard-accessible navigation, date observation and print states. */
 .result-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto;}
 .result-actions .back-btn{padding:7px 10px;font-size:12.5px;}
-.result-nav{position:relative;top:auto;z-index:15;display:flex;gap:6px;flex-wrap:wrap;padding:8px 20px;background:rgba(247,242,232,.96);border-bottom:1px solid var(--line);}
-.result-nav button{border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:#fffdf8;color:var(--accent);font:inherit;font-size:12px;font-weight:700;cursor:pointer;}
-.result-nav button:hover,.result-nav button:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;}
-#view-result .section[id],#view-result .summary[id]{scroll-margin-top:170px;}
 .current-phase{outline:2px solid var(--accent-2)!important;outline-offset:1px;background:#fff5dc!important;position:relative;}
 .current-phase::after{content:'觀察時點';display:inline-block;font-size:10px;font-weight:800;color:var(--accent);margin-left:5px;}
 .observation-toolbar{display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin:8px 0 0;}
@@ -405,7 +401,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
 .reference-wrapper .reference-content{padding:10px 0 0;}
 .export-mode-field{margin:8px 0 10px;}
 .export-mode-field select{width:100%;font-size:13px;padding:8px 10px;}
-@media(max-width:640px){.result-header{padding:10px 12px;gap:8px}.result-nav{padding:7px 10px}}
+@media(max-width:640px){.result-header{padding:10px 12px;gap:8px}}
 @media print{
   body{background:#fff!important;color:#111!important;}
   .result-sticky-shell,.observation-toolbar,#printFriendlyBtn,#openExportDialogBtn,#backToInput,#toggleReferencesBtn,#resultError{display:none!important;}
@@ -671,12 +667,6 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
       <button type="button" id="printFriendlyBtn" class="back-btn">🖨 精簡列印／PDF</button>
     </div>
   </header>
-  <nav class="result-nav" id="resultNav" aria-label="結果章節導覽">
-    <button type="button" data-nav-target="birthSection">先天稟賦（一至七）</button>
-    <button type="button" data-nav-target="matrix30Section">平氣與六十甲子（八至九）</button>
-    <button type="button" data-nav-target="pattern9Section">流年與六步（十至十六）</button>
-    <button type="button" data-nav-target="repairWindowSection">平調、禁例與方藥（十七至二十三）</button>
-  </nav>
   </div>
   <main>
     <div class="wrap">
@@ -3454,8 +3444,7 @@ if(_downloadExportBtn) _downloadExportBtn.addEventListener('click',()=>{
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
 
-// Result-page navigation and controls are delegated; they survive panel re-rendering.
-document.getElementById('resultNav')?.addEventListener('click',e=>{const b=e.target.closest('[data-nav-target]');if(!b)return;const el=document.getElementById(b.dataset.navTarget);if(el)el.scrollIntoView({behavior:'auto',block:'start'});});
+// Result-page controls are delegated; they survive panel re-rendering.
 document.getElementById('toggleReferencesBtn')?.addEventListener('click',()=>toggleReferenceSections());
 document.getElementById('observationSection')?.addEventListener('click',e=>{
   const btn=e.target.closest('button');if(!btn)return;
