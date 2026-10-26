@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-0r90v8E3XPdhPRXkcU9N4mF22bys1KP4VLzzxlWR62M='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-960y8tmiYd0nz0gjjxZ3zX70ouEXiX6AHL5mQdD3Kw8='; style-src-elem 'sha256-960y8tmiYd0nz0gjjxZ3zX70ouEXiX6AHL5mQdD3Kw8='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-aLkft8xzoBilgug9t8UoKXqxV8FAHgCTfW+Bpq+Tq+g='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-3I3IFtEsRdNMsz6HxsnNokwpVTehC7xTZakj8zcXAwk='; style-src-elem 'sha256-3I3IFtEsRdNMsz6HxsnNokwpVTehC7xTZakj8zcXAwk='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -404,7 +404,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
 @media(max-width:640px){.result-header{padding:10px 12px;gap:8px}}
 @media print{
   body{background:#fff!important;color:#111!important;}
-  .result-sticky-shell,.observation-toolbar,#printFriendlyBtn,#openExportDialogBtn,#backToInput,#toggleReferencesBtn,#resultError{display:none!important;}
+  .result-sticky-shell,.observation-toolbar,#printFriendlyBtn,#openExportDialogBtn,#backToInput,#resultError{display:none!important;}
   details.reference-wrapper,details.reference-detail,#pingQiMatrixSection,#auditSection{display:none!important;}
   #sixStepFortuneSection>details{display:block!important;}
   #sixStepFortuneSection>details>summary{display:none!important;}
@@ -663,7 +663,6 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
     <div class="form-error result-error" id="resultError" role="alert" aria-live="assertive" hidden></div>
     <button type="button" id="openExportDialogBtn" class="export-btn" aria-haspopup="dialog">📋 匯出 AI 分析指令</button>
     <div class="result-actions" aria-label="結果工具">
-      <button type="button" id="toggleReferencesBtn" class="back-btn" aria-expanded="false">展開典籍參照</button>
       <button type="button" id="printFriendlyBtn" class="back-btn">🖨 精簡列印／PDF</button>
     </div>
   </header>
@@ -1993,7 +1992,6 @@ function clearDerivedBirthState(clearRendered=false){
   if(clearRendered){
     const customQuestion=document.getElementById('exportCustomQuestion');if(customQuestion)customQuestion.value='';
     const warning=document.getElementById('exportWarningHint');if(warning)warning.textContent='';
-    const refsButton=document.getElementById('toggleReferencesBtn');if(refsButton){refsButton.textContent='展開典籍參照';refsButton.setAttribute('aria-expanded','false');}
     const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'];
     ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
   }
@@ -2043,12 +2041,8 @@ function wrapStaticReferenceSection(id,title){
   el.innerHTML=`<details class="reference-wrapper"><summary>📚 ${title}（固定參照，點擊展開）</summary><div class="reference-content">${content}</div></details>`;
 }
 function tagReferenceDetails(){
-  const matrixDetails=document.querySelector('#matrix30Section > details');if(matrixDetails)matrixDetails.classList.add('reference-detail');
+  const matrixDetails=document.querySelector('#matrix30Section > details');if(matrixDetails){matrixDetails.classList.add('reference-detail');matrixDetails.open=false;}
   wrapStaticReferenceSection('pingQiMatrixSection','九、平氣與六十甲子固定矩陣');
-  toggleReferenceSections(false);
-}
-function toggleReferenceSections(forceOpen){
-  const refs=[...document.querySelectorAll('details.reference-wrapper, details.reference-detail')];const open=typeof forceOpen==='boolean'?forceOpen:refs.some(d=>!d.open);refs.forEach(d=>{d.open=open;});const b=document.getElementById('toggleReferencesBtn');if(b){b.textContent=open?'收合典籍參照':'展開典籍參照';b.setAttribute('aria-expanded',String(open));}
 }
 function updateObservationAndHighlights(){
   const state=_lastExportState;if(!state||!state.birth||!state.target)return false;
@@ -3445,7 +3439,6 @@ if(_downloadExportBtn) _downloadExportBtn.addEventListener('click',()=>{
 });
 
 // Result-page controls are delegated; they survive panel re-rendering.
-document.getElementById('toggleReferencesBtn')?.addEventListener('click',()=>toggleReferenceSections());
 document.getElementById('observationSection')?.addEventListener('click',e=>{
   const btn=e.target.closest('button');if(!btn)return;
   if(btn.id==='todayObservationBtn'){const now=new Date(),tp=taipeiDateParts(now),input=document.getElementById('observeDate');if(input)input.value=`${String(tp.year).padStart(4,'0')}-${String(tp.month).padStart(2,'0')}-${String(tp.day).padStart(2,'0')}`;setFormError('');updateObservationAndHighlights();return;}
