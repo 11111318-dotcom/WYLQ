@@ -31,6 +31,8 @@ jobs:
         run: python3 tools/security_check.py index.html
       - name: Verify negative CSP hash tests
         run: python3 tools/test_security_tools.py index.html
+      - name: Run Nine-Palace and Linggui Bafa module regression tests
+        run: node tools/test-nine-palace-v3.33.js
 
   build:
     name: build-static-site
