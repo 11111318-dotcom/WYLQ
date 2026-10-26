@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-6c7um7xdUVL0fEvulpMN2UebUs9Cl5JERqf7pRr277Y='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-snVyJ/A05CWGfSVGOsOfemp8Q1zFA/5SfKVDz8I4R28='; style-src-elem 'sha256-snVyJ/A05CWGfSVGOsOfemp8Q1zFA/5SfKVDz8I4R28='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-t5Xo2ZHZvWjCHDxC0pZ8REcR9RTahZ2kYk6wgfjr5jw='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-bodUv0h/H8Lf9j+p+5oBuayvvUxxd4nwmweyhvzYuq4='; style-src-elem 'sha256-bodUv0h/H8Lf9j+p+5oBuayvvUxxd4nwmweyhvzYuq4='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -377,29 +377,25 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
 @media(max-width:640px){dialog.export-dialog{padding:16px 14px;width:96vw;max-height:92vh}.export-dialog h3{font-size:16px}.export-btn{margin-left:0}}
 
 
-/* 3.31.65: keyboard-accessible navigation, date comparison, timeline and print states. */
-.result-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;}
-.result-tools .back-btn{padding:7px 10px;font-size:12.5px;}
-.result-tools input{width:auto;min-width:90px;max-width:126px;padding:6px 8px;font-size:13px;}
-.result-tools .tool-label{font-size:11px;color:var(--muted);font-weight:700;}
+/* 3.31.65: keyboard-accessible navigation, date observation and print states. */
+.result-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto;}
+.result-actions .back-btn{padding:7px 10px;font-size:12.5px;}
 .result-nav{position:relative;top:auto;z-index:15;display:flex;gap:6px;flex-wrap:wrap;padding:8px 20px;background:rgba(247,242,232,.96);border-bottom:1px solid var(--line);}
 .result-nav button{border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:#fffdf8;color:var(--accent);font:inherit;font-size:12px;font-weight:700;cursor:pointer;}
 .result-nav button:hover,.result-nav button:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;}
 #view-result .section[id],#view-result .summary[id]{scroll-margin-top:170px;}
-.timeline-wrap{overflow:auto;max-width:100%;}
-.year-timeline{min-width:830px;font-size:12px;}
-.year-timeline th{position:sticky;top:0;}
-.year-timeline td{vertical-align:middle;padding:8px 10px;}
-.year-pick{border:1px solid var(--line);border-radius:7px;background:#fffdf8;color:var(--accent);font:inherit;font-weight:800;padding:4px 7px;cursor:pointer;white-space:nowrap;}
-.year-pick[aria-current="true"]{background:var(--accent);color:white;}
-.status-pill{display:inline-block;border-radius:999px;padding:2px 7px;font-size:11px;font-weight:700;background:#f0e9dc;color:var(--muted);}
-.status-pill.ok{background:#e2ede4;color:var(--green);}
-.status-pill.blocked{background:#f7ebd2;color:var(--warn);}
-.status-pill.pending{background:#f2e6f7;color:var(--purple);}
-.date-range{display:block;font-size:10.5px;color:var(--muted);margin-top:3px;font-weight:500;}
 .current-phase{outline:2px solid var(--accent-2)!important;outline-offset:1px;background:#fff5dc!important;position:relative;}
 .current-phase::after{content:'觀察時點';display:inline-block;font-size:10px;font-weight:800;color:var(--accent);margin-left:5px;}
 .observation-toolbar{display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin:8px 0 0;}
+.observation-details{margin:0;}
+.observation-details>summary{cursor:pointer;display:flex;align-items:center;gap:8px;flex-wrap:wrap;list-style:none;padding:0 0 8px;border-bottom:1px solid var(--line);font-family:"Noto Serif TC",serif;font-size:18px;font-weight:800;color:var(--accent);}
+.observation-details>summary::-webkit-details-marker{display:none;}
+.observation-details>summary::marker{content:"";}
+.observation-details>summary::before{content:'▸';font-size:14px;line-height:1;}
+.observation-details[open]>summary::before{content:'▾';}
+.observation-details .observation-hint{font-family:"Noto Sans TC","PingFang TC",system-ui,sans-serif;font-size:12px;font-weight:500;color:var(--muted);}
+.observation-details[open]>summary{margin-bottom:10px;}
+.observation-content{padding-top:2px;}
 .observation-toolbar .field{margin:0;min-width:175px;}
 .observation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;margin-top:10px;}
 .observation-chip{padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#faf7ef;font-size:12px;}
@@ -409,10 +405,10 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
 .reference-wrapper .reference-content{padding:10px 0 0;}
 .export-mode-field{margin:8px 0 10px;}
 .export-mode-field select{width:100%;font-size:13px;padding:8px 10px;}
-@media(max-width:640px){.result-header{padding:10px 12px;gap:8px}.result-nav{padding:7px 10px}.result-tools{gap:5px}.result-tools input{min-width:80px}.year-timeline{min-width:780px}}
+@media(max-width:640px){.result-header{padding:10px 12px;gap:8px}.result-nav{padding:7px 10px}}
 @media print{
   body{background:#fff!important;color:#111!important;}
-  .result-sticky-shell,.observation-toolbar,#yearTimelineSection,#printFriendlyBtn,#openExportDialogBtn,#backToInput,#toggleReferencesBtn,#resultError{display:none!important;}
+  .result-sticky-shell,.observation-toolbar,#printFriendlyBtn,#openExportDialogBtn,#backToInput,#toggleReferencesBtn,#resultError{display:none!important;}
   details.reference-wrapper,details.reference-detail,#pingQiMatrixSection,#auditSection{display:none!important;}
   #sixStepFortuneSection>details{display:block!important;}
   #sixStepFortuneSection>details>summary{display:none!important;}
@@ -670,12 +666,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
     <div class="result-meta" id="resultMeta" aria-live="polite"></div>
     <div class="form-error result-error" id="resultError" role="alert" aria-live="assertive" hidden></div>
     <button type="button" id="openExportDialogBtn" class="export-btn" aria-haspopup="dialog">📋 匯出 AI 分析指令</button>
-    <div class="result-tools" aria-label="結果頁工具列">
-      <span class="tool-label">目標年</span>
-      <button type="button" id="targetYearPrev" class="back-btn" aria-label="前一年">◀ 前一年</button>
-      <input type="number" id="quickTargetYear" min="1" max="3000" step="1" aria-label="快速切換目標運氣年" />
-      <button type="button" id="targetYearNext" class="back-btn" aria-label="後一年">後一年 ▶</button>
-      <button type="button" id="targetYearCurrent" class="back-btn">今運氣年</button>
+    <div class="result-actions" aria-label="結果工具">
       <button type="button" id="toggleReferencesBtn" class="back-btn" aria-expanded="false">展開典籍參照</button>
       <button type="button" id="printFriendlyBtn" class="back-btn">🖨 精簡列印／PDF</button>
     </div>
@@ -692,7 +683,6 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
       <div class="notice caution-layer u-style-a82d7062" id="resultDisclaimer" role="note"><b>⚠ 安全提示：</b>本結果為傳統五運六氣模型推演，不是醫療診斷，亦非個人化處方；不應僅憑推算結果自行用藥、停藥或延誤就醫。此單檔版本不主動發送網路請求；請仍以可信來源取得檔案。</div>
       <div class="notice transition u-style-a82d7062" id="precisionNotice" role="status" hidden></div>
       <div class="card summary" id="summary"></div>
-      <div class="card panel section" id="yearTimelineSection"></div>
       <div class="card panel section" id="observationSection"></div>
       <details class="card panel section" id="auditSection"><summary><h2>運氣推步紀要與審計軌跡 <span class="audit-toggle-hint">（預設收起；點擊展開／收起）</span></h2></summary><div class="audit-terminal" id="auditLog"></div></details>
       <div class="card panel section birth-section" id="birthSection"></div>
@@ -2004,11 +1994,9 @@ function buildTargetYearSnapshot(targetYear,southNorthMode,observationDate=null)
   if(southNorthMode==='halfyear'){target.southNorthHalf={first:southNorthPulseFor(tgz.gan,tgz.zhi,southNorthMode,twDate(targetYear,3,1)),second:southNorthPulseFor(tgz.gan,tgz.zhi,southNorthMode,twDate(targetYear,10,1))};target.southNorth=target.southNorthHalf.first;}
   return target;
 }
-const TARGET_YEAR_ROW_CACHE=new Map();
 function clearDerivedBirthState(clearRendered=false){
   _lastExportState=null;
   window.__wylqLastBirth=null;
-  TARGET_YEAR_ROW_CACHE.clear();
   const area=document.getElementById('exportPromptArea');if(area)area.value='';
   const count=document.getElementById('exportCharCount');if(count)count.textContent='0';
   const tokens=document.getElementById('exportTokenEst');if(tokens)tokens.textContent='0';
@@ -2016,56 +2004,11 @@ function clearDerivedBirthState(clearRendered=false){
     const customQuestion=document.getElementById('exportCustomQuestion');if(customQuestion)customQuestion.value='';
     const warning=document.getElementById('exportWarningHint');if(warning)warning.textContent='';
     const refsButton=document.getElementById('toggleReferencesBtn');if(refsButton){refsButton.textContent='展開典籍參照';refsButton.setAttribute('aria-expanded','false');}
-    const ids=['resultMeta','precisionNotice','summary','yearTimelineSection','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'];
+    const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'];
     ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
   }
 }
 
-function timelineBirthSignature(birth){
-  const roles=birth.roles||{};
-  const shape=items=>(items||[]).map(x=>`${x.el||x.element||''}:${x.organ||''}:${x.kind||x.role||''}:${x.source||''}`).join(',');
-  const signature={
-    year:birth.by&&birth.by.year,gz:birth.by&&birth.by.gz,phase:birth.phase&&birth.phase.index,fivePhase:birth.fivePhase&&birth.fivePhase.index,
-    mode:CALC_TIME_MODE,southNorthMode:birth.southNorthMode,yun:birth.yun&&[birth.yun.element,birth.yun.degree],
-    eras:birth.eras&&[birth.eras.isTruePingQi,birth.eras.isSecondaryPingQi,birth.eras.isPseudoPingQi,birth.eras.dynamicOverridesPseudo,birth.eras.finalName],
-    homo:birth.homo&&birth.homo.patterns&&birth.homo.patterns.map(x=>x.name),hetero:birth.hetero&&birth.hetero.name,
-    baseWeak:shape(roles.baseWeak),baseStrong:shape(roles.baseStrong),imprintWeak:shape(roles.imprintWeak),sixStepWeak:shape(roles.sixStepWeak),sixStepStrong:shape(roles.sixStepStrong),
-    conflicts:(roles.conflicts||[]).map(x=>`${x.element}:${x.organ}`).join(','),
-    repair:birth.repairWindow&&birth.repairWindow.windows&&birth.repairWindow.windows.map(w=>`${w.year}:${w.type}:${w.mechanism}`).join('|'),
-    annualYun:birth.annualYun&&[birth.annualYun.year,birth.annualYun.isPhaseShifted,birth.annualYun.phaseShiftDirection],
-    yufa:birth.yufa&&[birth.yufa.active,birth.yufa.yuElement,birth.yufa.yuOrgan,birth.yufa.timing,birth.yufa.desc]
-  };
-  return JSON.stringify(signature);
-}
-function getTargetYearRows(birth,targetYear,southNorthMode){
-  const start=Math.max(1,targetYear-5),end=Math.min(3000,targetYear+5),rows=[],birthSig=timelineBirthSignature(birth);
-  for(let year=start;year<=end;year++){
-    const cacheKey=`${birthSig}|${year}`;let row=TARGET_YEAR_ROW_CACHE.get(cacheKey);
-    if(row){TARGET_YEAR_ROW_CACHE.delete(cacheKey);TARGET_YEAR_ROW_CACHE.set(cacheKey,row);rows.push(row);continue;}
-    const model=buildTargetYearSnapshot(year,southNorthMode);
-    const isCross=year!==birth.by.year;
-    const matches=isCross?matchPattern9(birth,model,SCENARIO.CROSS_YEAR).matches:[];
-    const fortunes=isCross?calcSixStepFortune(birth,model):null;
-    const windowMatches=isCross&&birth.repairWindow?birth.repairWindow.windows.filter(w=>w.year===model.gz.gan).map(w=>({window:w,result:repairWindowEligibility(model,w)})):[];
-    row={year,model,patterns:matches.length,warningSteps:fortunes?fortunes.filter(f=>f.warnings.length>0).length:null,windowMatches};
-    TARGET_YEAR_ROW_CACHE.set(cacheKey,row);while(TARGET_YEAR_ROW_CACHE.size>132)TARGET_YEAR_ROW_CACHE.delete(TARGET_YEAR_ROW_CACHE.keys().next().value);rows.push(row);
-  }
-  return rows;
-}
-function renderTargetYearTimeline(birth,target){
-  const el=document.getElementById('yearTimelineSection');if(!el)return;
-  let rows;try{rows=getTargetYearRows(birth,target.year,birth.southNorthMode);}catch(err){console.error('[WYLQ] 流年速覽生成失敗',err);el.innerHTML='<h2>流年氣化與修復窗口速覽</h2><div class="notice">目前無法產生速覽；原本的年度推算結果不受影響。</div>';return;}
-  const rowHtml=rows.map(r=>{
-    const sev=r.model.severity;
-    const sameBirthYear=r.year===birth.by.year;
-    const wnd=sameBirthYear?'同年不適用':r.windowMatches.length?r.windowMatches.map(x=>{const e=x.result;return `${x.window.type}：${e.provisional?'暫行':e.eligible?'通過':'排除'}${e.pingQiMildWindow?'（另列平調參考候選，非正式窗口）':''}${(!e.eligible||e.provisional)&&e.reason?'（'+e.reason+'）':''}`;}).join('；'):(birth.repairWindow?'未命中':'—');
-    const statusCls=r.windowMatches.some(x=>x.result.eligible&&!x.result.provisional)?'ok':r.windowMatches.some(x=>x.result.provisional)?'pending':r.windowMatches.length?'blocked':'';
-    return `<tr${r.year===target.year?' class="current-target-year"':''}><td><button type="button" class="year-pick" data-timeline-year="${r.year}" aria-current="${r.year===target.year?'true':'false'}">${r.year} ${r.year===target.year?'◆':''}</button></td><td><b>${r.model.gz.gz}</b><span class="date-range">${r.model.yunAnnual.element}運${r.model.yunAnnual.degree}</span></td><td>${sev.label}<span class="date-range">${sev.patternName}</span></td><td>${r.warningSteps===null?'同年不計':`${r.patterns} 項`}</td><td>${r.warningSteps===null?'同年不計':`${r.warningSteps}/6 步`}</td><td><span class="status-pill ${statusCls}">${r.windowMatches.some(x=>x.result.eligible&&!x.result.provisional)?'通過':r.windowMatches.some(x=>x.result.provisional)?'暫行':r.windowMatches.length?'被排除':(sameBirthYear?'同年不適用':(birth.repairWindow?'未命中':'—'))}</span><span class="date-range">${wnd}</span></td></tr>`;
-  }).join('');
-  const start=rows.length?rows[0].year:target.year,end=rows.length?rows[rows.length-1].year:target.year;
-  const clipped=start!==target.year-5||end!==target.year+5;const rangeTitle=clipped?`（支援年份範圍裁切：${start}–${end}，共 ${rows.length} 年）`:'（前後五年）';
-  el.innerHTML=`<h2>流年氣化與修復窗口速覽${rangeTitle}</h2><div class="notice source-layer">點選年份可在不重填出生資料的情況下切換目標運氣年。此表沿用現行嚴格覆核，不自行放寬平氣、高階格局或偽平氣排除條件；「被排除」代表現行模型判定，待裁定的替代規則不計入正式窗口。</div><div class="timeline-wrap"><table class="year-timeline"><thead><tr><th>目標運氣年</th><th>干支／歲運</th><th>十級格局</th><th>九模式</th><th>六步警示</th><th>修復窗口覆核</th></tr></thead><tbody>${rowHtml}</tbody></table></div>`;
-}
 function renderObservationPanel(target){
   const el=document.getElementById('observationSection');if(!el)return;
   const dateEl=document.getElementById('observeDate');
@@ -2102,7 +2045,7 @@ function renderObservationPanel(target){
     }
   }
   if(dateEl&&bodyEl){bodyEl.innerHTML=html;return;}
-  el.innerHTML=`<h2>指定觀察日期與當前時位</h2><div class="notice source-layer">觀察日期使用台北時間中午作日內取樣；若要讓結果頁與該日期一致，請套用日期所屬運氣年。觀察日期是時位高亮的唯一來源；若其所屬運氣年與目標年不同，六步高亮暫停並顯示跨年提示。歲半模式將 3/1 與 10/1 代理取樣和指定觀察日分開顯示；不改變核心分類規則。</div><div class="observation-toolbar"><div class="field"><label for="observeDate">觀察日期</label><input type="date" id="observeDate" min="0001-01-01" max="3000-12-31" value="${escapeAttr(dateText)}" /></div><button type="button" id="todayObservationBtn" class="back-btn">帶入今日</button><button type="button" id="applyObservationDateBtn" class="back-btn">以日期所屬運氣年推算</button></div><div id="observationResultBody">${html}</div>`;
+  el.innerHTML=`<details class="observation-details"><summary>指定觀察日期與當前時位 <span class="observation-hint">（預設收合；需要時展開）</span></summary><div class="observation-content"><div class="notice source-layer">觀察日期使用台北時間中午作日內取樣；若要讓結果頁與該日期一致，請套用日期所屬運氣年。觀察日期是時位高亮的唯一來源；若其所屬運氣年與目標年不同，六步高亮暫停並顯示跨年提示。歲半模式將 3/1 與 10/1 代理取樣和指定觀察日分開顯示；不改變核心分類規則。</div><div class="observation-toolbar"><div class="field"><label for="observeDate">觀察日期</label><input type="date" id="observeDate" min="0001-01-01" max="3000-12-31" value="${escapeAttr(dateText)}" /></div><button type="button" id="todayObservationBtn" class="back-btn">帶入今日</button><button type="button" id="applyObservationDateBtn" class="back-btn">以日期所屬運氣年推算</button></div><div id="observationResultBody">${html}</div></div></details>`;
 }
 function wrapStaticReferenceSection(id,title){
   const el=document.getElementById(id);if(!el||el.querySelector(':scope > details.reference-wrapper'))return;
@@ -2130,20 +2073,9 @@ function updateObservationAndHighlights(){
   renderPulseSixStep(state.target);
   return true;
 }
-function quickRecalculateTarget(year){
-  const n=Number(year);if(!Number.isInteger(n)||n<1||n>3000){setFormError('目標運氣年須為 1–3000 的整數。');return false;}
-  if(!birthConfirmed||confirmedBirthKey!==currentBirthKey()){setFormError('出生資料確認已失效；請返回輸入頁重新確認。');return false;}
-  setFormError('');
-  const input=document.getElementById('target'),quick=document.getElementById('quickTargetYear');
-  const resultWasVisible=document.getElementById('view-result')?.hidden===false;
-  try{
-    if(input)input.value=String(n);if(quick)quick.value=String(n);
-    const ok=calculate();if(ok===true){showView('result',!resultWasVisible);return true;}return false;
-  }catch(err){console.error('[WYLQ] 快速切換目標年失敗：',err);setFormError('切換目標年時發生錯誤；請返回輸入頁重算。');return false;}
-}
 function calculate(){
   const previousTimeMode=CALC_TIME_MODE;
-  const ids=['resultMeta','precisionNotice','summary','yearTimelineSection','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'];
+  const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'];
   const snap=ids.map(id=>{const el=document.getElementById(id);return el?{innerHTML:el.innerHTML,hidden:!!el.hidden}:null;});
   let ok=false;
   try{ok=_calculateCore();}
@@ -2212,10 +2144,9 @@ function _calculateCore(){
   document.getElementById('resultMeta').innerHTML=`出生所屬運氣年 <b>${fmtYearWithGZ(by.year,by.gz)}</b>｜目標 <b>${targetYear}（${tgz.gz}）</b>｜<span class="u-style-34d22304">WYLQ-Audit ${APP_VERSION}</span>`;
   try{
     {const pn=document.getElementById('precisionNotice');if(pn){const txt=precisionNoticeText(by.year,targetYear);/* SAFETY: txt is generated only by precisionNoticeText() from numbers and fixed literals; never concatenate user-controlled text here. */pn.innerHTML=txt?('<b>ℹ 精度提示：</b>'+txt):'';pn.hidden=!txt;}}
-    renderObservationPanel(target);renderSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderChronicleSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);renderPulseBenMai(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderHerbDirection(birth);tagReferenceDetails();renderTargetYearTimeline(birth,target);
+    renderObservationPanel(target);renderSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderChronicleSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);renderPulseBenMai(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderHerbDirection(birth);tagReferenceDetails();
   }catch(renderErr){console.error('[WYLQ] 渲染失敗（E-CALC-002）：',renderErr);setFormError('推算未完成（錯誤代碼 E-CALC-002）。輸出生成時發生錯誤；技術細節已記錄於開發者主控台。');return false;}
   /* Export only the state that produced the visible results; never re-read edited form fields from the export dialog. */
-  const quickYearEl=document.getElementById('quickTargetYear');if(quickYearEl)quickYearEl.value=String(targetYear);
   _lastExportState = {birth,target,birthInput:birthDateInput,timeInput,pulseObserved,depEvidence,timeModeLabel:calcTimeModeLabel(),observationDate:document.getElementById('observeDate')?.value||''};
   return true;
 }
@@ -3524,17 +3455,12 @@ if(_downloadExportBtn) _downloadExportBtn.addEventListener('click',()=>{
 });
 
 // Result-page navigation and controls are delegated; they survive panel re-rendering.
-document.getElementById('targetYearPrev')?.addEventListener('click',()=>quickRecalculateTarget(Number(document.getElementById('quickTargetYear')?.value||document.getElementById('target')?.value)-1));
-document.getElementById('targetYearNext')?.addEventListener('click',()=>quickRecalculateTarget(Number(document.getElementById('quickTargetYear')?.value||document.getElementById('target')?.value)+1));
-document.getElementById('targetYearCurrent')?.addEventListener('click',()=>{const old=CALC_TIME_MODE;let year=null;try{CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));year=safeObservationRegimeYear(new Date());}catch(err){setFormError('無法依目前時間定位運氣年。');return;}finally{CALC_TIME_MODE=old;}if(year===null){setFormError('目前日期未定位於支援範圍內的運氣年。');return;}quickRecalculateTarget(year);});
-document.getElementById('quickTargetYear')?.addEventListener('change',e=>quickRecalculateTarget(e.target.value));
 document.getElementById('resultNav')?.addEventListener('click',e=>{const b=e.target.closest('[data-nav-target]');if(!b)return;const el=document.getElementById(b.dataset.navTarget);if(el)el.scrollIntoView({behavior:'auto',block:'start'});});
-document.getElementById('yearTimelineSection')?.addEventListener('click',e=>{const b=e.target.closest('[data-timeline-year]');if(!b)return;quickRecalculateTarget(b.dataset.timelineYear);});
 document.getElementById('toggleReferencesBtn')?.addEventListener('click',()=>toggleReferenceSections());
 document.getElementById('observationSection')?.addEventListener('click',e=>{
   const btn=e.target.closest('button');if(!btn)return;
   if(btn.id==='todayObservationBtn'){const now=new Date(),tp=taipeiDateParts(now),input=document.getElementById('observeDate');if(input)input.value=`${String(tp.year).padStart(4,'0')}-${String(tp.month).padStart(2,'0')}-${String(tp.day).padStart(2,'0')}`;setFormError('');updateObservationAndHighlights();return;}
-  if(btn.id==='applyObservationDateBtn'){const v=document.getElementById('observeDate')?.value;if(!v){setFormError('請先選擇觀察日期。');return;}if(!strictDateValue(v)){setFormError('觀察日期無效或超出支援範圍（公元 1–3000 年）。');return;}const dt=new Date(`${v}T12:00:00+08:00`);if(!Number.isFinite(dt.getTime())){setFormError('觀察日期格式無效。');return;}const old=CALC_TIME_MODE;let y=null;try{CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));y=safeObservationRegimeYear(dt);}catch(err){setFormError('無法依觀察日期定位運氣年。');return;}finally{CALC_TIME_MODE=old;}if(y===null){setFormError('觀察日期無法定位於支援範圍內的運氣年；請選擇其他日期。');return;}setFormError('');quickRecalculateTarget(y);}
+  if(btn.id==='applyObservationDateBtn'){const v=document.getElementById('observeDate')?.value;if(!v){setFormError('請先選擇觀察日期。');return;}if(!strictDateValue(v)){setFormError('觀察日期無效或超出支援範圍（公元 1–3000 年）。');return;}const dt=new Date(`${v}T12:00:00+08:00`);if(!Number.isFinite(dt.getTime())){setFormError('觀察日期格式無效。');return;}const old=CALC_TIME_MODE;let y=null;try{CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));y=safeObservationRegimeYear(dt);}catch(err){setFormError('無法依觀察日期定位運氣年。');return;}finally{CALC_TIME_MODE=old;}if(y===null){setFormError('觀察日期無法定位於支援範圍內的運氣年；請選擇其他日期。');return;}setFormError('');const targetInput=document.getElementById('target');if(!targetInput){setFormError('找不到目標運氣年欄位；請返回輸入頁重新推算。');return;}targetInput.value=String(y);const ok=calculate();if(ok===true){const replacement=document.getElementById('observeDate');if(replacement)replacement.value=v;if(_lastExportState){_lastExportState.observationDate=v;updateObservationAndHighlights();}const disclosure=document.querySelector('#observationSection details.observation-details');if(disclosure)disclosure.open=true;}
 });
 document.getElementById('observationSection')?.addEventListener('change',e=>{if(e.target.id==='observeDate'&&_lastExportState){setFormError('');updateObservationAndHighlights();}});
 (function wirePrintFriendly(){const btn=document.getElementById('printFriendlyBtn');if(!btn)return;btn.addEventListener('click',()=>{const details=[...document.querySelectorAll('details')].map(d=>({d,open:d.open}));let restored=false,fallbackTimer=null;const restore=()=>{if(restored)return;restored=true;if(fallbackTimer!==null)clearTimeout(fallbackTimer);details.forEach(x=>{if(x.d.isConnected)x.d.open=x.open;});window.removeEventListener('afterprint',restore);};const fallbackRestore=()=>{if(restored)return;const printing=!!(window.matchMedia&&window.matchMedia('print').matches);if(printing){fallbackTimer=setTimeout(fallbackRestore,30000);return;}restore();};document.querySelectorAll('#sixStepFortuneSection details').forEach(d=>d.open=true);document.querySelectorAll('details.reference-wrapper, details.reference-detail').forEach(d=>d.open=false);window.addEventListener('afterprint',restore,{once:true});try{window.print();}catch(err){console.error('[WYLQ] 列印視窗無法開啟：',err);restore();setFormError('列印視窗無法開啟；請改用瀏覽器列印功能。');return;}finally{if(!restored)fallbackTimer=setTimeout(fallbackRestore,30000);}});})();
