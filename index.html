@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-HpoM9q8nh9SmZlyr2N6U2mqRjLDXDcF7giZOWrKvFmQ='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-elem 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-XzdoalYC1O7fJ8gA6hgv72uhN4RBV4avbhhXIivr34I='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-elem 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -668,25 +668,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
   </div>
 </section>
 
-<dialog id="liuYuanDialog" class="export-dialog" aria-labelledby="liuYuanDialogTitle" aria-describedby="liuYuanDialogNotice">
-  <h3 id="liuYuanDialogTitle">
-    <span>《素問・六元正紀大論》六十甲子查核</span>
-    <button type="button" id="closeLiuYuanDialogBtn" class="back-btn">✕ 關閉</button>
-  </h3>
-  <div class="notice source-layer" id="liuYuanDialogNotice">本面板只依所選歲干支查閱經文合論、正對化分論與藥食宜資料；不讀取或改寫出生資料與個人推算結果。標籤「數值相符」表示數值對照，不單憑數值相等推定原典取值來源，也不表示兩套理論完全相同。</div>
-  <div class="field">
-    <label for="liuYuanGanZhi">選擇歲干支</label>
-    <select id="liuYuanGanZhi" aria-label="選擇六十甲子歲干支"></select>
-    <p class="hint">下拉選單完整列出六十甲子。結果以《素問・六元正紀大論》原典合論為軌道一，以《玄珠密語》等正化／對化分論為軌道二，並列呈現，不強行合併。</p>
-  </div>
-  <div class="export-actions">
-    <button type="button" id="runLiuYuanQueryBtn" class="primary-btn">查詢此歲 →</button>
-    <button type="button" id="closeLiuYuanDialogBtnBottom" class="back-btn">關閉</button>
-  </div>
-  <div id="liuYuanQueryResult" class="section" aria-live="polite" aria-atomic="false">
-    <div class="notice">選擇歲干支後，按「查詢此歲」顯示正化度、來源對照、邪氣化度與藥食宜。</div>
-  </div>
-</dialog>
+
 
 <section id="view-result" hidden>
   <div class="result-sticky-shell">
@@ -705,11 +687,6 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
       <div class="notice caution-layer u-style-a82d7062" id="resultDisclaimer" role="note"><b>⚠ 安全提示：</b>本結果為傳統五運六氣模型推演，不是醫療診斷，亦非個人化處方；不應僅憑推算結果自行用藥、停藥或延誤就醫。此單檔版本不主動發送網路請求；請仍以可信來源取得檔案。</div>
       <div class="notice transition u-style-a82d7062" id="precisionNotice" role="status" hidden></div>
       <div class="card summary" id="summary"></div>
-      <div class="card panel section" id="liuYuanLookupSection">
-        <h2>典籍查詢｜《素問・六元正紀大論》</h2>
-        <p>查閱六十甲子正化度、邪氣化度、災宮與藥食宜，並對照原典合論及《玄珠密語》等正化／對化分論數值。此查核模組獨立於個人推算，不讀取出生資料。</p>
-        <button type="button" id="openLiuYuanDialogBtn" class="back-btn" aria-haspopup="dialog">開啟六十甲子查核 →</button>
-      </div>
       <div class="card panel section" id="observationSection"></div>
       <details class="card panel section" id="auditSection"><summary><h2>運氣推步紀要與審計軌跡 <span class="audit-toggle-hint">（預設收起；點擊展開／收起）</span></h2></summary><div class="audit-terminal" id="auditLog"></div></details>
       <div class="card panel section birth-section" id="birthSection"></div>
@@ -726,6 +703,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
       <div class="card panel section birth-section" id="shengFuYuFaSection"></div>
       <div class="card panel section target-section" id="sixSection"></div>
       <div class="card panel section target-section" id="targetSection"></div>
+      <div class="card panel section target-section" id="liuYuanTargetSection" aria-live="polite"></div>
       <div class="card panel section" id="ninePalaceSection" aria-live="polite"></div>
       <div class="card panel section" id="chronicleSection"></div>
       <div class="card panel section target-section" id="interactionSection"></div>
@@ -820,10 +798,15 @@ function liuyuanMakeSubsection(title, content) {
   if (content) section.appendChild(content);
   return section;
 }
-function liuyuanRenderInfo(info) {
-  const root = document.getElementById('liuYuanQueryResult');
+function renderLiuYuanTargetSection(target) {
+  const root = document.getElementById('liuYuanTargetSection');
   if (!root) return;
   root.replaceChildren();
+  try {
+    const info = computeLiuYuanZhengJiInfo(target.gz.gz);
+    root.appendChild(liuyuanMakeElement('h2', '', '六元正紀｜目標分析年份 ' + target.year + '（' + info.干支 + '）'));
+    root.appendChild(liuyuanMakeElement('p', 'hint', '依主程式已選取的目標運氣年干支自動顯示，不需另選歲干支。經文合論與正化／對化分論分軌並列，不強行合併；本模組不讀取出生日期或出生時間。'));
+    root.appendChild(liuyuanMakeElement('p', 'notice source-layer', '來源判讀：數值相符僅表示數字對照，不單憑相等推定原典作者的實際取值推導；土數依「土常以生」及「土無成數」例外處理。'));
   const pair = LIUYUAN_60_JIAZI_MAP[info.干支];
   const track1 = info.軌道1_六元正紀經文合論正化度;
   const expanded = track1.上中下展開;
@@ -880,46 +863,11 @@ function liuyuanRenderInfo(info) {
   rawDetails.appendChild(liuyuanMakeElement('p', '', '藥食宜原文：' + pair.yaoShiYiRaw));
   rawDetails.appendChild(liuyuanMakeElement('p', 'hint', '內部省文碼：' + (pair.omissionCode || '無') + '；' + (pair.omissionType || '無另列省文說明')));
   root.appendChild(rawDetails);
-}
-function initLiuYuanLookupUI() {
-  const dialog = document.getElementById('liuYuanDialog');
-  const select = document.getElementById('liuYuanGanZhi');
-  const openBtn = document.getElementById('openLiuYuanDialogBtn');
-  const closeTop = document.getElementById('closeLiuYuanDialogBtn');
-  const closeBottom = document.getElementById('closeLiuYuanDialogBtnBottom');
-  const queryBtn = document.getElementById('runLiuYuanQueryBtn');
-  if (!dialog || !select || !openBtn || !closeTop || !queryBtn) return;
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < 60; i++) {
-    const gz = GAN[i % GAN.length] + ZHI[i % ZHI.length];
-    const pair = LIUYUAN_60_JIAZI_MAP[gz];
-    if (!pair) continue;
-    const option = document.createElement('option');
-    option.value = gz;
-    option.textContent = gz + '（第 ' + pair.pairIndex + ' 組：' + pair.years.join('／') + '）';
-    fragment.appendChild(option);
+  } catch (error) {
+    root.replaceChildren(liuyuanMakeElement('div', 'notice caution-layer', '六元正紀資料暫時無法顯示；目標年份的其他推算結果不受影響。'));
+    console.error('[WYLQ] 六元正紀呈現失敗：', error);
   }
-  select.replaceChildren(fragment);
-  select.value = '甲子';
-  openBtn.addEventListener('click', () => {
-    if (typeof dialog.showModal === 'function') dialog.showModal();
-    else dialog.setAttribute('open', '');
-  });
-  const closeDialog = () => {
-    if (typeof dialog.close === 'function' && dialog.open) dialog.close();
-    else dialog.removeAttribute('open');
-  };
-  closeTop.addEventListener('click', closeDialog);
-  if (closeBottom) closeBottom.addEventListener('click', closeDialog);
-  queryBtn.addEventListener('click', () => {
-    try { liuyuanRenderInfo(computeLiuYuanZhengJiInfo(select.value)); }
-    catch (error) {
-      const root = document.getElementById('liuYuanQueryResult');
-      if (root) root.replaceChildren(liuyuanMakeElement('div', 'notice caution-layer', '查核失敗：' + (error && error.message ? error.message : '輸入或資料錯誤')));
-    }
-  });
 }
-
 function setFormError(message){const text=message||'';const el=document.getElementById('formError');if(el){el.textContent=text;el.hidden=!text;}const resultEl=document.getElementById('resultError');if(resultEl){resultEl.textContent=text;resultEl.hidden=!text||document.getElementById('view-result')?.hidden===true;}}
 function showView(name,resetScroll=true){const isInput=name==='input';if(isInput){const dlg=document.getElementById('exportDialog');if(dlg&&dlg.open&&typeof dlg.close==='function')dlg.close();}document.getElementById('view-input').hidden=!isInput;document.getElementById('view-result').hidden=isInput;const resultError=document.getElementById('resultError');if(resultError)resultError.hidden=isInput||!resultError.textContent;if(resetScroll)requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));}
 function safeVal(id,fb){const el=document.getElementById(id);if(!el)return fb;const v=el.value;return(v===undefined||v===null||v==='')?fb:v;}
@@ -3580,7 +3528,7 @@ function clearDerivedBirthState(clearRendered=false){
   if(clearRendered){
     const customQuestion=document.getElementById('exportCustomQuestion');if(customQuestion)customQuestion.value='';
     const warning=document.getElementById('exportWarningHint');if(warning)warning.textContent='';
-    const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'];
+    const ids=['resultMeta','liuYuanTargetSection','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'];
     ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
   }
 }
@@ -3647,7 +3595,7 @@ function updateObservationAndHighlights(){
 }
 function calculate(){
   const previousTimeMode=CALC_TIME_MODE;
-  const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'];
+  const ids=['resultMeta','liuYuanTargetSection','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'];
   const snap=ids.map(id=>{const el=document.getElementById(id);return el?{innerHTML:el.innerHTML,hidden:!!el.hidden}:null;});
   let ok=false;
   try{ok=_calculateCore();}
@@ -3658,7 +3606,7 @@ function calculate(){
 }
 function _calculateCore(){
   const securityInputError=validateSecurityInputs();if(securityInputError){setFormError(securityInputError);return false;}
-  ['summary','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+  ['summary','liuYuanTargetSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
   const birthDateInput=safeVal('birth','');const timeInput=safeVal('time','12:00');const targetRaw=safeVal('target','');if(!/^\d+$/.test(String(targetRaw).trim())){setFormError('目標年份必須為整數（不接受小數、字母或空白）。');return false;}const targetYear=Number(targetRaw);
   CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));
   const bdate=new Date(`${birthDateInput}T${timeInput}:00+08:00`);
@@ -3716,7 +3664,7 @@ function _calculateCore(){
   document.getElementById('resultMeta').innerHTML=`出生所屬運氣年 <b>${fmtYearWithGZ(by.year,by.gz)}</b>｜目標 <b>${targetYear}（${tgz.gz}）</b>｜<span class="u-style-34d22304">WYLQ-Audit ${APP_VERSION}</span>`;
   try{
     {const pn=document.getElementById('precisionNotice');if(pn){const txt=precisionNoticeText(by.year,targetYear);/* SAFETY: txt is generated only by precisionNoticeText() from numbers and fixed literals; never concatenate user-controlled text here. */pn.innerHTML=txt?('<b>ℹ 精度提示：</b>'+txt):'';pn.hidden=!txt;}}
-    renderObservationPanel(target);renderSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderChronicleSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);renderPulseBenMai(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderHerbDirection(birth);renderNinePalaceSection(target);tagReferenceDetails();
+    renderObservationPanel(target);renderSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderLiuYuanTargetSection(target);renderChronicleSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);renderPulseBenMai(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderHerbDirection(birth);renderNinePalaceSection(target);tagReferenceDetails();
   }catch(renderErr){console.error('[WYLQ] 渲染失敗（E-CALC-002）：',renderErr);setFormError('推算未完成（錯誤代碼 E-CALC-002）。輸出生成時發生錯誤；技術細節已記錄於開發者主控台。');return false;}
   /* Export only the state that produced the visible results; never re-read edited form fields from the export dialog. */
   _lastExportState = {birth,target,birthInput:birthDateInput,timeInput,pulseObserved,depEvidence,timeModeLabel:calcTimeModeLabel(),observationDate:document.getElementById('observeDate')?.value||''};
@@ -4671,7 +4619,6 @@ if(ninePalacePanel){
   });
 }
 
-initLiuYuanLookupUI();
 showView('input');
 
 
