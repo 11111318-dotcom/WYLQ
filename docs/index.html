@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WNcytCk3EzFmYAPmtaLQji1pfdta/eMhYckMuuEE6BQ='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-elem 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-HpoM9q8nh9SmZlyr2N6U2mqRjLDXDcF7giZOWrKvFmQ='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-elem 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -664,9 +664,35 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
       <div id="formError" class="notice caution-layer form-error" role="alert" aria-live="assertive" hidden></div>
     </form>
 
+    <div class="input-notice">
+      <b>典籍查核工具｜《素問・六元正紀大論》</b>
+      <p>可直接查詢六十甲子正化度、邪氣化度、藥食宜，以及《素問》合論數與正化／對化分論數值的對照；不需要先輸入出生資料或執行個人推算。</p>
+      <button type="button" id="openLiuYuanDialogBtn" class="back-btn">開啟六十甲子查核 →</button>
+    </div>
+
     <div class="input-notice">⚠️ 安全提示：本系統產出之弱臟定位、格局劇烈度、脈位推算均屬傳統模型推演，不可替代醫療診斷。本單檔版本不主動發送網路請求；出生資料在本頁計算，不由程式上傳。</div>
   </div>
 </section>
+
+<dialog id="liuYuanDialog" class="export-dialog" aria-labelledby="liuYuanDialogTitle" aria-describedby="liuYuanDialogNotice">
+  <h3 id="liuYuanDialogTitle">
+    <span>《素問・六元正紀大論》六十甲子查核</span>
+    <button type="button" id="closeLiuYuanDialogBtn" class="back-btn">✕ 關閉</button>
+  </h3>
+  <div class="notice source-layer" id="liuYuanDialogNotice">本面板只查閱經文合論、正對化分論與藥食宜資料，不讀取出生日期、出生時間或個人推算結果。標籤「數值相符」表示數值對照，不單憑數值相等推定原典取值來源，也不表示兩套理論完全相同。</div>
+  <div class="field">
+    <label for="liuYuanGanZhi">選擇歲干支</label>
+    <select id="liuYuanGanZhi" aria-label="選擇六十甲子歲干支"></select>
+    <p class="hint">下拉選單完整列出六十甲子。結果以《素問・六元正紀大論》原典合論為軌道一，以《玄珠密語》等正化／對化分論為軌道二，並列呈現，不強行合併。</p>
+  </div>
+  <div class="export-actions">
+    <button type="button" id="runLiuYuanQueryBtn" class="primary-btn">查詢此歲 →</button>
+    <button type="button" id="closeLiuYuanDialogBtnBottom" class="back-btn">關閉</button>
+  </div>
+  <div id="liuYuanQueryResult" class="section" aria-live="polite" aria-atomic="false">
+    <div class="notice">選擇歲干支後，按「查詢此歲」顯示正化度、來源對照、邪氣化度與藥食宜。</div>
+  </div>
+</dialog>
 
 <section id="view-result" hidden>
   <div class="result-sticky-shell">
@@ -763,6 +789,138 @@ try { if (window.opener) window.opener = null; } catch (_) {}
 let _lastExportState = null;
 console.log('[WYLQ] '+APP_VERSION+' 開始執行');
 
+
+/* 六元正紀查核介面：獨立於主程式的出生／流年計算；所有資料以 DOM textContent 輸出。 */
+function liuyuanMakeElement(tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined && text !== null) el.textContent = String(text);
+  return el;
+}
+function liuyuanMakeTable(headers, rows) {
+  const wrap = liuyuanMakeElement('div', 'table-wrap');
+  const table = liuyuanMakeElement('table');
+  const thead = liuyuanMakeElement('thead');
+  const headRow = liuyuanMakeElement('tr');
+  headers.forEach((label) => headRow.appendChild(liuyuanMakeElement('th', '', label)));
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+  const tbody = liuyuanMakeElement('tbody');
+  rows.forEach((row) => {
+    const tr = liuyuanMakeElement('tr');
+    row.forEach((value) => tr.appendChild(liuyuanMakeElement('td', '', value === undefined || value === null || value === '' ? '—' : value)));
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  return wrap;
+}
+function liuyuanMakeSubsection(title, content) {
+  const section = liuyuanMakeElement('div', 'section');
+  section.appendChild(liuyuanMakeElement('h4', '', title));
+  if (content) section.appendChild(content);
+  return section;
+}
+function liuyuanRenderInfo(info) {
+  const root = document.getElementById('liuYuanQueryResult');
+  if (!root) return;
+  root.replaceChildren();
+  const pair = LIUYUAN_60_JIAZI_MAP[info.干支];
+  const track1 = info.軌道1_六元正紀經文合論正化度;
+  const expanded = track1.上中下展開;
+  const track2 = info.軌道2_玄珠類經正對化分論生成數;
+  const split = track2.分論生成數;
+
+  root.appendChild(liuyuanMakeElement('h4', '', info.干支 + '｜' + info.所屬經文組別));
+  root.appendChild(liuyuanMakeElement('p', 'hint', '原典篇頭同化標記：' + (info.原典篇頭同化標記 || '無特別標記')));
+  root.appendChild(liuyuanMakeElement('p', '', '三氣格局：' + info.三氣格局.上_司天 + '；' + info.三氣格局.中_歲運 + '；' + info.三氣格局.下_在泉));
+  root.appendChild(liuyuanMakeElement('div', 'notice source-layer', '判讀邊界：本面板把原典合論值與正化／對化分論值並列。自動標籤說明數值是否相符；相符本身不能證明原典作者的取值推導過程。土數另依「土常以生」及「土無成數」例外處理。'));
+
+  const track1Rows = [
+    ['上（司天）', expanded.上_司天.化名 + ' ' + expanded.上_司天.數值, expanded.上_司天.數值性質, expanded.上_司天.是否省文合併 ? '省文展開' : '原文列項'],
+    ['中（歲運）', expanded.中_歲運.化名 + ' ' + expanded.中_歲運.數值, expanded.中_歲運.數值性質, expanded.中_歲運.是否省文合併 ? '省文展開' : '原文列項'],
+    ['下（在泉）', expanded.下_在泉.化名 + ' ' + expanded.下_在泉.數值, expanded.下_在泉.數值性質, expanded.下_在泉.是否省文合併 ? '省文展開' : '原文列項']
+  ];
+  const classicalSection = liuyuanMakeSubsection('軌道一｜《素問・六元正紀大論》經文合論正化度', liuyuanMakeTable(['位置', '合論化名／數值', '數值對照標籤', '列項狀態'], track1Rows));
+  classicalSection.appendChild(liuyuanMakeElement('p', 'hint', '原典記載：' + track1.原典記載));
+  classicalSection.appendChild(liuyuanMakeElement('p', 'hint', '省文／異名說明：' + track1.省文與異名說明));
+  root.appendChild(classicalSection);
+
+  const track2Rows = [
+    ['上（司天）', split.上_司天.六氣 + '・' + split.上_司天.化名, split.上_司天.數值, '依地支正化／對化規則分論'],
+    ['中（歲運）', split.中_歲運.歲運 + '・' + split.中_歲運.化名, split.中_歲運.數值, split.中_歲運.依據],
+    ['下（在泉）', split.下_在泉.六氣 + '・' + split.下_在泉.化名, split.下_在泉.數值, '依地支正化／對化規則分論']
+  ];
+  const splitSection = liuyuanMakeSubsection('軌道二｜《玄珠密語》等正化／對化分論生成數', liuyuanMakeTable(['位置', '氣／歲運', '分論數值', '依據'], track2Rows));
+  splitSection.appendChild(liuyuanMakeElement('p', 'hint', '本年地支：' + track2.本年地支正對屬性 + '。' + track2.正對化法則));
+  splitSection.appendChild(liuyuanMakeElement('p', 'hint', '方位／月建解釋：' + track2.方位月建釋義));
+  splitSection.appendChild(liuyuanMakeElement('p', 'notice ' + (track2.與經文合論數是否存異 ? 'transition' : 'source-layer'), '雙軌比較：' + (track2.與經文合論數是否存異 ? '司天／在泉至少一項數值不同' : '本歲司天／在泉數值與經文合論值相符') + '。' + track2.雙軌差異說明));
+  root.appendChild(splitSection);
+
+  const xie = info.邪氣化度與災宮;
+  const xieSection = liuyuanMakeSubsection('邪氣化度與災宮', null);
+  xieSection.appendChild(liuyuanMakeElement('p', '', xie.原典記載));
+  xieSection.appendChild(liuyuanMakeElement('p', 'hint', xie.有無邪氣化度 ? '災宮數：' + xie.災宮數 : '本組資料未列邪氣化度與災宮。'));
+  root.appendChild(xieSection);
+
+  const herbs = info.其化上中下_藥食宜;
+  const herbSection = liuyuanMakeSubsection('其化上、中、下｜藥食宜', liuyuanMakeTable(
+    ['位置', '經文宜法'],
+    [['上（司天）', herbs.上_司天宜], ['中（歲運）', herbs.中_歲運宜], ['下（在泉）', herbs.下_在泉宜]]
+  ));
+  herbSection.appendChild(liuyuanMakeElement('p', 'notice caution-layer', info.醫療邊界聲明));
+  root.appendChild(herbSection);
+
+  const rawDetails = document.createElement('details');
+  rawDetails.className = 'reference-detail';
+  rawDetails.appendChild(liuyuanMakeElement('summary', '', '展開原典原文與本組資料'));
+  rawDetails.appendChild(liuyuanMakeElement('p', '', '本組干支：' + pair.years.join('、')));
+  rawDetails.appendChild(liuyuanMakeElement('p', '', '三氣原文格局：' + pair.siTianText + '；' + pair.zhongYunText + '；' + pair.zaiQuanText));
+  rawDetails.appendChild(liuyuanMakeElement('p', '', '正化度原文：' + pair.zhengHuaRaw));
+  if (pair.xieQiText) rawDetails.appendChild(liuyuanMakeElement('p', '', '邪氣化度原文：' + pair.xieQiText + (pair.zaiGong === null ? '' : '；災' + pair.zaiGong + '宮')));
+  rawDetails.appendChild(liuyuanMakeElement('p', '', '藥食宜原文：' + pair.yaoShiYiRaw));
+  rawDetails.appendChild(liuyuanMakeElement('p', 'hint', '內部省文碼：' + (pair.omissionCode || '無') + '；' + (pair.omissionType || '無另列省文說明')));
+  root.appendChild(rawDetails);
+}
+function initLiuYuanLookupUI() {
+  const dialog = document.getElementById('liuYuanDialog');
+  const select = document.getElementById('liuYuanGanZhi');
+  const openBtn = document.getElementById('openLiuYuanDialogBtn');
+  const closeTop = document.getElementById('closeLiuYuanDialogBtn');
+  const closeBottom = document.getElementById('closeLiuYuanDialogBtnBottom');
+  const queryBtn = document.getElementById('runLiuYuanQueryBtn');
+  if (!dialog || !select || !openBtn || !closeTop || !queryBtn) return;
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < 60; i++) {
+    const gz = GAN[i % GAN.length] + ZHI[i % ZHI.length];
+    const pair = LIUYUAN_60_JIAZI_MAP[gz];
+    if (!pair) continue;
+    const option = document.createElement('option');
+    option.value = gz;
+    option.textContent = gz + '（第 ' + pair.pairIndex + ' 組：' + pair.years.join('／') + '）';
+    fragment.appendChild(option);
+  }
+  select.replaceChildren(fragment);
+  select.value = '甲子';
+  openBtn.addEventListener('click', () => {
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+  });
+  const closeDialog = () => {
+    if (typeof dialog.close === 'function' && dialog.open) dialog.close();
+    else dialog.removeAttribute('open');
+  };
+  closeTop.addEventListener('click', closeDialog);
+  if (closeBottom) closeBottom.addEventListener('click', closeDialog);
+  queryBtn.addEventListener('click', () => {
+    try { liuyuanRenderInfo(computeLiuYuanZhengJiInfo(select.value)); }
+    catch (error) {
+      const root = document.getElementById('liuYuanQueryResult');
+      if (root) root.replaceChildren(liuyuanMakeElement('div', 'notice caution-layer', '查核失敗：' + (error && error.message ? error.message : '輸入或資料錯誤')));
+    }
+  });
+}
+
 function setFormError(message){const text=message||'';const el=document.getElementById('formError');if(el){el.textContent=text;el.hidden=!text;}const resultEl=document.getElementById('resultError');if(resultEl){resultEl.textContent=text;resultEl.hidden=!text||document.getElementById('view-result')?.hidden===true;}}
 function showView(name,resetScroll=true){const isInput=name==='input';if(isInput){const dlg=document.getElementById('exportDialog');if(dlg&&dlg.open&&typeof dlg.close==='function')dlg.close();}document.getElementById('view-input').hidden=!isInput;document.getElementById('view-result').hidden=isInput;const resultError=document.getElementById('resultError');if(resultError)resultError.hidden=isInput||!resultError.textContent;if(resetScroll)requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));}
 function safeVal(id,fb){const el=document.getElementById(id);if(!el)return fb;const v=el.value;return(v===undefined||v===null||v==='')?fb:v;}
@@ -807,8 +965,8 @@ function twDate(y,m,d,time='00:00:00'){return new Date(`${String(y).padStart(4,'
 function addDays(date,days){return new Date(date.getTime()+days*86400000);}
 function round6(x){return Math.round(x*1e6)/1e6;}
 function fmtCount(v){if(typeof v!=='number'||!Number.isFinite(v))return'—';return v===Math.floor(v)?String(v):v.toFixed(1);}
-document.title='五運六氣｜WYLQ-Audit '+APP_VERSION;
-{const _b=document.getElementById('appVersionBadge');if(_b)_b.textContent='WYLQ-AUDIT '+APP_VERSION;const _f=document.getElementById('versionFooter');if(_f)_f.textContent='WYLQ-Audit '+APP_VERSION;}
+document.title='五運六氣｜WYLQ-Audit '+APP_VERSION+' + 六元正紀 v3.34.0';
+{const _b=document.getElementById('appVersionBadge');if(_b)_b.textContent='WYLQ-AUDIT '+APP_VERSION+' · 六元正紀 v3.34.0';const _f=document.getElementById('versionFooter');if(_f)_f.textContent='WYLQ-Audit '+APP_VERSION+' / 六元正紀 v3.34.0';}
 function fmtYear(y){if(typeof y!=='number'||!Number.isFinite(y)||!Number.isInteger(y))return '未知年份';return y>=1?String(y):'公元前'+(1-y)+'年（天文紀年 '+y+'）';}
 function fmtYearWithGZ(y,gz){if(typeof y!=='number'||!Number.isFinite(y)||!Number.isInteger(y)||typeof gz!=='string'||!gz.trim())return '未知年份';return y>=1?`${y}（${gz}）`:`公元前${1-y}年（天文紀年 ${y} · ${gz}）`;}
 /* 3.31.28：保留既有 ΔT（TT−UT）分段多項式近似模型；分段交界可能不連續，精度警示不等於逐點校準。本版未更動核心天文公式。 */
@@ -854,6 +1012,684 @@ function precisionNoticeText(birthRegimeYear,targetYear){
 
 const GAN=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+
+/* 六元正紀查核模組 v3.34.0（整合版；與主程式出生／流年計算路徑分離） */
+const LIUYUAN_MEDICAL_NOTICE =
+  "⚠️ 本區「其化上・中・下（所謂藥食宜也）」源自《素問·六元正紀大論》五味寒熱調氣常法，僅供古典運氣理論對照，非臨床處方；實際用藥與食療須由合格中醫師依四診合參決定。";
+
+const FALLBACK_GAN = Object.freeze(["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]);
+const FALLBACK_ZHI = Object.freeze(["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]);
+
+let GAN_LIST, ZHI_LIST;
+try { GAN_LIST = Array.isArray(GAN) ? GAN : FALLBACK_GAN; } catch (_) { GAN_LIST = FALLBACK_GAN; }
+try { ZHI_LIST = Array.isArray(ZHI) ? ZHI : FALLBACK_ZHI; } catch (_) { ZHI_LIST = FALLBACK_ZHI; }
+
+const BRANCH_ZHENG_DUI_META = Object.freeze({
+  "子": Object.freeze({ 正對屬性: "對化", 司天六氣: "少陰君火", 在泉地支: "卯", 在泉六氣: "陽明燥金", 司天數: 7, 在泉數: 9, 方位月建釋義: "子居正北十一月建，與正南午位君火對沖，故對化於子（從標成數七）" }),
+  "丑": Object.freeze({ 正對屬性: "對化", 司天六氣: "太陰濕土", 在泉地支: "辰", 在泉六氣: "太陽寒水", 司天數: 5, 在泉數: 6, 方位月建釋義: "丑居東北十二月建，與西南未宮坤土對沖，故對化於丑（土無成數，太陰土仍取五數，不宜將此五稱為成數）" }),
+  "寅": Object.freeze({ 正對屬性: "正化", 司天六氣: "少陽相火", 在泉地支: "亥", 在泉六氣: "厥陰風木", 司天數: 2, 在泉數: 3, 方位月建釋義: "正月建寅孟春木旺，火長生於寅，故少陽相火正化於寅（從本生數二）" }),
+  "卯": Object.freeze({ 正對屬性: "對化", 司天六氣: "陽明燥金", 在泉地支: "子", 在泉六氣: "少陰君火", 司天數: 9, 在泉數: 7, 方位月建釋義: "卯居正東仲春二月建，與正西酉位燥金對沖，故對化於卯（從標成數九）" }),
+  "辰": Object.freeze({ 正對屬性: "對化", 司天六氣: "太陽寒水", 在泉地支: "丑", 在泉六氣: "太陰濕土", 司天數: 6, 在泉數: 5, 方位月建釋義: "辰為季春三月建，與季秋戌位對沖，故太陽寒水對化於辰（從標成數六）" }),
+  "巳": Object.freeze({ 正對屬性: "對化", 司天六氣: "厥陰風木", 在泉地支: "申", 在泉六氣: "少陽相火", 司天數: 8, 在泉數: 7, 方位月建釋義: "巳為孟夏四月建，與孟冬亥位對沖，故對化於巳（從標成數八）" }),
+  "午": Object.freeze({ 正對屬性: "正化", 司天六氣: "少陰君火", 在泉地支: "酉", 在泉六氣: "陽明燥金", 司天數: 2, 在泉數: 4, 方位月建釋義: "午居正南離位仲夏五月建，君火尊位正得南方，故正化於午（從本生數二）" }),
+  "未": Object.freeze({ 正對屬性: "正化", 司天六氣: "太陰濕土", 在泉地支: "戌", 在泉六氣: "太陽寒水", 司天數: 5, 在泉數: 1, 方位月建釋義: "未居西南坤宮季夏六月建，土旺於長夏未分，故正化於未（從本生數五）" }),
+  "申": Object.freeze({ 正對屬性: "對化", 司天六氣: "少陽相火", 在泉地支: "巳", 在泉六氣: "厥陰風木", 司天數: 7, 在泉數: 8, 方位月建釋義: "申為孟秋七月建，與孟春寅位對沖，故對化於申（從標成數七）" }),
+  "酉": Object.freeze({ 正對屬性: "正化", 司天六氣: "陽明燥金", 在泉地支: "午", 在泉六氣: "少陰君火", 司天數: 4, 在泉數: 2, 方位月建釋義: "酉居正西兌位仲秋八月建，正得西方金位，故正化於酉（從本生數四）" }),
+  "戌": Object.freeze({ 正對屬性: "正化", 司天六氣: "太陽寒水", 在泉地支: "未", 在泉六氣: "太陰濕土", 司天數: 1, 在泉數: 5, 方位月建釋義: "戌居西北九月建，太陽寒水得西北漸旺之鄉，故正化於戌（依《玄珠密語》《類經圖翼》正化理論，從本生數一）" }),
+  "亥": Object.freeze({ 正對屬性: "正化", 司天六氣: "厥陰風木", 在泉地支: "寅", 在泉六氣: "少陽相火", 司天數: 3, 在泉數: 2, 方位月建釋義: "亥為孟冬十月建，水生木、木長生於亥，故正化於亥（從本生數三）" })
+});
+
+const STEM_YUN_NUMBER_META = Object.freeze({
+  "甲": Object.freeze({ 歲運: "太宮土運", 太少: "太過", 五行: "土", 數別: "土例外：土常以生，取數五；不以一般成數十論", 化數: 5 }),
+  "乙": Object.freeze({ 歲運: "少商金運", 太少: "不及", 五行: "金", 數別: "生數", 化數: 4 }),
+  "丙": Object.freeze({ 歲運: "太羽水運", 太少: "太過", 五行: "水", 數別: "成數", 化數: 6 }),
+  "丁": Object.freeze({ 歲運: "少角木運", 太少: "不及", 五行: "木", 數別: "生數", 化數: 3 }),
+  "戊": Object.freeze({ 歲運: "太徵火運", 太少: "太過", 五行: "火", 數別: "成數", 化數: 7 }),
+  "己": Object.freeze({ 歲運: "少宮土運", 太少: "不及", 五行: "土", 數別: "生數", 化數: 5 }),
+  "庚": Object.freeze({ 歲運: "太商金運", 太少: "太過", 五行: "金", 數別: "成數", 化數: 9 }),
+  "辛": Object.freeze({ 歲運: "少羽水運", 太少: "不及", 五行: "水", 數別: "生數", 化數: 1 }),
+  "壬": Object.freeze({ 歲運: "太角木運", 太少: "太過", 五行: "木", 數別: "成數", 化數: 8 }),
+  "癸": Object.freeze({ 歲運: "少徵火運", 太少: "不及", 五行: "火", 數別: "生數", 化數: 2 })
+});
+
+const LIUYUAN_30_PAIRS_RAW = Object.freeze([
+  Object.freeze({
+    pairIndex: 1, years: Object.freeze(["甲子", "甲午"]),
+    titleTags: Object.freeze({ "甲子": null, "甲午": null }),
+    siTianText: "上少陰火", zhongYunText: "中太宮土運", zaiQuanText: "下陽明金",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "熱化二，雨化五，燥化四，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "熱化", 數值: 2 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "雨化", 數值: 5 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "燥化", 數值: 4 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上鹹寒，中苦熱，下酸熱，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "苦熱", 下: "酸熱" })
+  }),
+  Object.freeze({
+    pairIndex: 2, years: Object.freeze(["乙丑", "乙未"]),
+    titleTags: Object.freeze({ "乙丑": null, "乙未": null }),
+    siTianText: "上太陰土", zhongYunText: "中少商金運", zaiQuanText: "下太陽水",
+    xieQiText: "熱化寒化勝復同，所謂邪氣化日也", zaiGong: 7,
+    zhengHuaRaw: "濕化五，清化四，寒化六，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "濕化", 數值: 5 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "清化", 數值: 4 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "寒化", 數值: 6 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦熱，中酸和，下甘熱，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦熱", 中: "酸和", 下: "甘熱" })
+  }),
+  Object.freeze({
+    pairIndex: 3, years: Object.freeze(["丙寅", "丙申"]),
+    titleTags: Object.freeze({ "丙寅": null, "丙申": null }),
+    siTianText: "上少陽相火", zhongYunText: "中太羽水運", zaiQuanText: "下厥陰木",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "火化二，寒化六，風化三，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "火化", 數值: 2 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "寒化", 數值: 6 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "風化", 數值: 3 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上鹹寒，中鹹溫，下辛溫，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "鹹溫", 下: "辛溫" })
+  }),
+  Object.freeze({
+    pairIndex: 4, years: Object.freeze(["丁卯", "丁酉"]),
+    titleTags: Object.freeze({ "丁卯": "歲會", "丁酉": null }),
+    siTianText: "上陽明金", zhongYunText: "中少角木運", zaiQuanText: "下少陰火",
+    xieQiText: "清化熱化勝復同，所謂邪氣化日也", zaiGong: 3,
+    zhengHuaRaw: "燥化九，風化三，熱化七，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "燥化", 數值: 9 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "風化", 數值: 3 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "熱化", 數值: 7 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦小溫，中辛和，下鹹寒，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦小溫", 中: "辛和", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 5, years: Object.freeze(["戊辰", "戊戌"]),
+    titleTags: Object.freeze({ "戊辰": null, "戊戌": null }),
+    siTianText: "上太陽水", zhongYunText: "中太徵火運", zaiQuanText: "下太陰土",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "寒化六，熱化七，濕化五，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "寒化", 數值: 6 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "熱化", 數值: 7 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "濕化", 數值: 5 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦溫，中甘和，下甘溫，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦溫", 中: "甘和", 下: "甘溫" })
+  }),
+  Object.freeze({
+    pairIndex: 6, years: Object.freeze(["己巳", "己亥"]),
+    titleTags: Object.freeze({ "己巳": null, "己亥": null }),
+    siTianText: "上厥陰木", zhongYunText: "中少宮土運", zaiQuanText: "下少陽相火",
+    xieQiText: "風化清化勝復同，所謂邪氣化日也", zaiGong: 5,
+    zhengHuaRaw: "風化三，濕化五，火化七，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "風化", 數值: 3 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "濕化", 數值: 5 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "火化", 數值: 7 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上辛涼，中甘和，下鹹寒，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "辛涼", 中: "甘和", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 7, years: Object.freeze(["庚午", "庚子"]),
+    titleTags: Object.freeze({ "庚午": "同天符", "庚子": "同天符" }),
+    siTianText: "上少陰火", zhongYunText: "中太商金運", zaiQuanText: "下陽明金",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "熱化七，清化九，燥化九，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "熱化", 數值: 7 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "清化", 數值: 9 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "燥化", 數值: 9 })
+    ]),
+    omissionCode: null,
+    omissionType: "異名同數不省文（中運太商金稱清化九，在泉陽明金稱燥化九，故三數並存）",
+    yaoShiYiRaw: "其化上鹹寒，中辛溫，下酸溫，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "辛溫", 下: "酸溫" })
+  }),
+  Object.freeze({
+    pairIndex: 8, years: Object.freeze(["辛未", "辛丑"]),
+    titleTags: Object.freeze({ "辛未": "同歲會", "辛丑": "同歲會" }),
+    siTianText: "上太陰土", zhongYunText: "中少羽水運", zaiQuanText: "下太陽水",
+    xieQiText: "雨化風化勝復同，所謂邪氣化日也", zaiGong: 1,
+    zhengHuaRaw: "雨化五，寒化一，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "雨化", 數值: 5 }),
+      Object.freeze({ 位置: "中（歲運）＋下（在泉）同氣省文", 化名: "寒化", 數值: 1 })
+    ]),
+    omissionCode: "MIDDLE_LOWER",
+    omissionType: "中下同名同數省文（中少羽水運與下太陽寒水在泉皆為寒化一）",
+    yaoShiYiRaw: "其化上苦熱，中苦和，下苦熱，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦熱", 中: "苦和", 下: "苦熱" })
+  }),
+  Object.freeze({
+    pairIndex: 9, years: Object.freeze(["壬申", "壬寅"]),
+    titleTags: Object.freeze({ "壬申": "同天符", "壬寅": "同天符" }),
+    siTianText: "上少陽相火", zhongYunText: "中太角木運", zaiQuanText: "下厥陰木",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "火化二，風化八，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "火化", 數值: 2 }),
+      Object.freeze({ 位置: "中（歲運）＋下（在泉）同氣省文", 化名: "風化", 數值: 8 })
+    ]),
+    omissionCode: "MIDDLE_LOWER",
+    omissionType: "中下同名同數省文（中太角木運與下厥陰風木在泉皆為風化八）",
+    yaoShiYiRaw: "其化上鹹寒，中酸和，下辛涼，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "酸和", 下: "辛涼" })
+  }),
+  Object.freeze({
+    pairIndex: 10, years: Object.freeze(["癸酉", "癸卯"]),
+    titleTags: Object.freeze({ "癸酉": "同歲會", "癸卯": "同歲會" }),
+    siTianText: "上陽明金", zhongYunText: "中少徵火運", zaiQuanText: "下少陰火",
+    xieQiText: "寒化雨化勝復同，所謂邪氣化日也", zaiGong: 9,
+    zhengHuaRaw: "燥化九，熱化二，所謂正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "燥化", 數值: 9 }),
+      Object.freeze({ 位置: "中（歲運）＋下（在泉）同氣省文", 化名: "熱化", 數值: 2 })
+    ]),
+    omissionCode: "MIDDLE_LOWER",
+    omissionType: "中下同名同數省文（中少徵火運與下少陰君火在泉皆為熱化二）",
+    yaoShiYiRaw: "其化上苦小溫，中鹹溫，下鹹寒，所謂藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦小溫", 中: "鹹溫", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 11, years: Object.freeze(["甲戌", "甲辰"]),
+    titleTags: Object.freeze({ "甲戌": "歲會同天符", "甲辰": "歲會同天符" }),
+    siTianText: "上太陽水", zhongYunText: "中太宮土運", zaiQuanText: "下太陰土",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "寒化六，濕化五，正化日也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "寒化", 數值: 6 }),
+      Object.freeze({ 位置: "中（歲運）＋下（在泉）同氣省文", 化名: "濕化", 數值: 5 })
+    ]),
+    omissionCode: "MIDDLE_LOWER",
+    omissionType: "中下同名同數省文（中太宮土運與下太陰濕土在泉皆為濕化五）",
+    yaoShiYiRaw: "其化上苦熱，中苦溫，下苦溫，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦熱", 中: "苦溫", 下: "苦溫" })
+  }),
+  Object.freeze({
+    pairIndex: 12, years: Object.freeze(["乙亥", "乙巳"]),
+    titleTags: Object.freeze({ "乙亥": null, "乙巳": null }),
+    siTianText: "上厥陰木", zhongYunText: "中少商金運", zaiQuanText: "下少陽相火",
+    xieQiText: "熱化寒化勝復同，邪氣化日也", zaiGong: 7,
+    zhengHuaRaw: "風化八，清化四，火化二，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "風化", 數值: 8 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "清化", 數值: 4 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "火化", 數值: 2 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上辛涼，中酸和，下鹹寒，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "辛涼", 中: "酸和", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 13, years: Object.freeze(["丙子", "丙午"]),
+    titleTags: Object.freeze({ "丙子": "歲會", "丙午": null }),
+    siTianText: "上少陰火", zhongYunText: "中太羽水運", zaiQuanText: "下陽明金",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "熱化二，寒化六，清化四，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "熱化", 數值: 2 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "寒化", 數值: 6 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "清化", 數值: 4 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上鹹寒，中鹹熱，下酸溫，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "鹹熱", 下: "酸溫" })
+  }),
+  Object.freeze({
+    pairIndex: 14, years: Object.freeze(["丁丑", "丁未"]),
+    titleTags: Object.freeze({ "丁丑": null, "丁未": null }),
+    siTianText: "上太陰土", zhongYunText: "中少角木運", zaiQuanText: "下太陽水",
+    xieQiText: "清化熱化勝復同，邪氣化度也", zaiGong: 3,
+    zhengHuaRaw: "雨化五，風化三，寒化一，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "雨化", 數值: 5 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "風化", 數值: 3 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "寒化", 數值: 1 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦溫，中辛溫，下甘熱，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦溫", 中: "辛溫", 下: "甘熱" })
+  }),
+  Object.freeze({
+    pairIndex: 15, years: Object.freeze(["戊寅", "戊申"]),
+    titleTags: Object.freeze({ "戊寅": "天符", "戊申": "天符" }),
+    siTianText: "上少陽相火", zhongYunText: "中太徵火運", zaiQuanText: "下厥陰木",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "火化七，風化三，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）＋中（歲運）同氣省文", 化名: "火化", 數值: 7 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "風化", 數值: 3 })
+    ]),
+    omissionCode: "UPPER_MIDDLE",
+    omissionType: "上中同名同數省文（上少陽相火司天與中太徵火運皆為火化七）",
+    yaoShiYiRaw: "其化上鹹寒，中甘和，下辛涼，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "甘和", 下: "辛涼" })
+  }),
+  Object.freeze({
+    pairIndex: 16, years: Object.freeze(["己卯", "己酉"]),
+    titleTags: Object.freeze({ "己卯": null, "己酉": null }),
+    siTianText: "上陽明金", zhongYunText: "中少宮土運", zaiQuanText: "下少陰火",
+    xieQiText: "風化清化勝復同，邪氣化度也", zaiGong: 5,
+    zhengHuaRaw: "清化九，雨化五，熱化七，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "清化", 數值: 9 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "雨化", 數值: 5 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "熱化", 數值: 7 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦小溫，中甘和，下鹹寒，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦小溫", 中: "甘和", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 17, years: Object.freeze(["庚辰", "庚戌"]),
+    titleTags: Object.freeze({ "庚辰": null, "庚戌": null }),
+    siTianText: "上太陽水", zhongYunText: "中太商金運", zaiQuanText: "下太陰土",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "寒化一，清化九，雨化五，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "寒化", 數值: 1 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "清化", 數值: 9 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "雨化", 數值: 5 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦熱，中辛溫，下甘熱，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦熱", 中: "辛溫", 下: "甘熱" })
+  }),
+  Object.freeze({
+    pairIndex: 18, years: Object.freeze(["辛巳", "辛亥"]),
+    titleTags: Object.freeze({ "辛巳": null, "辛亥": null }),
+    siTianText: "上厥陰木", zhongYunText: "中少羽水運", zaiQuanText: "下少陽相火",
+    xieQiText: "雨化風化勝復同，邪氣化度也", zaiGong: 1,
+    zhengHuaRaw: "風化三，寒化一，火化七，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "風化", 數值: 3 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "寒化", 數值: 1 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "火化", 數值: 7 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上辛涼，中苦和，下鹹寒，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "辛涼", 中: "苦和", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 19, years: Object.freeze(["壬午", "壬子"]),
+    titleTags: Object.freeze({ "壬午": null, "壬子": null }),
+    siTianText: "上少陰火", zhongYunText: "中太角木運", zaiQuanText: "下陽明金",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "熱化二，風化八，清化四，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "熱化", 數值: 2 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "風化", 數值: 8 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "清化", 數值: 4 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上鹹寒，中酸涼，下酸溫，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "酸涼", 下: "酸溫" })
+  }),
+  Object.freeze({
+    pairIndex: 20, years: Object.freeze(["癸未", "癸丑"]),
+    titleTags: Object.freeze({ "癸未": null, "癸丑": null }),
+    siTianText: "上太陰土", zhongYunText: "中少徵火運", zaiQuanText: "下太陽水",
+    xieQiText: "寒化雨化勝復同，邪氣化度也", zaiGong: 9,
+    zhengHuaRaw: "雨化五，火化二，寒化一，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "雨化", 數值: 5 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "火化", 數值: 2 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "寒化", 數值: 1 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦溫，中鹹溫，下甘熱，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦溫", 中: "鹹溫", 下: "甘熱" })
+  }),
+  Object.freeze({
+    pairIndex: 21, years: Object.freeze(["甲申", "甲寅"]),
+    titleTags: Object.freeze({ "甲申": null, "甲寅": null }),
+    siTianText: "上少陽相火", zhongYunText: "中太宮土運", zaiQuanText: "下厥陰木",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "火化二，雨化五，風化八，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "火化", 數值: 2 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "雨化", 數值: 5 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "風化", 數值: 8 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上鹹寒，中鹹和，下辛涼，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "鹹和", 下: "辛涼" })
+  }),
+  Object.freeze({
+    pairIndex: 22, years: Object.freeze(["乙酉", "乙卯"]),
+    titleTags: Object.freeze({ "乙酉": "太乙天符", "乙卯": "天符" }),
+    siTianText: "上陽明金", zhongYunText: "中少商金運", zaiQuanText: "下少陰火",
+    xieQiText: "熱化寒化勝復同，邪氣化度也", zaiGong: 7,
+    zhengHuaRaw: "燥化四，清化四，熱化二，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "燥化", 數值: 4 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "清化", 數值: 4 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "熱化", 數值: 2 })
+    ]),
+    omissionCode: null,
+    omissionType: "異名同數不省文（司天陽明金稱燥化四，中運少商金稱清化四，故三數並存）",
+    yaoShiYiRaw: "其化上苦小溫，中苦和，下鹹寒，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦小溫", 中: "苦和", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 23, years: Object.freeze(["丙戌", "丙辰"]),
+    titleTags: Object.freeze({ "丙戌": "天符", "丙辰": "天符" }),
+    siTianText: "上太陽水", zhongYunText: "中太羽水運", zaiQuanText: "下太陰土",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "寒化六，雨化五，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）＋中（歲運）同氣省文", 化名: "寒化", 數值: 6 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "雨化", 數值: 5 })
+    ]),
+    omissionCode: "UPPER_MIDDLE",
+    omissionType: "上中同名同數省文（上太陽寒水司天與中太羽水運皆為寒化六）",
+    yaoShiYiRaw: "其化上苦熱，中鹹溫，下甘熱，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦熱", 中: "鹹溫", 下: "甘熱" })
+  }),
+  Object.freeze({
+    pairIndex: 24, years: Object.freeze(["丁亥", "丁巳"]),
+    titleTags: Object.freeze({ "丁亥": "天符", "丁巳": "天符" }),
+    siTianText: "上厥陰木", zhongYunText: "中少角木運", zaiQuanText: "下少陽相火",
+    xieQiText: "清化熱化勝復同，邪氣化度也", zaiGong: 3,
+    zhengHuaRaw: "風化三，火化七，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）＋中（歲運）同氣省文", 化名: "風化", 數值: 3 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "火化", 數值: 7 })
+    ]),
+    omissionCode: "UPPER_MIDDLE",
+    omissionType: "上中同名同數省文（上厥陰風木司天與中少角木運皆為風化三）",
+    yaoShiYiRaw: "其化上辛涼，中辛和，下鹹寒，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "辛涼", 中: "辛和", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 25, years: Object.freeze(["戊子", "戊午"]),
+    titleTags: Object.freeze({ "戊子": "天符", "戊午": "太乙天符" }),
+    siTianText: "上少陰火", zhongYunText: "中太徵火運", zaiQuanText: "下陽明金",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "熱化七，清化九，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）＋中（歲運）同氣省文", 化名: "熱化", 數值: 7 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "清化", 數值: 9 })
+    ]),
+    omissionCode: "UPPER_MIDDLE",
+    omissionType: "上中同名同數省文（上少陰君火司天與中太徵火運皆為熱化七）",
+    yaoShiYiRaw: "其化上鹹寒，中甘寒，下酸溫，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "甘寒", 下: "酸溫" })
+  }),
+  Object.freeze({
+    pairIndex: 26, years: Object.freeze(["己丑", "己未"]),
+    titleTags: Object.freeze({ "己丑": "太乙天符", "己未": "太乙天符" }),
+    siTianText: "上太陰土", zhongYunText: "中少宮土運", zaiQuanText: "下太陽水",
+    xieQiText: "風化清化勝復同，邪氣化度也", zaiGong: 5,
+    zhengHuaRaw: "雨化五，寒化一，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）＋中（歲運）同氣省文", 化名: "雨化", 數值: 5 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "寒化", 數值: 1 })
+    ]),
+    omissionCode: "UPPER_MIDDLE",
+    omissionType: "上中同名同數省文（上太陰濕土司天與中少宮土運皆為雨化五）",
+    yaoShiYiRaw: "其化上苦熱，中甘和，下甘熱，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦熱", 中: "甘和", 下: "甘熱" })
+  }),
+  Object.freeze({
+    pairIndex: 27, years: Object.freeze(["庚寅", "庚申"]),
+    titleTags: Object.freeze({ "庚寅": null, "庚申": null }),
+    siTianText: "上少陽相火", zhongYunText: "中太商金運", zaiQuanText: "下厥陰木",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "火化七，清化九，風化三，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "火化", 數值: 7 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "清化", 數值: 9 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "風化", 數值: 3 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上鹹寒，中辛溫，下辛涼，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "鹹寒", 中: "辛溫", 下: "辛涼" })
+  }),
+  Object.freeze({
+    pairIndex: 28, years: Object.freeze(["辛卯", "辛酉"]),
+    titleTags: Object.freeze({ "辛卯": null, "辛酉": null }),
+    siTianText: "上陽明金", zhongYunText: "中少羽水運", zaiQuanText: "下少陰火",
+    xieQiText: "雨化風化勝復同，邪氣化度也", zaiGong: 1,
+    zhengHuaRaw: "清化九，寒化一，熱化七，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "清化", 數值: 9 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "寒化", 數值: 1 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "熱化", 數值: 7 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦小溫，中苦和，下鹹寒，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦小溫", 中: "苦和", 下: "鹹寒" })
+  }),
+  Object.freeze({
+    pairIndex: 29, years: Object.freeze(["壬辰", "壬戌"]),
+    titleTags: Object.freeze({ "壬辰": null, "壬戌": null }),
+    siTianText: "上太陽水", zhongYunText: "中太角木運", zaiQuanText: "下太陰土",
+    xieQiText: null, zaiGong: null,
+    zhengHuaRaw: "寒化六，風化八，雨化五，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "寒化", 數值: 6 }),
+      Object.freeze({ 位置: "中（歲運）", 化名: "風化", 數值: 8 }),
+      Object.freeze({ 位置: "下（在泉）", 化名: "雨化", 數值: 5 })
+    ]),
+    omissionCode: null,
+    omissionType: null,
+    yaoShiYiRaw: "其化上苦溫，中酸和，下甘溫，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "苦溫", 中: "酸和", 下: "甘溫" })
+  }),
+  Object.freeze({
+    pairIndex: 30, years: Object.freeze(["癸巳", "癸亥"]),
+    titleTags: Object.freeze({ "癸巳": "同歲會", "癸亥": "同歲會" }),
+    siTianText: "上厥陰木", zhongYunText: "中少徵火運", zaiQuanText: "下少陽相火",
+    xieQiText: "寒化雨化勝復同，邪氣化度也", zaiGong: 9,
+    zhengHuaRaw: "風化八，火化二，正化度也",
+    zhengHuaItems: Object.freeze([
+      Object.freeze({ 位置: "上（司天）", 化名: "風化", 數值: 8 }),
+      Object.freeze({ 位置: "中（歲運）＋下（在泉）同氣省文", 化名: "火化", 數值: 2 })
+    ]),
+    omissionCode: "MIDDLE_LOWER",
+    omissionType: "中下同名同數省文（中少徵火運與下少陽相火在泉皆為火化二）",
+    yaoShiYiRaw: "其化上辛涼，中鹹和，下鹹寒，藥食宜也",
+    yaoShiYi: Object.freeze({ 上: "辛涼", 中: "鹹和", 下: "鹹寒" })
+  })
+]);
+
+const LIUYUAN_60_JIAZI_MAP = Object.freeze(
+  LIUYUAN_30_PAIRS_RAW.reduce((acc, pair) => {
+    for (const gz of pair.years) {
+      acc[gz] = pair;
+    }
+    return acc;
+  }, {})
+);
+
+/**
+ * 全自動比對經文合論每一項（上、中、下）與正化／對化分論數值的關係。
+ * 注意：數值相符只能標示數值對照，不足以證明原典的實際推導來源。
+ */
+function resolveClassicalValueOrigin(pair, positionKey, classicalVal) {
+  const [gzA, gzB] = pair.years;
+  const zhengGz = BRANCH_ZHENG_DUI_META[gzA.charAt(1)].正對屬性 === "正化" ? gzA : gzB;
+  const duiGz = zhengGz === gzA ? gzB : gzA;
+
+  if (positionKey === "MIDDLE") {
+    return `兩歲同值（同干中運，正化歲${zhengGz}與對化歲${duiGz}分論皆為 ${classicalVal}）`;
+  }
+
+  const field = positionKey === "UPPER" ? "司天數" : "在泉數";
+  const zhengVal = BRANCH_ZHENG_DUI_META[zhengGz.charAt(1)][field];
+  const duiVal = BRANCH_ZHENG_DUI_META[duiGz.charAt(1)][field];
+
+  if (zhengVal === duiVal) {
+    const qiName = BRANCH_ZHENG_DUI_META[zhengGz.charAt(1)][field === "司天數" ? "司天六氣" : "在泉六氣"];
+    const soilNote = qiName === "太陰濕土"
+      ? "；《玄珠密語》明言土無成數，故此處只記土化五，不稱「生數成數皆五」"
+      : "";
+    return `兩歲同值（正化歲${zhengGz}與對化歲${duiGz}分論皆為 ${classicalVal}${soilNote}）`;
+  }
+  if (classicalVal === zhengVal) {
+    return `原典合論數值與正化歲分論值相符（數值同正化歲${zhengGz}之生數 ${zhengVal}；對化歲${duiGz}分論值為 ${duiVal}）。此為數值比對，不單憑相等推定原典取值來源`;
+  }
+  if (classicalVal === duiVal) {
+    return `原典合論數值與對化歲分論值相符（數值同對化歲${duiGz}之成數 ${duiVal}；正化歲${zhengGz}分論值為 ${zhengVal}）。此為數值比對，不單憑相等推定原典取值來源`;
+  }
+  throw new Error(`resolveClassicalValueOrigin: 無法匹配 ${pair.years.join("/")} ${positionKey} 數值 ${classicalVal}`);
+}
+
+/**
+ * 將省文之 2 項正化度展開為完整之上、中、下 3 項結構，並自動標註每一項與正化／對化分論數值的對照關係
+ */
+function expandThreePositionZhengHua(pair) {
+  const items = pair.zhengHuaItems;
+  let upperItem, middleItem, lowerItem;
+
+  if (pair.omissionCode === null) {
+    upperItem = { 化名: items[0].化名, 數值: items[0].數值, 是否省文合併: false };
+    middleItem = { 化名: items[1].化名, 數值: items[1].數值, 是否省文合併: false };
+    lowerItem = { 化名: items[2].化名, 數值: items[2].數值, 是否省文合併: false };
+  } else if (pair.omissionCode === "UPPER_MIDDLE") {
+    upperItem = { 化名: items[0].化名, 數值: items[0].數值, 是否省文合併: true };
+    middleItem = { 化名: items[0].化名, 數值: items[0].數值, 是否省文合併: true };
+    lowerItem = { 化名: items[1].化名, 數值: items[1].數值, 是否省文合併: false };
+  } else if (pair.omissionCode === "MIDDLE_LOWER") {
+    upperItem = { 化名: items[0].化名, 數值: items[0].數值, 是否省文合併: false };
+    middleItem = { 化名: items[1].化名, 數值: items[1].數值, 是否省文合併: true };
+    lowerItem = { 化名: items[1].化名, 數值: items[1].數值, 是否省文合併: true };
+  } else {
+    throw new Error(`expandThreePositionZhengHua: 未知的 omissionCode "${String(pair.omissionCode)}"`);
+  }
+
+  upperItem.數值性質 = resolveClassicalValueOrigin(pair, "UPPER", upperItem.數值);
+  middleItem.數值性質 = resolveClassicalValueOrigin(pair, "MIDDLE", middleItem.數值);
+  lowerItem.數值性質 = resolveClassicalValueOrigin(pair, "LOWER", lowerItem.數值);
+
+  return {
+    上_司天: upperItem,
+    中_歲運: middleItem,
+    下_在泉: lowerItem
+  };
+}
+
+/**
+ * 查詢並推演單一歲干支之《六元正紀大論》正化度、邪氣化度、正對化分論生成數與藥食宜
+ */
+function computeLiuYuanZhengJiInfo(ganzhi) {
+  if (typeof ganzhi !== "string" || ganzhi.trim().length === 0) {
+    throw new TypeError("computeLiuYuanZhengJiInfo: ganzhi 必須為非空字串");
+  }
+  const normalizedGz = ganzhi.trim();
+  if (normalizedGz.length !== 2) {
+    throw new RangeError("computeLiuYuanZhengJiInfo: 干支必須恰為兩字");
+  }
+  const stem = normalizedGz.charAt(0);
+  const branch = normalizedGz.charAt(1);
+  const stemIdx = GAN_LIST.indexOf(stem);
+  const branchIdx = ZHI_LIST.indexOf(branch);
+  if (stemIdx < 0 || branchIdx < 0 || (stemIdx % 2) !== (branchIdx % 2)) {
+    throw new RangeError(`computeLiuYuanZhengJiInfo: 非法六十甲子干支 "${normalizedGz}"`);
+  }
+
+  const pair = LIUYUAN_60_JIAZI_MAP[normalizedGz];
+  const stemMeta = STEM_YUN_NUMBER_META[stem];
+  const branchMeta = BRANCH_ZHENG_DUI_META[branch];
+  const expanded = expandThreePositionZhengHua(pair);
+
+  const classicalDifferFromXuanZhu =
+    expanded.上_司天.數值 !== branchMeta.司天數 ||
+    expanded.下_在泉.數值 !== branchMeta.在泉數;
+
+  return {
+    醫療邊界聲明: LIUYUAN_MEDICAL_NOTICE,
+    干支: normalizedGz,
+    所屬經文組別: `第 ${pair.pairIndex} 組（${pair.years[0]}・${pair.years[1]}歲）`,
+    原典篇頭同化標記: pair.titleTags[normalizedGz],
+    三氣格局: {
+      上_司天: pair.siTianText,
+      中_歲運: pair.zhongYunText,
+      下_在泉: pair.zaiQuanText
+    },
+    邪氣化度與災宮: pair.xieQiText
+      ? {
+          有無邪氣化度: true,
+          原典記載: `${pair.xieQiText}。災${pair.zaiGong}宮。`,
+          災宮數: pair.zaiGong
+        }
+      : {
+          有無邪氣化度: false,
+          原典記載: "無（陽干歲運太過之年無勝復邪化，全屬正化日／正化度）",
+          災宮數: null
+        },
+    軌道1_六元正紀經文合論正化度: {
+      原典記載: pair.zhengHuaRaw,
+      合論警語: "《素問·六元正紀大論》原文將對沖兩歲並舉。本模組另將合論數值與《玄珠密語》等正化／對化分論數作比對；數值相符只表示數字相等，不單憑相等推定原典實際取值來源。欲查單歲分論數值，請參照軌道 2。",
+      經文列數項數: pair.zhengHuaItems.length,
+      省文枚舉碼: pair.omissionCode,
+      省文與異名說明: pair.omissionType || "上、中、下三氣不同名，完整並列三數",
+      上中下展開: expanded
+    },
+    軌道2_玄珠類經正對化分論生成數: {
+      本年地支正對屬性: `${branch}年屬「${branchMeta.正對屬性}」`,
+      正對化法則: branchMeta.正對屬性 === "正化"
+        ? "正司化令之實，正化從本生數（司天、在泉皆取生數；土亦常以生數五論）"
+        : "對司化令之虛，通常對化從標成數；但太陰土無成數而取五，故土位不宜概稱為成數",
+      方位月建釋義: branchMeta.方位月建釋義,
+      分論生成數: {
+        上_司天: { 六氣: branchMeta.司天六氣, 化名: expanded.上_司天.化名, 數值: branchMeta.司天數 },
+        中_歲運: {
+          歲運: stemMeta.歲運,
+          化名: expanded.中_歲運.化名,
+          數值: stemMeta.化數,
+          依據: stem === "甲"
+            ? "《素問》曰「太過者其數成，不及者其數生，土常以生」；甲歲太宮土運本項取五，按土常以生處理，不以一般成數十論"
+            : `「太過者其數成，不及者其數生」（${stemMeta.數別}）`
+        },
+        下_在泉: { 六氣: branchMeta.在泉六氣, 化名: expanded.下_在泉.化名, 數值: branchMeta.在泉數 }
+      },
+      與經文合論數是否存異: classicalDifferFromXuanZhu,
+      雙軌差異說明: classicalDifferFromXuanZhu
+        ? "《素問·六元正紀大論》將對沖兩歲合論，其司天、在泉生成數係綜合歲運盛衰與勝復制化而定；《玄珠密語》《新校正》《類經圖翼》則依地支正化（生數）、對化（成數）分論。"
+        : "本年正對化分論生成數恰與《素問》經文兩歲合論數之數值相符（屬單歲分論值恰等於經文兩歲合論所取之值，非二軌理論等同）。"
+    },
+    其化上中下_藥食宜: {
+      原典記載: pair.yaoShiYiRaw,
+      上_司天宜: pair.yaoShiYi.上,
+      中_歲運宜: pair.yaoShiYi.中,
+      下_在泉宜: pair.yaoShiYi.下
+    }
+  };
+}
+
 const YUN_MAP={甲:['土','太過','太宮'],己:['土','不及','少宮'],乙:['金','不及','少商'],庚:['金','太過','太商'],丙:['水','太過','太羽'],辛:['水','不及','少羽'],丁:['木','不及','少角'],壬:['木','太過','太角'],戊:['火','太過','太徵'],癸:['火','不及','少徵']};
 const HEAVEN_TO_QI={子:'少陰君火',午:'少陰君火',丑:'太陰濕土',未:'太陰濕土',寅:'少陽相火',申:'少陽相火',卯:'陽明燥金',酉:'陽明燥金',辰:'太陽寒水',戌:'太陽寒水',巳:'厥陰風木',亥:'厥陰風木'};
 const QI_OPPOSITE={厥陰風木:'少陽相火',少陰君火:'陽明燥金',太陰濕土:'太陽寒水',少陽相火:'厥陰風木',陽明燥金:'少陰君火',太陽寒水:'太陰濕土'};
@@ -3836,6 +4672,7 @@ if(ninePalacePanel){
   });
 }
 
+initLiuYuanLookupUI();
 showView('input');
 
 
