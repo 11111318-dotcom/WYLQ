@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-aLkft8xzoBilgug9t8UoKXqxV8FAHgCTfW+Bpq+Tq+g='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-3I3IFtEsRdNMsz6HxsnNokwpVTehC7xTZakj8zcXAwk='; style-src-elem 'sha256-3I3IFtEsRdNMsz6HxsnNokwpVTehC7xTZakj8zcXAwk='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-LNkKRd+wVXeMNq7cU70NY+Jg9ssXcqrktIWL8P/IL6w='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-elem 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -586,6 +586,19 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
 #style-attribute-migration-root .guest-role-label{font-weight:800;margin-left:4px}
 #style-attribute-migration-root .guest-role-label.sitian{color:var(--risk)}
 #style-attribute-migration-root .guest-role-label.other{color:var(--purple)}
+
+/* v3.33.0 Nine-Palace / Linggui Bafa module */
+.ninepalace-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;align-items:end;margin:12px 0 16px}
+.ninepalace-controls .field{margin:0}
+.lp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.lp-card{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#faf7ef;overflow-wrap:anywhere}
+.lp-card b{color:var(--accent)}
+.lp-table{min-width:850px}
+.lp-table tr.lp-selected td{background:#eaf3ec;font-weight:700}
+.lp-note{margin:10px 0;padding:11px 13px;border-left:3px solid var(--accent-2);border-radius:8px;background:#f7f2e8;color:var(--muted);font-size:12.5px}
+.lp-section-title{margin-top:18px}
+@media(max-width:600px){.ninepalace-controls{grid-template-columns:1fr}.lp-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -688,6 +701,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
       <div class="card panel section birth-section" id="shengFuYuFaSection"></div>
       <div class="card panel section target-section" id="sixSection"></div>
       <div class="card panel section target-section" id="targetSection"></div>
+      <div class="card panel section" id="ninePalaceSection" aria-live="polite"></div>
       <div class="card panel section" id="chronicleSection"></div>
       <div class="card panel section target-section" id="interactionSection"></div>
       <div class="card panel section target-section" id="repairWindowSection"></div>
@@ -743,7 +757,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
 <script>
 'use strict';
 {const warning=document.getElementById('scriptStartupWarning');if(warning)warning.remove();}
-const APP_VERSION='3.32.0-security';
+const APP_VERSION='3.33.0-security';
 /* LOW-BENEFIT DEFENSE-IN-DEPTH: sever a Window.opener reference if this file was opened by a page. This does not replace rel="noopener noreferrer" on any future outbound links and does not prevent postMessage by itself. */
 try { if (window.opener) window.opener = null; } catch (_) {}
 let _lastExportState = null;
@@ -901,6 +915,632 @@ const WANGBING_QIHUA=['戊辰','戊戌','庚子','庚午','庚寅','庚申'];
 const WANGBING_DIZHI=['丁卯','丁巳','丁亥','癸巳','癸亥','己丑','己未','乙酉','乙卯','辛亥'];
 const SUWEN_8=['丁卯','戊午','甲辰','甲戌','己丑','己未','乙酉','丙子'];
 const HIGH_TIER_PINGQI_BLOCKED_GZ=Object.freeze(['乙酉','己丑','己未','丁亥']);
+
+/* WYLQ-Audit v3.33.0: integrated Nine-Palace / Linggui Bafa core. */
+const WYLQNinePalaceModule = (() => {
+const MEDICAL_BOUNDARY_NOTICE =
+  "⚠️ 本區為傳統運氣理論模型推演，穴位僅作典籍對照，不是針灸處方；實際取穴與補瀉須由合格中醫師按四診合參決定。";
+
+const FALLBACK_GAN = Object.freeze(["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]);
+const FALLBACK_ZHI = Object.freeze(["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]);
+const FALLBACK_BLOCKED_GZ = Object.freeze(["乙酉", "己丑", "己未", "丁亥"]);
+
+// 🔴 F-01 修正：使用 try/catch 徹底免疫 const/let TDZ（暫時性死區）ReferenceError
+let GAN_LIST, ZHI_LIST, HIGH_TIER_BLOCKED_LIST;
+try { GAN_LIST = Array.isArray(GAN) ? GAN : FALLBACK_GAN; } catch (_) { GAN_LIST = FALLBACK_GAN; }
+try { ZHI_LIST = Array.isArray(ZHI) ? ZHI : FALLBACK_ZHI; } catch (_) { ZHI_LIST = FALLBACK_ZHI; }
+try {
+  HIGH_TIER_BLOCKED_LIST = Array.isArray(HIGH_TIER_PINGQI_BLOCKED_GZ)
+    ? HIGH_TIER_PINGQI_BLOCKED_GZ
+    : FALLBACK_BLOCKED_GZ;
+} catch (_) {
+  HIGH_TIER_BLOCKED_LIST = FALLBACK_BLOCKED_GZ;
+}
+
+const YANG_GAN_SET = Object.freeze(new Set(["甲", "丙", "戊", "庚", "壬"]));
+
+/**
+ * 洛書九宮基礎拓撲與《靈樞·九宮八風》《九針論》原典映射表
+ * 注意：中五宮（LUOSHU_PALACE_META[5]）無單一對宮，故 `沖後對宮` 與 `沖後虛風` 為 null，下游讀取時須作 null guard。
+ */
+const LUOSHU_PALACE_META = Object.freeze({
+  1: Object.freeze({
+    宮數: 1, 宮名: "一宮・葉蟄", 卦位: "坎一", 方位: "正北", 五行: "水",
+    應人九野: "腰尻下竅", 八正直日: "壬子日", 天忌日: null,
+    當令實風: Object.freeze({ 方向: "北風", 屬性: "實風", 說明: "太一居本宮時從北方所居之鄉來，主生、長養萬物" }),
+    失令虛風: Object.freeze({
+      風名: "大剛風",
+      觸發條件: "太一居正南離九宮（北方為衝後方位）時，從北方逆來之風方為《靈樞》標準虛風",
+      病候: "內舍於腎，外在骨與肩背膂筋，氣主寒"
+    }),
+    中宮異常風候: null,
+    沖後對宮: 9, 沖後方位: "正南（離九・上天）",
+    沖後虛風: Object.freeze({ 風名: "大弱風", 傷藏: "心", 病候: "內舍於心，外在於脈，氣主熱" })
+  }),
+  2: Object.freeze({
+    宮數: 2, 宮名: "二宮・玄委", 卦位: "坤二", 方位: "西南", 五行: "土",
+    應人九野: "右手", 八正直日: "戊申、己未日", 天忌日: null,
+    當令實風: Object.freeze({ 方向: "西南風", 屬性: "實風", 說明: "太一居本宮時從西南所居之鄉來，主生、長養萬物" }),
+    失令虛風: Object.freeze({
+      風名: "謀風",
+      觸發條件: "太一居東北艮八宮（西南為衝後方位）時，從西南方逆來之風方為《靈樞》標準虛風",
+      病候: "內舍於脾，外在於肌，氣主弱"
+    }),
+    中宮異常風候: null,
+    沖後對宮: 8, 沖後方位: "東北（艮八・天留）",
+    沖後虛風: Object.freeze({ 風名: "凶風", 傷藏: "大腸", 病候: "內舍於大腸，外在兩脅腋骨下及肢節" })
+  }),
+  3: Object.freeze({
+    宮數: 3, 宮名: "三宮・倉門", 卦位: "震三", 方位: "正東", 五行: "木",
+    應人九野: "左脅", 八正直日: "乙卯日", 天忌日: null,
+    當令實風: Object.freeze({ 方向: "東風", 屬性: "實風", 說明: "太一居本宮時從東方所居之鄉來，主生、長養萬物" }),
+    失令虛風: Object.freeze({
+      風名: "嬰兒風",
+      觸發條件: "太一居正西兌七宮（東方為衝後方位）時，從東方逆來之風方為《靈樞》標準虛風",
+      病候: "內舍於肝，外在筋紐，氣主身濕"
+    }),
+    中宮異常風候: null,
+    沖後對宮: 7, 沖後方位: "正西（兌七・倉果）",
+    沖後虛風: Object.freeze({ 風名: "剛風", 傷藏: "肺", 病候: "內舍於肺，外在於皮膚，氣主燥" })
+  }),
+  4: Object.freeze({
+    宮數: 4, 宮名: "四宮・陰洛", 卦位: "巽四", 方位: "東南（注家稱天門）", 五行: "木",
+    應人九野: "左手", 八正直日: "戊辰、己巳日", 天忌日: null,
+    當令實風: Object.freeze({ 方向: "東南風", 屬性: "實風", 說明: "太一居本宮時從東南所居之鄉來，主生、長養萬物" }),
+    失令虛風: Object.freeze({
+      風名: "弱風",
+      觸發條件: "太一居西北乾六宮（東南為衝後方位）時，從東南方逆來之風方為《靈樞》標準虛風",
+      病候: "內舍於胃，外在肌肉，氣主體重"
+    }),
+    中宮異常風候: null,
+    沖後對宮: 6, 沖後方位: "西北（乾六・新洛）",
+    沖後虛風: Object.freeze({ 風名: "折風", 傷藏: "小腸", 病候: "內舍於小腸，外在手太陽脈，脈絕則溢，脈閉則結不通，善暴死" })
+  }),
+  5: Object.freeze({
+    宮數: 5, 宮名: "五宮・招搖", 卦位: "中五", 方位: "中央（中州）", 五行: "土",
+    應人九野: "膈下三藏六府",
+    八正直日: "無（中宮不屬八正）",
+    天忌日: "諸戊己日及太一所在之日（見天忌日流派釋義）",
+    天忌日流派釋義: "《靈樞·九針論》云：『主膈下三藏，應中州之氣，大禁太一所在之日及諸戊己。』注家一解指各宮交節移宮直日及戊己日；另一解指當令太一所在宮位之日及戊己日，刺中州膈下皆須審慎。",
+    當令實風: Object.freeze({ 方向: "無定方", 屬性: "無單一屬性（中宮朝八風）", 說明: "《靈樞·九宮八風》：『太一入徙，立於中宮，乃朝八風，以占吉凶也。』" }),
+    失令虛風: Object.freeze({
+      風名: "無（不適用八方失令概念，請參看中宮異常風候）",
+      觸發條件: "太一入中宮之日，若見折木揚沙之變風",
+      病候: "占在吏（太一居五宮之日見折木揚沙之變，主吏治失和）；視八方虛風所從來之鄉而占其內舍之藏"
+    }),
+    中宮異常風候: Object.freeze({
+      條件: "太一居五宮之日，病風折樹木，揚沙石",
+      病候: "占在吏（主吏治失和）；因視八方虛風所從來而占其內舍之藏"
+    }),
+    沖後對宮: null,
+    沖後方位: "無（中宮不在八方，無單一衝後對宮，視八方來風以占病候）",
+    沖後虛風: null
+  }),
+  6: Object.freeze({
+    宮數: 6, 宮名: "六宮・新洛", 卦位: "乾六", 方位: "西北（注家稱地戶）", 五行: "金",
+    應人九野: "右足", 八正直日: "戊戌、己亥日", 天忌日: null,
+    當令實風: Object.freeze({ 方向: "西北風", 屬性: "實風", 說明: "太一居本宮時從西北所居之鄉來，主生、長養萬物" }),
+    失令虛風: Object.freeze({
+      風名: "折風",
+      觸發條件: "太一居東南巽四宮（西北為衝後方位）時，從西北方逆來之風方為《靈樞》標準虛風",
+      病候: "內舍於小腸，外在手太陽脈，脈絕則溢，脈閉則結不通"
+    }),
+    中宮異常風候: null,
+    沖後對宮: 4, 沖後方位: "東南（巽四・陰洛）",
+    沖後虛風: Object.freeze({ 風名: "弱風", 傷藏: "胃", 病候: "內舍於胃，外在於肌肉，氣主體重" })
+  }),
+  7: Object.freeze({
+    宮數: 7, 宮名: "七宮・倉果", 卦位: "兌七", 方位: "正西", 五行: "金",
+    應人九野: "右脅", 八正直日: "辛酉日", 天忌日: null,
+    當令實風: Object.freeze({ 方向: "西風", 屬性: "實風", 說明: "太一居本宮時從西方所居之鄉來，主生、長養萬物" }),
+    失令虛風: Object.freeze({
+      風名: "剛風",
+      觸發條件: "太一居正東震三宮（西方為衝後方位）時，從西方逆來之風方為《靈樞》標準虛風",
+      病候: "內舍於肺，外在皮膚，氣主燥"
+    }),
+    中宮異常風候: null,
+    沖後對宮: 3, 沖後方位: "正東（震三・倉門）",
+    沖後虛風: Object.freeze({ 風名: "嬰兒風", 傷藏: "肝", 病候: "內舍於肝，外在於筋紐，氣主身濕" })
+  }),
+  8: Object.freeze({
+    宮數: 8, 宮名: "八宮・天留", 卦位: "艮八", 方位: "東北", 五行: "土",
+    應人九野: "左足", 八正直日: "戊寅、己丑日", 天忌日: null,
+    當令實風: Object.freeze({ 方向: "東北風", 屬性: "實風", 說明: "太一居本宮時從東北所居之鄉來，主生、長養萬物" }),
+    失令虛風: Object.freeze({
+      風名: "凶風",
+      觸發條件: "太一居西南坤二宮（東北為衝後方位）時，從東北方逆來之風方為《靈樞》標準虛風",
+      病候: "內舍於大腸，外在兩脅腋骨下及肢節"
+    }),
+    中宮異常風候: null,
+    沖後對宮: 2, 沖後方位: "西南（坤二・玄委）",
+    沖後虛風: Object.freeze({ 風名: "謀風", 傷藏: "脾", 病候: "內舍於脾，外在於肌，氣主弱" })
+  }),
+  9: Object.freeze({
+    宮數: 9, 宮名: "九宮・上天", 卦位: "離九", 方位: "正南", 五行: "火",
+    應人九野: "膺喉首頭", 八正直日: "丙午日", 天忌日: null,
+    當令實風: Object.freeze({ 方向: "南風", 屬性: "實風", 說明: "太一居本宮時從南方所居之鄉來，主生、長養萬物" }),
+    失令虛風: Object.freeze({
+      風名: "大弱風",
+      觸發條件: "太一居正北坎一宮（南方為衝後方位）時，從南方逆來之風方為《靈樞》標準虛風",
+      病候: "內舍於心，外在脈，氣主熱"
+    }),
+    中宮異常風候: null,
+    沖後對宮: 1, 沖後方位: "正北（坎一・葉蟄）",
+    沖後虛風: Object.freeze({ 風名: "大剛風", 傷藏: "腎", 病候: "內舍於腎，外在骨與肩背膂筋，氣主寒" })
+  })
+});
+
+const YIN_STEM_ZAIGONG_MAP = Object.freeze({
+  "乙": Object.freeze({
+    歲運: "少商（金運不及）",
+    邪氣化度: "熱化寒化勝復同，所謂邪氣化日／度也",
+    災宮數: 7,
+    災宮來源: "《素問·六元正紀大論》原文「災七宮」",
+    次級波及宮: Object.freeze([6]),
+    次級波及來源: "本系統依後天八卦同五行金位（乾六）推論之擴展，非原典明文",
+    勝氣: "火（熱化）", 復氣: "水（寒化）", 受邪本藏: "肺（兼及大腸）",
+    運氣配穴參照: Object.freeze({
+      穴位: "後谿（兌七，手太陽小腸經通督脈）",
+      傳統補瀉參考: "傳統運氣配穴多云瀉小腸火以救肺金之不足（屬後世運氣配穴延伸，非靈龜八法本義；具體操作需結合病人虛實寒熱辨證，不可盲目套用）"
+    })
+  }),
+  "丁": Object.freeze({
+    歲運: "少角（木運不及）",
+    邪氣化度: "清化熱化勝復同，所謂邪氣化日／度也",
+    災宮數: 3,
+    災宮來源: "《素問·六元正紀大論》原文「災三宮」",
+    次級波及宮: Object.freeze([4]),
+    次級波及來源: "本系統依後天八卦同五行木位（巽四）推論之擴展，非原典明文",
+    勝氣: "金（清化）", 復氣: "火（熱化）", 受邪本藏: "肝（兼及膽）",
+    運氣配穴參照: Object.freeze({
+      穴位: "外關（震三，手少陽三焦經通陽維脈）",
+      傳統補瀉參考: "傳統運氣配穴多云假三焦相火以制肺金之勝（屬後世運氣配穴延伸，非靈龜八法本義；具體操作需結合病人虛實寒熱辨證，不可盲目套用）"
+    })
+  }),
+  "己": Object.freeze({
+    歲運: "少宮（土運不及）",
+    邪氣化度: "風化清化勝復同，所謂邪氣化日／度也",
+    災宮數: 5,
+    災宮來源: "《素問·六元正紀大論》原文「災五宮」",
+    次級波及宮: Object.freeze([2, 4, 6, 8]),
+    次級波及來源: "《素問·五常政大論》卑監之紀原文「其眚四維」（坤二、巽四、乾六、艮八四隅宮）",
+    勝氣: "木（風化）", 復氣: "金（清化）", 受邪本藏: "脾（兼及胃）",
+    運氣配穴參照: Object.freeze({
+      穴位: "通行法寄坤二照海／古法男寄艮八內關、女寄坤二照海／脾土本經參照乾六公孫",
+      傳統補瀉參考: "傳統運氣配穴多云培土抑木以防風化乘克（屬後世運氣配穴延伸，非靈龜八法本義；具體操作需結合病人虛實寒熱辨證，不可盲目套用）"
+    })
+  }),
+  "辛": Object.freeze({
+    歲運: "少羽（水運不及）",
+    邪氣化度: "雨化風化勝復同，所謂邪氣化日／度也",
+    災宮數: 1,
+    災宮來源: "《素問·六元正紀大論》原文「災一宮」",
+    次級波及宮: Object.freeze([]),
+    次級波及來源: "坎一為唯一正北水位，無其他同五行次級宮位",
+    勝氣: "土（雨化）", 復氣: "木（風化）", 受邪本藏: "腎（兼及膀胱）",
+    運氣配穴參照: Object.freeze({
+      穴位: "申脈（坎一，足太陽膀胱經通陽蹻脈）",
+      傳統補瀉參考: "傳統運氣配穴多云補壬水以助腎防土乘克（屬後世運氣配穴延伸，非靈龜八法本義；具體操作需結合病人虛實寒熱辨證，不可盲目套用）"
+    })
+  }),
+  "癸": Object.freeze({
+    歲運: "少徵（火運不及）",
+    邪氣化度: "寒化雨化勝復同，所謂邪氣化日／度也",
+    災宮數: 9,
+    災宮來源: "《素問·六元正紀大論》原文「災九宮」",
+    次級波及宮: Object.freeze([]),
+    次級波及來源: "離九為唯一正南火位，無其他同五行次級宮位",
+    勝氣: "水（寒化）", 復氣: "土（雨化）", 受邪本藏: "心（兼及小腸、心包）",
+    運氣配穴參照: Object.freeze({
+      穴位: "列缺（離九，手太陰肺經通任脈）",
+      傳統補瀉參考: "傳統運氣配穴多云宣調肺金以防火不及失制而金亢（屬後世運氣配穴延伸，非靈龜八法本義；具體操作需結合病人虛實寒熱辨證，不可盲目套用）"
+    })
+  })
+});
+
+const YANG_STEM_EXCESS_MAP = Object.freeze({
+  "甲": Object.freeze({
+    歲運: "太宮（土運太過）",
+    化度: "正化日／度也（《六元正紀大論》原文無災宮）",
+    所勝受乘宮: Object.freeze([1]),
+    所勝受邪藏: "腎水（坎一宮）",
+    條件復氣本宮: Object.freeze([5, 2, 4, 6, 8]),
+    條件復氣預警: "【或然候選】若歲土太過而恃強失德、乘危而行，則恐招木氣（風化）來復而反及中五宮（其眚四維：兼波及坤二、巽四、乾六、艮八宮）。"
+  }),
+  "丙": Object.freeze({
+    歲運: "太羽（水運太過）",
+    化度: "正化日／度也（《六元正紀大論》原文無災宮）",
+    所勝受乘宮: Object.freeze([9]),
+    所勝受邪藏: "心火（離九宮）",
+    條件復氣本宮: Object.freeze([1]),
+    條件復氣預警: "【或然候選】若歲水太過而恃強失德、乘危而行，則恐招土氣（雨化）來復而反及坎一宮。"
+  }),
+  "戊": Object.freeze({
+    歲運: "太徵（火運太過）",
+    化度: "正化日／度也（《六元正紀大論》原文無災宮）",
+    所勝受乘宮: Object.freeze([7, 6]),
+    所勝受邪藏: "肺金（主位兌七宮，兼及同五行乾六宮）",
+    條件復氣本宮: Object.freeze([9]),
+    條件復氣預警: "【或然候選】若歲火太過而恃強失德、乘危而行，則恐招水氣（寒化）來復而反及離九宮。"
+  }),
+  "庚": Object.freeze({
+    歲運: "太商（金運太過）",
+    化度: "正化日／度也（《六元正紀大論》原文無災宮）",
+    所勝受乘宮: Object.freeze([3, 4]),
+    所勝受邪藏: "肝木（主位震三宮，兼及同五行巽四宮）",
+    條件復氣本宮: Object.freeze([7, 6]),
+    條件復氣預警: "【或然候選】若歲金太過而恃強失德、乘危而行，則恐招火氣（熱化）來復而反及兌七宮（兼及同五行乾六宮）。"
+  }),
+  "壬": Object.freeze({
+    歲運: "太角（木運太過）",
+    化度: "正化日／度也（《六元正紀大論》原文無災宮）",
+    // 註：《五常政大論》發生之紀（壬木太過）本身原文為「其眚東」（對應條件復氣本宮震三）；
+    // 此處「所勝受乘宮」係因木太過乘土，土受邪時按土之眚位特性（參照敦阜、卑監之紀「其眚四維」）擴展至中五與四隅宮。
+    所勝受乘宮: Object.freeze([5, 2, 4, 6, 8]),
+    所勝受邪藏: "脾土（主位中五宮，並依土受邪『其眚四維』特性波及坤二、巽四、乾六、艮八宮）",
+    條件復氣本宮: Object.freeze([3, 4]),
+    條件復氣預警: "【或然候選】若歲木太過而恃強失德、乘危而行，則恐招金氣（清化）來復而反及震三宮（其眚東，兼及同五行巽四宮）。"
+  })
+});
+
+/**
+ * 對接現有系統 calcThreeEras 回傳之 eras 物件與 homo 同氣格局物件
+ * 🔴 F-02 & F-03 修正：在 !eras 與 eras 非空兩個入口皆對陰干年與陽干年的高階格局（太乙天符/天符/同天符）作完整對稱提示
+ */
+function evaluatePingQiForZaiGong(eras, isYinYear, zaiGongNum, homo = null) {
+  const hasHighTierHomo = Boolean(homo && (homo.isTaiYi || homo.isTianFu || homo.isTongTianFu));
+  const homoTag = hasHighTierHomo
+    ? (homo.isTaiYi ? "太乙天符" : homo.isTianFu ? "天符" : "同天符")
+    : null;
+
+  // 🔴 F-03 修正：!eras 時，陰干年與陽干年對稱檢查高階格局
+  if (!eras) {
+    if (hasHighTierHomo) {
+      if (isYinYear) {
+        return `⚠️ 本年為歲運不及兼「${homoTag}」高階同氣偏勝格局；「災${zaiGongNum}宮」維持原典警示，應按「不及本氣 + 高階同氣」雙重結構審視其偏勝與勝復之勢（平氣裁定資料未提供，無法進一步連動）。`;
+      }
+      return `⚠️ 本年為歲運太過兼「${homoTag}」高階同氣格局，偏勝之勢疊加；依《五常政大論》審察是否具『恃強失德』之候（Provisional 候選狀態）。`;
+    }
+    return isYinYear
+      ? "本年為典型歲運不及之年，依《六元正紀大論》原典推演災宮與勝復。"
+      : "依《五常政大論》審察是否具『恃強失德』之候（Provisional 候選狀態）。";
+  }
+
+  // 防禦檢查：若傳入非 null 的空物件 {}（不含 isTruePingQi 欄位）
+  if (typeof eras !== "object" || !("isTruePingQi" in eras)) {
+    return "⚠️ 平氣裁定資料結構不完整（缺 isTruePingQi 欄位），無法執行災宮平氣連動；請以主系統 calcThreeEras 結果為準。";
+  }
+
+  const isPseudoUnresolved = Boolean(eras.isPseudoPingQi && !eras.dynamicOverridesPseudo);
+  const isMitigatedPingQi = Boolean(eras.isTruePingQi || eras.isSecondaryPingQi);
+
+  if (isYinYear) {
+    if (isPseudoUnresolved) {
+      return `⚠️ 本年雖見於平氣討論（屬「偽平氣」：本氣被奪／兼化），然非得歲氣相助之正平氣，故「災${zaiGongNum}宮」維持原典警示，不按得助減輕處理。`;
+    }
+    if (eras.dynamicPingQiBlockedByHighTier) {
+      const blockedList = HIGH_TIER_BLOCKED_LIST.join("、");
+      return `⚠️ 本年雖具干德符條件，然因命中太乙天符／天符等高階同氣偏勝格局（${blockedList}），依高階格局保護規則未改判平氣；「災${zaiGongNum}宮」維持原典警示，且應另按高階格局審視其偏勝之勢。`;
+    }
+    // 🔴 F-02 修正：eras 非空且未觸發干德符時，若陰干年命中太乙天符／天符（如乙酉、己丑、己未、丁亥），優先提示高階同氣偏勝雙重結構
+    if (homo && (homo.isTaiYi || homo.isTianFu || homo.isTongTianFu)) {
+      const yinHomoTag = homo.isTaiYi ? "太乙天符" : homo.isTianFu ? "天符" : "同天符";
+      return `⚠️ 本年為歲運不及兼「${yinHomoTag}」高階同氣偏勝格局；依高階格局保護規則，「災${zaiGongNum}宮」維持原典警示，並應按「不及本氣 + 高階同氣」雙重結構審視其偏勝與勝復之勢。`;
+    }
+    if (isMitigatedPingQi) {
+      let tierTag = "次平氣";
+      if (eras.isTruePingQi) {
+        if (eras.dynamicOverridesPseudo) {
+          tierTag = "干德符覆核平氣";
+        } else if (eras.pingQiSource === "動態干德符") {
+          tierTag = "干德符動態平氣";
+        } else {
+          tierTag = "正平氣";
+        }
+      }
+      return `ℹ️ 本年雖載「災${zaiGongNum}宮」，然得歲氣相助（${tierTag}），氣化趨平，勝復與災變程度較一般不及年減輕。`;
+    }
+    return "本年為典型歲運不及之年，依《六元正紀大論》原典推演災宮與勝復。";
+  } else {
+    if (isMitigatedPingQi) {
+      const tierTag = eras.isTruePingQi ? "正平氣" : "次平氣";
+      return `ℹ️ 本年得司天抑之而成${tierTag}，太過乘制之勢得以緩和。`;
+    }
+    if (hasHighTierHomo) {
+      return `⚠️ 本年為歲運太過兼「${homoTag}」高階同氣格局，偏勝之勢疊加；依《五常政大論》審察是否具『恃強失德』之候（Provisional 候選狀態）。`;
+    }
+    return "依《五常政大論》審察是否具『恃強失德』之候（Provisional 候選狀態）。";
+  }
+}
+
+/**
+ * 【第一、二階段】計算流年運氣災宮與平氣/偽平氣/同氣高階格局連動
+ * 🟡 F-05 修正：將 ganzhi 正規化為 normalizedGanzhi 後回傳
+ */
+function computeYearZaiGongInfo(ganzhi, eras = null, homo = null) {
+  if (typeof ganzhi !== "string" || ganzhi.trim().length === 0) {
+    throw new TypeError("computeYearZaiGongInfo: ganzhi 必須為非空字串");
+  }
+  const normalizedGanzhi = ganzhi.trim();
+  if (normalizedGanzhi.length !== 2) {
+    throw new RangeError("computeYearZaiGongInfo: 干支必須恰為兩字");
+  }
+  const stem = normalizedGanzhi.charAt(0);
+  const branch = normalizedGanzhi.charAt(1);
+  const stemIndex = GAN_LIST.indexOf(stem);
+  const branchIndex = ZHI_LIST.indexOf(branch);
+  if (stemIndex < 0) {
+    throw new RangeError(`computeYearZaiGongInfo: 無效的天干字元 "${stem}"`);
+  }
+  if (branchIndex < 0) {
+    throw new RangeError(`computeYearZaiGongInfo: 無效的地支字元 "${branch}"`);
+  }
+  if ((stemIndex % 2) !== (branchIndex % 2)) {
+    throw new RangeError(`computeYearZaiGongInfo: 非六十甲子中的有效干支組合 "${normalizedGanzhi}"`);
+  }
+  const isYin = Object.prototype.hasOwnProperty.call(YIN_STEM_ZAIGONG_MAP, stem);
+  const isYang = Object.prototype.hasOwnProperty.call(YANG_STEM_EXCESS_MAP, stem);
+
+  if (!isYin && !isYang) {
+    throw new RangeError(`computeYearZaiGongInfo: 無效的天干字元 "${stem}"`);
+  }
+
+  if (isYin) {
+    const info = YIN_STEM_ZAIGONG_MAP[stem];
+    return {
+      干支: normalizedGanzhi,
+      陰陽屬性: "陰干（歲運不及）",
+      歲運: info.歲運,
+      原典記載: `${info.邪氣化度}，災${info.災宮數}宮。`,
+      災宮數: info.災宮數,
+      災宮來源: info.災宮來源,
+      災宮詳情: LUOSHU_PALACE_META[info.災宮數],
+      次級波及宮數: info.次級波及宮,
+      次級波及來源: info.次級波及來源,
+      次級波及宮詳情: info.次級波及宮.map(n => LUOSHU_PALACE_META[n]),
+      勝復氣化: `勝氣為${info.勝氣}，復氣為${info.復氣}，主要受邪本藏：${info.受邪本藏}`,
+      所勝受乘宮數: [],
+      所勝受乘詳情: [],
+      所勝受邪藏: null,
+      條件復氣本宮數: [],
+      條件復氣本宮詳情: [],
+      條件復氣預警: null,
+      平氣連動裁定: evaluatePingQiForZaiGong(eras, true, info.災宮數, homo),
+      運氣配穴延伸參照: info.運氣配穴參照
+    };
+  } else {
+    const info = YANG_STEM_EXCESS_MAP[stem];
+    return {
+      干支: normalizedGanzhi,
+      陰陽屬性: "陽干（歲運太過）",
+      歲運: info.歲運,
+      原典記載: info.化度,
+      災宮數: null,
+      災宮來源: "陽干太過年《六元正紀大論》原文無災宮記載",
+      災宮詳情: null,
+      次級波及宮數: [],
+      次級波及來源: null,
+      次級波及宮詳情: [],
+      勝復氣化: null,
+      所勝受乘宮數: info.所勝受乘宮,
+      所勝受乘詳情: info.所勝受乘宮.map(n => LUOSHU_PALACE_META[n]),
+      所勝受邪藏: info.所勝受邪藏,
+      條件復氣本宮數: info.條件復氣本宮,
+      條件復氣本宮詳情: info.條件復氣本宮.map(n => LUOSHU_PALACE_META[n]),
+      條件復氣預警: info.條件復氣預警,
+      平氣連動裁定: evaluatePingQiForZaiGong(eras, false, info.條件復氣本宮[0], homo),
+      運氣配穴延伸參照: null
+    };
+  }
+}
+
+const LINGGUI_DAY_STEM_NUM = Object.freeze({ "甲": 10, "己": 10, "乙": 9, "庚": 9, "丁": 8, "壬": 8, "丙": 7, "辛": 7, "戊": 7, "癸": 7 });
+const LINGGUI_DAY_BRANCH_NUM = Object.freeze({ "辰": 10, "戌": 10, "丑": 10, "未": 10, "申": 9, "酉": 9, "寅": 8, "卯": 8, "巳": 7, "午": 7, "亥": 7, "子": 7 });
+const LINGGUI_HOUR_STEM_NUM = Object.freeze({ "甲": 9, "己": 9, "乙": 8, "庚": 8, "丙": 7, "辛": 7, "丁": 6, "壬": 6, "戊": 5, "癸": 5 });
+const LINGGUI_HOUR_BRANCH_NUM = Object.freeze({ "子": 9, "午": 9, "丑": 8, "未": 8, "寅": 7, "申": 7, "卯": 6, "酉": 6, "辰": 5, "戌": 5, "巳": 4, "亥": 4 });
+
+const LINGGUI_YIN_YANG_RULE_NOTE =
+  "陽日除九（餘數 1～9，整除作 9），可開出全部八穴（中五寄於坤二或艮八，故八穴分佈九宮）；陰日除六（餘數 1～6，整除作 6），故陰日開穴僅在坎一、坤二、震三、巽四、中五、乾六（1～6 宮）中循環，兌七後谿、艮八內關、離九列缺（7～9 宮）僅於陽日出現。";
+
+/**
+ * 奇經納卦八穴對照表
+ * 🟡 F-04 修正：明確中五「無本穴所屬經脈／無本穴所通奇經」
+ */
+const LINGGUI_ACUPOINT_MAP = Object.freeze({
+  1: Object.freeze({ 卦宮: "坎一", 開穴: "申脈", 所屬經脈: "足太陽膀胱經", 通奇經: "陽蹻脈", 偶穴配對: "後谿（督脈）", 循行交會部位: "目內眥、頸項、耳、肩胛" }),
+  2: Object.freeze({ 卦宮: "坤二", 開穴: "照海", 所屬經脈: "足少陰腎經", 通奇經: "陰蹻脈", 偶穴配對: "列缺（任脈）", 循行交會部位: "咽喉、胸膈、肺系" }),
+  3: Object.freeze({ 卦宮: "震三", 開穴: "外關", 所屬經脈: "手少陽三焦經", 通奇經: "陽維脈", 偶穴配對: "足臨泣（帶脈）", 循行交會部位: "耳後、肩、頰、目銳眥" }),
+  4: Object.freeze({ 卦宮: "巽四", 開穴: "足臨泣", 所屬經脈: "足少陽膽經", 通奇經: "帶脈", 偶穴配對: "外關（陽維脈）", 循行交會部位: "目銳眥、耳後、頰、頸肩" }),
+  5: Object.freeze({
+    卦宮: "中五（寄宮）",
+    開穴: "無本穴（通行法寄坤二取照海）",
+    所屬經脈: "無本穴所屬經脈（通行法取坤二照海，屬足少陰腎經）",
+    通奇經: "無本穴所通奇經（通行法取坤二照海，通陰蹻脈）",
+    偶穴配對: "取坤二照海時（通行法／古法女），偶穴列缺；取艮八內關時（古法男），偶穴公孫；取乾六公孫時（參照脾本經），偶穴內關",
+    偶穴配對分支: Object.freeze([
+      Object.freeze({ 適用流派: "通行法／古法女寄坤二", 取穴: "坤二照海", 偶穴: "列缺（任脈）" }),
+      Object.freeze({ 適用流派: "古法男寄艮八", 取穴: "艮八內關", 偶穴: "公孫（衝脈）" }),
+      Object.freeze({ 適用流派: "脾土本經交會參照", 取穴: "乾六公孫", 偶穴: "內關（陰維脈）" })
+    ]),
+    循行交會部位: "依所取寄穴而定：照海（咽喉胸膈肺系）／內關（心胸胃脘）／公孫（胃心胸脘）",
+    流派並列參照: "① 通行法：坤二五照海（偶穴列缺，據《針灸大成》）；② 古法男女寄穴（流派說法）：男寄艮八內關（偶穴公孫）、女寄坤二照海（偶穴列缺）；③ 脾土本經交會參照：乾六公孫（足太陰脾經通衝脈，偶穴內關）。"
+  }),
+  6: Object.freeze({ 卦宮: "乾六", 開穴: "公孫", 所屬經脈: "足太陰脾經", 通奇經: "衝脈", 偶穴配對: "內關（陰維脈）", 循行交會部位: "胃、心、胸脘" }),
+  7: Object.freeze({ 卦宮: "兌七", 開穴: "後谿", 所屬經脈: "手太陽小腸經", 通奇經: "督脈", 偶穴配對: "申脈（陽蹻脈）", 循行交會部位: "目內眥、頸項、耳、肩背" }),
+  8: Object.freeze({ 卦宮: "艮八", 開穴: "內關", 所屬經脈: "手厥陰心包經", 通奇經: "陰維脈", 偶穴配對: "公孫（衝脈）", 循行交會部位: "心、胸、胃脘" }),
+  9: Object.freeze({ 卦宮: "離九", 開穴: "列缺", 所屬經脈: "手太陰肺經", 通奇經: "任脈", 偶穴配對: "照海（陰蹻脈）", 循行交會部位: "胸、肺、膈、喉嚨" })
+});
+
+const ANCIENT_8JIE_RANGES = Object.freeze([
+  Object.freeze({ start: 1,   end: 46,  palace: 1, label: "葉蟄之宮（46日）" }),
+  Object.freeze({ start: 47,  end: 92,  palace: 8, label: "天留之宮（46日）" }),
+  Object.freeze({ start: 93,  end: 138, palace: 3, label: "倉門之宮（46日）" }),
+  Object.freeze({ start: 139, end: 183, palace: 4, label: "陰洛之宮（45日・注家稱天門）" }),
+  Object.freeze({ start: 184, end: 229, palace: 9, label: "上天之宮（46日）" }),
+  Object.freeze({ start: 230, end: 275, palace: 2, label: "玄委之宮（46日）" }),
+  Object.freeze({ start: 276, end: 321, palace: 7, label: "倉果之宮（46日）" }),
+  Object.freeze({ start: 322, end: 366, palace: 6, label: "新洛之宮（45日・注家稱地戶）" })
+]);
+
+function getPalaceFromSolarLongitude(lambdaDeg) {
+  if (typeof lambdaDeg !== "number" || !Number.isFinite(lambdaDeg)) {
+    throw new TypeError("getPalaceFromSolarLongitude: lambdaDeg 必須為有限數字");
+  }
+  const norm = ((lambdaDeg % 360) + 360) % 360;
+  if (norm >= 270 && norm < 315) return 1;
+  if (norm >= 315 && norm < 360) return 8;
+  if (norm >= 0   && norm < 45)  return 3;
+  if (norm >= 45  && norm < 90)  return 4;
+  if (norm >= 90  && norm < 135) return 9;
+  if (norm >= 135 && norm < 180) return 2;
+  if (norm >= 180 && norm < 225) return 7;
+  return 6;
+}
+
+function computeTaiyiThreeTracks(daysSinceWinterSolstice, solarLongitudeDeg) {
+  if (typeof daysSinceWinterSolstice !== "number" || !Number.isFinite(daysSinceWinterSolstice) || daysSinceWinterSolstice < 0) {
+    throw new RangeError("computeTaiyiThreeTracks: daysSinceWinterSolstice 必須為非負有限數字（冬至當日 = 0）");
+  }
+  if (typeof solarLongitudeDeg !== "number" || !Number.isFinite(solarLongitudeDeg)) {
+    throw new TypeError("computeTaiyiThreeTracks: solarLongitudeDeg 必須為有限數字");
+  }
+
+  const diffDays = Math.floor(daysSinceWinterSolstice);
+  const N = diffDays + 1;
+  const normalizedLambda = ((solarLongitudeDeg % 360) + 360) % 360;
+
+  const astroPalaceNum = getPalaceFromSolarLongitude(normalizedLambda);
+
+  const cappedN = ((N - 1) % 366) + 1;
+  const ancientMatch = ANCIENT_8JIE_RANGES.find(r => cappedN >= r.start && cappedN <= r.end) || ANCIENT_8JIE_RANGES[7];
+  const dayInAncientPalace = cappedN - ancientMatch.start + 1;
+  const ancientPalaceSpan = ancientMatch.end - ancientMatch.start + 1;
+
+  const dailyPalaceNum = ((cappedN - 1) % 9) + 1;
+
+  const tracksDiffer = astroPalaceNum !== ancientMatch.palace;
+  const isExactBoundaryDay = dayInAncientPalace === 1 || dayInAncientPalace === ancientPalaceSpan;
+  const isNearTransitionWindow = dayInAncientPalace <= 2 || dayInAncientPalace >= ancientPalaceSpan - 1;
+
+  const notes = [];
+  if (tracksDiffer) {
+    notes.push(
+      `⚠️ 【雙軌分歧】本日天文黃經定氣宮位（${LUOSHU_PALACE_META[astroPalaceNum].宮名}）與古法 46/45 日歲遊宮位（${LUOSHU_PALACE_META[ancientMatch.palace].宮名}）不一致，處於曆法與定氣交節過渡區；臨床應以實測風向與病人證候為主要判讀依據，不單憑任一軌。`
+    );
+  }
+  if (isNearTransitionWindow) {
+    notes.push(
+      `ℹ️ 【移宮交界期】本日為古法${ancientMatch.label}第 ${dayInAncientPalace} 日（共 ${ancientPalaceSpan} 日），《靈樞·九宮八風》云：「太一移日，天必應之以風雨，以其日風雨則吉，歲美民安少病矣；先之則多雨，後之則多旱」，宜留意交節前後氣候與風向變化。`
+    );
+  }
+
+  return {
+    距冬至天數差: diffDays,
+    冬至起算第N日: N,
+    週期內積日cappedN: cappedN,
+    軌道1_天文黃經定氣: {
+      軌道標籤: "天文黃經（定氣八節）",
+      黃經度數: normalizedLambda,
+      所居宮數: astroPalaceNum,
+      宮位詳情: LUOSHU_PALACE_META[astroPalaceNum]
+    },
+    軌道2_古法八節歲遊: {
+      軌道標籤: "八節移宮（古法 46/45 日歲遊）",
+      所居宮數: ancientMatch.palace,
+      居宮日數: `居${ancientMatch.label}第 ${dayInAncientPalace} 日`,
+      是否移日: dayInAncientPalace === 1,
+      宮位詳情: LUOSHU_PALACE_META[ancientMatch.palace]
+    },
+    軌道3_太一日遊: {
+      軌道標籤: "太一日遊（九日循環：數所在，日從一處，至九日復反於一）",
+      所居宮數: dailyPalaceNum,
+      是否入中宮招搖: dailyPalaceNum === 5,
+      宮位詳情: LUOSHU_PALACE_META[dailyPalaceNum]
+    },
+    軌道分歧偵測: {
+      天文與古法宮位是否一致: !tracksDiffer,
+      是否雙軌分歧: tracksDiffer,
+      是否為古法移宮首尾日: isExactBoundaryDay,
+      是否處於古法移宮交界期: isNearTransitionWindow,
+      交界提示列表: notes,
+      交界提示: notes.length > 0 ? notes.join(" ") : null
+    }
+  };
+}
+
+function computeLingguiBafaForDate(date, sexagenaryDayFn, hourGanFn) {
+  if (!(date instanceof Date) || !Number.isFinite(date.getTime())) {
+    throw new TypeError("computeLingguiBafaForDate: date 必須為有效 Date");
+  }
+  if (typeof sexagenaryDayFn !== "function") {
+    throw new TypeError("computeLingguiBafaForDate: sexagenaryDayFn 必須為函式");
+  }
+  const dayObj = sexagenaryDayFn(date);
+  if (!dayObj || !Number.isInteger(dayObj.index) || dayObj.index < 0 || dayObj.index > 59) {
+    throw new TypeError("computeLingguiBafaForDate: sexagenaryDayFn 必須返回含有效 index (0–59) 的物件");
+  }
+
+  const dayIdx = dayObj.index;
+  const computedGan = GAN_LIST[dayIdx % 10];
+  const computedZhi = ZHI_LIST[dayIdx % 12];
+
+  if (dayObj.stem && dayObj.stem !== computedGan) {
+    throw new Error(`computeLingguiBafaForDate: dayObj.stem (${dayObj.stem}) 與 index (${dayIdx}) 推算之天干 (${computedGan}) 不符`);
+  }
+  if (dayObj.branch && dayObj.branch !== computedZhi) {
+    throw new Error(`computeLingguiBafaForDate: dayObj.branch (${dayObj.branch}) 與 index (${dayIdx}) 推算之地支 (${computedZhi}) 不符`);
+  }
+
+  const dayGan = dayObj.stem || computedGan;
+  const dayZhi = dayObj.branch || computedZhi;
+  const isYangDay = YANG_GAN_SET.has(dayGan);
+
+  const dGanNum = LINGGUI_DAY_STEM_NUM[dayGan];
+  const dZhiNum = LINGGUI_DAY_BRANCH_NUM[dayZhi];
+
+  const hourlySchedule = ZHI_LIST.map((hZhi, branchIdx) => {
+    const hGan = typeof hourGanFn === "function"
+      ? hourGanFn(dayGan, hZhi)
+      : GAN_LIST[((GAN_LIST.indexOf(dayGan) % 5) * 2 + branchIdx) % 10];
+    if (!Object.prototype.hasOwnProperty.call(LINGGUI_HOUR_STEM_NUM, hGan)) {
+      throw new RangeError(`computeLingguiBafaForDate: hourGanFn 返回無效天干 "${String(hGan)}"`);
+    }
+    const hGanNum = LINGGUI_HOUR_STEM_NUM[hGan];
+    const hZhiNum = LINGGUI_HOUR_BRANCH_NUM[hZhi];
+    if (!Number.isFinite(dGanNum) || !Number.isFinite(dZhiNum) || !Number.isFinite(hGanNum) || !Number.isFinite(hZhiNum)) {
+      throw new RangeError("computeLingguiBafaForDate: 天干地支數值表缺少有效映射");
+    }
+    const sumS = dGanNum + dZhiNum + hGanNum + hZhiNum;
+
+    const openNum = isYangDay ? ((sumS - 1) % 9) + 1 : ((sumS - 1) % 6) + 1;
+    const rawRemainder = isYangDay ? (sumS % 9) : (sumS % 6);
+    const zeroRemainderNote = rawRemainder === 0
+      ? (isYangDay ? "整除餘 0，依『陽日除九，不及零餘穴下推』作 9" : "整除餘 0，依『陰日除六，不及零餘穴下推』作 6")
+      : null;
+
+    return {
+      時辰干支: `${hGan}${hZhi}時`,
+      四數代數式: `${dayGan}(${dGanNum}) + ${dayZhi}(${dZhiNum}) + ${hGan}(${hGanNum}) + ${hZhi}(${hZhiNum}) = ${sumS}`,
+      除數規則: isYangDay ? "陽日除九" : "陰日除六",
+      原始餘數: rawRemainder,
+      餘零說明: zeroRemainderNote,
+      開穴宮數: openNum,
+      開穴詳情: LINGGUI_ACUPOINT_MAP[openNum]
+    };
+  });
+
+  return {
+    觀測日干支: `${dayGan}${dayZhi}日`,
+    日干陰陽: isYangDay ? "陽干日（除九，餘零作九）" : "陰干日（除六，餘零作六）",
+    陰陽日開穴範圍說明: LINGGUI_YIN_YANG_RULE_NOTE,
+    日干支代數: `${dayGan}=${dGanNum}, ${dayZhi}=${dZhiNum}`,
+    十二時辰開穴表: hourlySchedule
+  };
+}
+return { MEDICAL_BOUNDARY_NOTICE, LUOSHU_PALACE_META, computeYearZaiGongInfo, computeTaiyiThreeTracks, computeLingguiBafaForDate };
+})();
+let activeNinePalaceTarget = null;
+
 
 const ZHU_BU_YING_SAN_SHUO=[
   {name:'王冰「覆手診脈」',content:'王冰注云：「不應皆為脈沉……仰手而沉，覆其手，則沉為浮，細為大也。」'},
@@ -1983,6 +2623,109 @@ function buildTargetYearSnapshot(targetYear,southNorthMode,observationDate=null)
   if(southNorthMode==='halfyear'){target.southNorthHalf={first:southNorthPulseFor(tgz.gan,tgz.zhi,southNorthMode,twDate(targetYear,3,1)),second:southNorthPulseFor(tgz.gan,tgz.zhi,southNorthMode,twDate(targetYear,10,1))};target.southNorth=target.southNorthHalf.first;}
   return target;
 }
+
+function lpSafe(value){return escapeAttr(value===null||value===undefined||value===""?"—":String(value));}
+function lpPalaceCard(p, heading){
+  if(!p)return "";
+  return "<div class='lp-card'><b>"+lpSafe(heading||p.宮名)+"</b><br>"+
+    lpSafe(p.宮名)+"｜"+lpSafe(p.卦位)+"｜"+lpSafe(p.方位)+"<br>"+
+    "五行："+lpSafe(p.五行)+"｜應人九野："+lpSafe(p.應人九野)+"<br>"+
+    "當令實風："+lpSafe(p.當令實風&&p.當令實風.方向)+"；"+lpSafe(p.當令實風&&p.當令實風.屬性)+"<br>"+
+    "失令虛風："+lpSafe(p.失令虛風&&p.失令虛風.風名)+"；"+lpSafe(p.失令虛風&&p.失令虛風.病候)+"</div>";
+}
+function lpPalaceCards(palaces, label){
+  if(!Array.isArray(palaces)||!palaces.length)return "";
+  return "<h4>"+lpSafe(label)+"</h4><div class='lp-grid'>"+palaces.map(function(p){return lpPalaceCard(p);}).join("")+"</div>";
+}
+function renderNinePalaceSection(target){
+  const el=document.getElementById("ninePalaceSection");if(!el||!target)return;
+  activeNinePalaceTarget=target;
+  const nowTW=new Date(Date.now()+8*60*60*1000);
+  const today=nowTW.toISOString().slice(0,10);
+  const hour=nowTW.getUTCHours();
+  const defaultBranchIndex=Math.floor(((hour+1)%24)/2);
+  const yearInfo=WYLQNinePalaceModule.computeYearZaiGongInfo(target.gz.gz,target.eras,target.homo);
+  const primaryPalaces=yearInfo.災宮詳情?[yearInfo.災宮詳情]:yearInfo.所勝受乘詳情;
+  const disasterHtml=yearInfo.災宮數!==null
+    ? "<p><b>陰干不及原典災宮：</b>第 "+lpSafe(yearInfo.災宮數)+" 宮｜"+lpSafe(yearInfo.災宮來源)+"</p><p>"+lpSafe(yearInfo.原典記載)+"</p>"
+    : "<p><b>陽干太過：</b>《六元正紀大論》原文無固定災宮，以下按模型分列所勝受乘與條件復氣宮，不冒充原典災宮。</p><p>"+lpSafe(yearInfo.原典記載)+"</p>";
+  const secondary=yearInfo.次級波及宮數&&yearInfo.次級波及宮數.length
+    ? "<p><b>次級波及宮：</b>"+lpSafe(yearInfo.次級波及宮數.join("、"))+"｜"+lpSafe(yearInfo.次級波及來源)+"</p>"
+    : "";
+  const winList=yearInfo.所勝受乘宮數&&yearInfo.所勝受乘宮數.length
+    ? "<p><b>所勝受乘宮：</b>"+lpSafe(yearInfo.所勝受乘宮數.join("、"))+"｜"+lpSafe(yearInfo.所勝受邪藏)+"</p>"
+    : "";
+  const recovery=yearInfo.條件復氣本宮數&&yearInfo.條件復氣本宮數.length
+    ? "<p><b>條件性復氣本宮：</b>"+lpSafe(yearInfo.條件復氣本宮數.join("、"))+"｜"+lpSafe(yearInfo.條件復氣預警)+"</p>"
+    : "";
+  const needle=yearInfo.運氣配穴延伸參照
+    ? "<h4>運氣配穴延伸參照（非靈龜八法本義）</h4><p><b>穴位：</b>"+lpSafe(yearInfo.運氣配穴延伸參照.穴位)+"</p><p>"+lpSafe(yearInfo.運氣配穴延伸參照.傳統補瀉參考)+"</p>"
+    : "";
+  const hourOptions=ZHI.map(function(z,i){
+    const title=["子（23–01）","丑（01–03）","寅（03–05）","卯（05–07）","辰（07–09）","巳（09–11）","午（11–13）","未（13–15）","申（15–17）","酉（17–19）","戌（19–21）","亥（21–23）"][i];
+    return "<option value='"+z+"'"+(i===defaultBranchIndex?" selected":"")+">"+title+"</option>";
+  }).join("");
+  el.innerHTML="<h2>二十四、九宮太一與靈龜八法</h2>"+
+    "<div class='notice source-layer'>本區將九宮八風／太一三軌與靈龜八法作為獨立的典籍模型對照，不混同於主程式的五運六氣核心判定。"+lpSafe(WYLQNinePalaceModule.MEDICAL_BOUNDARY_NOTICE)+"</div>"+
+    "<h3 class='lp-section-title'>一、目標運氣年九宮分析｜"+lpSafe(target.year)+"（"+lpSafe(target.gz.gz)+"）</h3>"+
+    "<p><b>歲運：</b>"+lpSafe(yearInfo.歲運)+"｜"+lpSafe(yearInfo.陰陽屬性)+"</p>"+disasterHtml+
+    "<p><b>勝復氣化：</b>"+lpSafe(yearInfo.勝復氣化)+"</p>"+secondary+winList+recovery+
+    "<p><b>平氣連動裁定：</b>"+lpSafe(yearInfo.平氣連動裁定)+"</p>"+
+    "<div class='lp-grid'>"+primaryPalaces.map(function(p){return lpPalaceCard(p,p.災宮來源||p.宮名);}).join("")+"</div>"+
+    lpPalaceCards(yearInfo.次級波及宮詳情,"次級波及宮位參照")+
+    lpPalaceCards(yearInfo.所勝受乘詳情,"所勝受乘宮位參照")+
+    lpPalaceCards(yearInfo.條件復氣本宮詳情,"條件復氣本宮位參照")+needle+
+    "<h3 class='lp-section-title'>二、指定日期：太一三軌與靈龜八法</h3>"+
+    "<div class='lp-note'>太一三軌並列天文黃經定氣、古法八節歲遊與太一日遊；雙軌不一致時保留分歧，不強行合併。下方時辰表是計算法與典籍穴位對照，不是個人化針灸建議。</div>"+
+    "<div class='ninepalace-controls'><div class='field'><label for='lpDate'>觀測日期（台北 UTC+8）</label><input id='lpDate' type='date' min='0001-01-01' max='3000-12-31' value='"+lpSafe(today)+"'></div>"+
+    "<div class='field'><label for='lpHourBranch'>指定時辰（用於表格標記）</label><select id='lpHourBranch'>"+hourOptions+"</select></div>"+
+    "<button type='button' class='back-btn' id='lpRecalcBtn'>重新計算本區</button></div>"+
+    "<div id='lpDateOutput' aria-live='polite'></div>";
+  updateNinePalaceOutput(target);
+}
+function updateNinePalaceOutput(target){
+  const out=document.getElementById("lpDateOutput");if(!out||!target)return;
+  const dateText=safeVal("lpDate","");
+  if(!strictDateValue(dateText)){out.innerHTML="<div class='notice caution-layer'>日期無效；請選擇公元 1–3000 年內的有效日期。</div>";return;}
+  const date=new Date(dateText+"T12:00:00+08:00");
+  if(!Number.isFinite(date.getTime())){out.innerHTML="<div class='notice caution-layer'>日期無法解析，請重新選擇。</div>";return;}
+  try{
+    const p=taipeiDateParts(date);
+    const thisSolstice=findSolarTerm(p.year,270);
+    const lastSolstice=date>=thisSolstice?thisSolstice:findSolarTerm(p.year-1,270);
+    const daysSinceSolstice=(date.getTime()-lastSolstice.getTime())/86400000;
+    const tracks=WYLQNinePalaceModule.computeTaiyiThreeTracks(daysSinceSolstice,solarLongitude(date));
+    const day=sexagenaryDay(date);
+    const linggui=WYLQNinePalaceModule.computeLingguiBafaForDate(date,function(d){return {index:d.index,stem:d.gan,branch:d.zhi};},hourGan);
+    const selectedBranch=safeVal("lpHourBranch","子");
+    const selectedRow=linggui.十二時辰開穴表.find(function(row){return row.時辰干支.charAt(1)===selectedBranch;});
+    const t1=tracks.軌道1_天文黃經定氣,t2=tracks.軌道2_古法八節歲遊,t3=tracks.軌道3_太一日遊;
+    const tracksHtml="<div class='lp-grid'>"+
+      "<div class='lp-card'><b>"+lpSafe(t1.軌道標籤)+"</b><br>太陽黃經："+lpSafe(t1.黃經度數.toFixed(4))+"°<br>"+lpSafe(t1.宮位詳情.宮名)+"｜"+lpSafe(t1.宮位詳情.方位)+"</div>"+
+      "<div class='lp-card'><b>"+lpSafe(t2.軌道標籤)+"</b><br>"+lpSafe(t2.宮位詳情.宮名)+"｜"+lpSafe(t2.宮位詳情.方位)+"<br>"+lpSafe(t2.居宮日數)+(t2.是否移日?"（本日移宮）":"")+"</div>"+
+      "<div class='lp-card'><b>"+lpSafe(t3.軌道標籤)+"</b><br>"+lpSafe(t3.宮位詳情.宮名)+"｜"+lpSafe(t3.宮位詳情.方位+"")+(t3.是否入中宮招搖?"（入中五宮）":"")+"</div></div>";
+    const warning=tracks.軌道分歧偵測.交界提示
+      ? "<div class='notice transition'>"+lpSafe(tracks.軌道分歧偵測.交界提示)+"</div>"
+      : "<div class='notice source-layer'>天文定氣宮與古法歲遊宮目前一致；仍應依文獻、觀測與所採流派分開理解。</div>";
+    const tableHtml="<div class='table-wrap'><table class='lp-table'><thead><tr><th>時辰干支</th><th>四數代數式</th><th>除數規則</th><th>原始餘數</th><th>開穴宮</th><th>開穴／所通奇經</th><th>所屬經脈</th><th>偶穴配對</th></tr></thead><tbody>"+
+      linggui.十二時辰開穴表.map(function(row){
+        const branch=row.時辰干支.charAt(1), a=row.開穴詳情;
+        return "<tr class='"+(branch===selectedBranch?"lp-selected":"")+"'><td>"+lpSafe(row.時辰干支)+(row.餘零說明?"<br><small>"+lpSafe(row.餘零說明)+"</small>":"")+"</td><td>"+lpSafe(row.四數代數式)+"</td><td>"+lpSafe(row.除數規則)+"</td><td>"+lpSafe(row.原始餘數)+"</td><td>"+lpSafe(row.開穴宮數)+"｜"+lpSafe(a.卦宮)+"</td><td>"+lpSafe(a.開穴)+"<br>"+lpSafe(a.通奇經)+"</td><td>"+lpSafe(a.所屬經脈)+"</td><td>"+lpSafe(a.偶穴配對)+"</td></tr>";
+      }).join("")+"</tbody></table></div>";
+    const selectedHtml=selectedRow
+      ? "<div class='lp-card'><b>指定時辰摘要："+lpSafe(selectedRow.時辰干支)+"</b><br>"+lpSafe(selectedRow.四數代數式)+"<br>開穴："+lpSafe(selectedRow.開穴詳情.開穴)+"（"+lpSafe(selectedRow.開穴詳情.卦宮)+"）｜通奇經："+lpSafe(selectedRow.開穴詳情.通奇經)+"</div>"
+      : "";
+    out.innerHTML="<p><b>觀測日干支：</b>"+lpSafe(linggui.觀測日干支)+"｜"+lpSafe(linggui.日干陰陽)+"</p>"+
+      "<p>"+lpSafe(linggui.陰陽日開穴範圍說明)+"</p>"+tracksHtml+warning+
+      "<h4>靈龜八法十二時辰開穴表</h4>"+selectedHtml+tableHtml+
+      "<p class='lp-note'>日期以台北固定 UTC+8 中午取樣。時辰表依觀測日干支配合十二地支時計算；所選時辰只負責高亮對照列。</p>";
+  }catch(err){
+    console.error("[WYLQ] 九宮／靈龜八法模組計算失敗：",err);
+    out.innerHTML="<div class='notice caution-layer'>本區計算未完成；請檢查日期是否位於支援範圍。主程式五運六氣結果未受本區影響。</div>";
+  }
+}
+
+
 function clearDerivedBirthState(clearRendered=false){
   _lastExportState=null;
   window.__wylqLastBirth=null;
@@ -1992,7 +2735,7 @@ function clearDerivedBirthState(clearRendered=false){
   if(clearRendered){
     const customQuestion=document.getElementById('exportCustomQuestion');if(customQuestion)customQuestion.value='';
     const warning=document.getElementById('exportWarningHint');if(warning)warning.textContent='';
-    const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'];
+    const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'];
     ids.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
   }
 }
@@ -2059,7 +2802,7 @@ function updateObservationAndHighlights(){
 }
 function calculate(){
   const previousTimeMode=CALC_TIME_MODE;
-  const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'];
+  const ids=['resultMeta','precisionNotice','summary','observationSection','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'];
   const snap=ids.map(id=>{const el=document.getElementById(id);return el?{innerHTML:el.innerHTML,hidden:!!el.hidden}:null;});
   let ok=false;
   try{ok=_calculateCore();}
@@ -2070,7 +2813,7 @@ function calculate(){
 }
 function _calculateCore(){
   const securityInputError=validateSecurityInputs();if(securityInputError){setFormError(securityInputError);return false;}
-  ['summary','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+  ['summary','auditLog','birthSection','hostYunSection','constitutionSection','classicProfilesSection','tenGanConstitutionSection','constitutionTypeSection','specialDualPathologySection','matrix30Section','pingQiMatrixSection','pattern9Section','sixStepFortuneSection','shengFuYuFaSection','sixSection','targetSection','chronicleSection','interactionSection','repairWindowSection','clinicalCautionSection','pulseBenMaiSection','pulseSixStepSection','southNorthSection','herbsSection','herbDirectionSection','ninePalaceSection'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
   const birthDateInput=safeVal('birth','');const timeInput=safeVal('time','12:00');const targetRaw=safeVal('target','');if(!/^\d+$/.test(String(targetRaw).trim())){setFormError('目標年份必須為整數（不接受小數、字母或空白）。');return false;}const targetYear=Number(targetRaw);
   CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));
   const bdate=new Date(`${birthDateInput}T${timeInput}:00+08:00`);
@@ -2128,7 +2871,7 @@ function _calculateCore(){
   document.getElementById('resultMeta').innerHTML=`出生所屬運氣年 <b>${fmtYearWithGZ(by.year,by.gz)}</b>｜目標 <b>${targetYear}（${tgz.gz}）</b>｜<span class="u-style-34d22304">WYLQ-Audit ${APP_VERSION}</span>`;
   try{
     {const pn=document.getElementById('precisionNotice');if(pn){const txt=precisionNoticeText(by.year,targetYear);/* SAFETY: txt is generated only by precisionNoticeText() from numbers and fixed literals; never concatenate user-controlled text here. */pn.innerHTML=txt?('<b>ℹ 精度提示：</b>'+txt):'';pn.hidden=!txt;}}
-    renderObservationPanel(target);renderSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderChronicleSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);renderPulseBenMai(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderHerbDirection(birth);tagReferenceDetails();
+    renderObservationPanel(target);renderSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderChronicleSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);renderPulseBenMai(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderHerbDirection(birth);renderNinePalaceSection(target);tagReferenceDetails();
   }catch(renderErr){console.error('[WYLQ] 渲染失敗（E-CALC-002）：',renderErr);setFormError('推算未完成（錯誤代碼 E-CALC-002）。輸出生成時發生錯誤；技術細節已記錄於開發者主控台。');return false;}
   /* Export only the state that produced the visible results; never re-read edited form fields from the export dialog. */
   _lastExportState = {birth,target,birthInput:birthDateInput,timeInput,pulseObserved,depEvidence,timeModeLabel:calcTimeModeLabel(),observationDate:document.getElementById('observeDate')?.value||''};
@@ -2272,6 +3015,7 @@ historyLines.push(`<div>   • <span class="hl3">[3.31.45]</span> 低優先級�
   historyLines.push(`<div>   • <span class="hl3">[3.31.62]</span> 自訂問題多行結構與匯出防禦補強：①修正編號轉換正規表示式，不再把 「1.」 後的換行吞併，並保留編號後空格；②匯出函式新增 300 UTF-16 字元二次限制，且避免截斷代理對；③新增屬性脈絡 escapeAttr，修復六步來源提示 title 插值的防禦；④修復窗口矩陣明示名義命中但未通過覆核的項目；⑤E2E 改為等待指定出生運氣年與目標年結果更新，並遵守程式既有冷卻狀態；補多行、超長輸入與屬性跳脫測試。⑥移除 matchPattern9 中未使用的 tYunDegree 局部變數；未批量刪除頂層函式回傳欄位，以避免破壞潛在外部呼叫者相容性。未更動核心五運六氣公式、權重、時間窗或古典分類資料表。<span class="src-program"> [prompt fidelity / defense-in-depth / E2E stability]</span></div>`);
   historyLines.push(`<div>   • <span class="hl3">[3.31.61]</span> 自訂匯出結構防護與修復窗口語義收斂：①自訂問題中的全形段落標頭括號轉為中性括號，換行後的數字題號轉為全形括號，避免使用者輸入偽造「輸出要求」段或破壞題目編號；②未經干德符覆核的偽平氣不再列為單純「本氣自衰」有效修復窗口；③歷史版本排序支援多字母後綴；④補強干支年份格式器對空白／非字串干支的防禦；⑤清除未使用的背景色局部變數與不可達的弱臟 fallback，保留真正參與運算的角色資料；⑥摘要南北政 fallback 改用中性符號。未更動核心五運六氣公式、權重、時間窗或古典分類資料表。<span class="src-program"> [prompt structure / repair-window semantics / defensive maintenance]</span></div>`);
   historyLines.push(`<div>   • <span class="hl3">[3.31.58]</span> 死字段與失效樣式清理：①移除確認無讀取方的狀態／演算回傳字段與彙總欄位，保留參與運算的局部變數及歲運 <code>isOverlap</code> 相容別名；②移除未消費的古典資料表字段與舊版體質子表，不改動仍在使用的分類、權重與公式；③移除未被呼叫的 <code>escHtml</code>，避免將未接入的 helper 誤認為有效防護；④刪除已無對應 DOM 類別的舊 CSS 規則；⑤自訂問題欄位支援多行，並補上匯出對話框描述、複製／字數狀態的無障礙通知及同年參照標示。未更動核心五運六氣計算公式、時間窗、權重、古典分類判準或外部網路行為。<span class="src-program"> [dead-field cleanup / CSS cleanup / accessibility / semantic clarity]</span></div>`);  historyLines.push(`<div>   • <span class="hl3">[3.31.68]</span> 工程與顯示一致性：①修正手機六步雙欄擠壓與置頂章節導覽錨點；②年份格式器拒絕非整數；③資料速查模式不再誤顯 ΔT／太陽黃經計算警示；④區分傳統交司精確近似與純天文黃經年界；⑤校正固定典籍參照的 OCR／字形誤植；⑥主運／客運顯示五音標籤與五運時間窗；⑦觀察日期 DOM、時間基準快照及歲半代理取樣分列。未更動靜態平氣矩陣、核心五行關係、數值權重或正式修復窗口判準。<span class="src-program"> [engineering / display / snapshot semantics]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.33.0]</span> 整合九宮太一與靈龜八法獨立模組：加入目標運氣年災宮／所勝受乘／條件復氣參照、太一三軌與十二時辰開穴表；本模組與原五運六氣核心運算分離，保留原典／模型延伸之區分及非處方安全提示。<span class="src-program"> [module / UI / CSP]</span></div>`);
   historyLines.push(`<div>   • <span class="hl3">[3.32.0]</span> 第二階段跨模組修補：①新增與主分類閘門分離的同歲會／類歲會／運氣相生結構標籤，未擴充固定平氣矩陣；②十級嚴重度保留次級不利候選並過濾太乙天符組成格局重複項；③五鬱制鬱方向按太過／不及分支；④跨年勝復模式不再由出生鬱氣單獨觸發，改核對目標年有效復氣；⑤本氣不及年修復窗口保持嚴格 eligible，僅為正／次平氣另列非正式平調候選；⑥九模式弱強重複角色去重、母氣扶核兼克連帶弱臟雙方向標記；⑦九模式將疾病預測與固定治則改為機制候選／解讀限制。未將未定義的太過反侮條件新增為自動命中，也未更動權重與靜態平氣矩陣；另補充高階天符窗口雙面機制、太過出生逢天符／同天符級之反侮審計備註、陰干天符／太乙天符三派詮釋與表 8-1 爭議年份考辨。<span class="src-program"> [cross-module semantics / conservative theory boundary]</span></div>`);
   const historyLinesStable=historyLines.map((line,index)=>({line,index}));
   historyLinesStable.sort((a,b)=>{const v=x=>{const m=x.match(/\[(\d+)\.(\d+)\.(\d+)([a-z]*)\]/i);return m?{a:+m[1],b:+m[2],c:+m[3],s:m[4].toLowerCase()}:null;};const x=v(a.line),y=v(b.line);if(!x&&!y)return a.index-b.index;if(!x)return 1;if(!y)return -1;return x.a-y.a||x.b-y.b||x.c-y.c||(x.s<y.s?-1:x.s>y.s?1:0)||a.index-b.index;});
@@ -3068,6 +3812,17 @@ document.getElementById('target').addEventListener('input',()=>setFormError(''))
 document.getElementById('timeMode').addEventListener('change',()=>{setFormError('');invalidateBirthConfirmation();});
 ['pulseObserved','depressionEvidence','southNorthMode'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('change',()=>setFormError(''));});
 setBirthConfirmation(false,'尚未確認出生資料；請輸入生日／時間後按「確認出生資料」。');
+const ninePalacePanel=document.getElementById('ninePalaceSection');
+if(ninePalacePanel){
+  ninePalacePanel.addEventListener('change',function(event){
+    if(event.target&&(['lpDate','lpHourBranch'].includes(event.target.id)))updateNinePalaceOutput(activeNinePalaceTarget);
+  });
+  ninePalacePanel.addEventListener('click',function(event){
+    const button=event.target&&event.target.closest?event.target.closest('#lpRecalcBtn'):null;
+    if(button)updateNinePalaceOutput(activeNinePalaceTarget);
+  });
+}
+
 showView('input');
 
 
