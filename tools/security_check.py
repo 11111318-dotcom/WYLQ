@@ -41,6 +41,9 @@ scripts=re.findall(r"<script\b([^>]*)>([\s\S]*?)</script\s*>",html,re.I)
 styles=re.findall(r"<style\b([^>]*)>([\s\S]*?)</style\s*>",html,re.I)
 check(len(scripts)==1 and not re.search(r"\bsrc\s*=",scripts[0][0],re.I), "exactly one inline script; no external script src")
 check(len(styles)==1, "exactly one inline style block")
+if len(scripts)==1:
+    solstice_window = re.search(r"const SOLAR_TERM_WINDOW\s*=\s*\{([\s\S]*?)\};", scripts[0][1])
+    check(bool(solstice_window and re.search(r"(?m)^\s*270\s*:", solstice_window.group(1))), "SOLAR_TERM_WINDOW includes 270° winter-solstice search window")
 check(len(p.csp)==1, "exactly one parseable CSP meta")
 d={}
 if len(p.csp)==1:
