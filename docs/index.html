@@ -664,12 +664,6 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
       <div id="formError" class="notice caution-layer form-error" role="alert" aria-live="assertive" hidden></div>
     </form>
 
-    <div class="input-notice">
-      <b>典籍查核工具｜《素問・六元正紀大論》</b>
-      <p>可直接查詢六十甲子正化度、邪氣化度、藥食宜，以及《素問》合論數與正化／對化分論數值的對照；不需要先輸入出生資料或執行個人推算。</p>
-      <button type="button" id="openLiuYuanDialogBtn" class="back-btn">開啟六十甲子查核 →</button>
-    </div>
-
     <div class="input-notice">⚠️ 安全提示：本系統產出之弱臟定位、格局劇烈度、脈位推算均屬傳統模型推演，不可替代醫療診斷。本單檔版本不主動發送網路請求；出生資料在本頁計算，不由程式上傳。</div>
   </div>
 </section>
@@ -679,7 +673,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
     <span>《素問・六元正紀大論》六十甲子查核</span>
     <button type="button" id="closeLiuYuanDialogBtn" class="back-btn">✕ 關閉</button>
   </h3>
-  <div class="notice source-layer" id="liuYuanDialogNotice">本面板只查閱經文合論、正對化分論與藥食宜資料，不讀取出生日期、出生時間或個人推算結果。標籤「數值相符」表示數值對照，不單憑數值相等推定原典取值來源，也不表示兩套理論完全相同。</div>
+  <div class="notice source-layer" id="liuYuanDialogNotice">本面板只依所選歲干支查閱經文合論、正對化分論與藥食宜資料；不讀取或改寫出生資料與個人推算結果。標籤「數值相符」表示數值對照，不單憑數值相等推定原典取值來源，也不表示兩套理論完全相同。</div>
   <div class="field">
     <label for="liuYuanGanZhi">選擇歲干支</label>
     <select id="liuYuanGanZhi" aria-label="選擇六十甲子歲干支"></select>
@@ -711,6 +705,11 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
       <div class="notice caution-layer u-style-a82d7062" id="resultDisclaimer" role="note"><b>⚠ 安全提示：</b>本結果為傳統五運六氣模型推演，不是醫療診斷，亦非個人化處方；不應僅憑推算結果自行用藥、停藥或延誤就醫。此單檔版本不主動發送網路請求；請仍以可信來源取得檔案。</div>
       <div class="notice transition u-style-a82d7062" id="precisionNotice" role="status" hidden></div>
       <div class="card summary" id="summary"></div>
+      <div class="card panel section" id="liuYuanLookupSection">
+        <h2>典籍查詢｜《素問・六元正紀大論》</h2>
+        <p>查閱六十甲子正化度、邪氣化度、災宮與藥食宜，並對照原典合論及《玄珠密語》等正化／對化分論數值。此查核模組獨立於個人推算，不讀取出生資料。</p>
+        <button type="button" id="openLiuYuanDialogBtn" class="back-btn" aria-haspopup="dialog">開啟六十甲子查核 →</button>
+      </div>
       <div class="card panel section" id="observationSection"></div>
       <details class="card panel section" id="auditSection"><summary><h2>運氣推步紀要與審計軌跡 <span class="audit-toggle-hint">（預設收起；點擊展開／收起）</span></h2></summary><div class="audit-terminal" id="auditLog"></div></details>
       <div class="card panel section birth-section" id="birthSection"></div>
