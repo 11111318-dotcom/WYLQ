@@ -35,7 +35,7 @@ jobs:
         run: node tools/test-nine-palace-v3.33.js
       - name: Run Liu-Yuan Zheng-Ji 60-cycle regression tests
         run: node tools/test-liuyuan-zhengji-v3.34.js
-      - name: Verify Liu-Yuan lookup placement in query/results view
+      - name: Verify automatic Liu-Yuan results follow selected target year
         run: node tools/test-liuyuan-ui-placement-v3.34.js
 
   build:
