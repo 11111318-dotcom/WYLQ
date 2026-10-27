@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Wb3CIRmpwXvtmw0M1s8YnABi+m3JPNZhbGX2Y7hcsic='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-elem 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-1kCHnJDJKJKQL/Fj4cX+LRYGwiC2frUvP3vkgIO5HhI='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-elem 'sha256-8tSH59vaekBTVTQIOWxxfKxivGAWhbKHmD7LI33eplY='; style-src-attr 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -757,7 +757,7 @@ dialog.export-dialog::backdrop{background:rgba(41,38,31,.45);-webkit-backdrop-fi
 <script>
 'use strict';
 {const warning=document.getElementById('scriptStartupWarning');if(warning)warning.remove();}
-const APP_VERSION='3.33.1-security';
+const APP_VERSION='3.33.2-security';
 /* LOW-BENEFIT DEFENSE-IN-DEPTH: sever a Window.opener reference if this file was opened by a page. This does not replace rel="noopener noreferrer" on any future outbound links and does not prevent postMessage by itself. */
 try { if (window.opener) window.opener = null; } catch (_) {}
 let _lastExportState = null;
@@ -2697,7 +2697,7 @@ function updateNinePalaceOutput(target){
     const daysSinceSolstice=(date.getTime()-lastSolstice.getTime())/86400000;
     const tracks=WYLQNinePalaceModule.computeTaiyiThreeTracks(daysSinceSolstice,solarLongitude(date));
     const day=sexagenaryDay(date);
-    const linggui=WYLQNinePalaceModule.computeLingguiBafaForDate(date,function(d){return {index:d.index,stem:d.gan,branch:d.zhi};},hourGan);
+    const linggui=WYLQNinePalaceModule.computeLingguiBafaForDate(date,function(d){const day=sexagenaryDay(d);return {index:day.index,stem:day.gan,branch:day.zhi};},hourGan);
     const selectedBranch=safeVal("lpHourBranch","子");
     const selectedRow=linggui.十二時辰開穴表.find(function(row){return row.時辰干支.charAt(1)===selectedBranch;});
     const t1=tracks.軌道1_天文黃經定氣,t2=tracks.軌道2_古法八節歲遊,t3=tracks.軌道3_太一日遊;
@@ -3016,6 +3016,7 @@ historyLines.push(`<div>   • <span class="hl3">[3.31.45]</span> 低優先級�
   historyLines.push(`<div>   • <span class="hl3">[3.31.62]</span> 自訂問題多行結構與匯出防禦補強：①修正編號轉換正規表示式，不再把 「1.」 後的換行吞併，並保留編號後空格；②匯出函式新增 300 UTF-16 字元二次限制，且避免截斷代理對；③新增屬性脈絡 escapeAttr，修復六步來源提示 title 插值的防禦；④修復窗口矩陣明示名義命中但未通過覆核的項目；⑤E2E 改為等待指定出生運氣年與目標年結果更新，並遵守程式既有冷卻狀態；補多行、超長輸入與屬性跳脫測試。⑥移除 matchPattern9 中未使用的 tYunDegree 局部變數；未批量刪除頂層函式回傳欄位，以避免破壞潛在外部呼叫者相容性。未更動核心五運六氣公式、權重、時間窗或古典分類資料表。<span class="src-program"> [prompt fidelity / defense-in-depth / E2E stability]</span></div>`);
   historyLines.push(`<div>   • <span class="hl3">[3.31.61]</span> 自訂匯出結構防護與修復窗口語義收斂：①自訂問題中的全形段落標頭括號轉為中性括號，換行後的數字題號轉為全形括號，避免使用者輸入偽造「輸出要求」段或破壞題目編號；②未經干德符覆核的偽平氣不再列為單純「本氣自衰」有效修復窗口；③歷史版本排序支援多字母後綴；④補強干支年份格式器對空白／非字串干支的防禦；⑤清除未使用的背景色局部變數與不可達的弱臟 fallback，保留真正參與運算的角色資料；⑥摘要南北政 fallback 改用中性符號。未更動核心五運六氣公式、權重、時間窗或古典分類資料表。<span class="src-program"> [prompt structure / repair-window semantics / defensive maintenance]</span></div>`);
   historyLines.push(`<div>   • <span class="hl3">[3.31.58]</span> 死字段與失效樣式清理：①移除確認無讀取方的狀態／演算回傳字段與彙總欄位，保留參與運算的局部變數及歲運 <code>isOverlap</code> 相容別名；②移除未消費的古典資料表字段與舊版體質子表，不改動仍在使用的分類、權重與公式；③移除未被呼叫的 <code>escHtml</code>，避免將未接入的 helper 誤認為有效防護；④刪除已無對應 DOM 類別的舊 CSS 規則；⑤自訂問題欄位支援多行，並補上匯出對話框描述、複製／字數狀態的無障礙通知及同年參照標示。未更動核心五運六氣計算公式、時間窗、權重、古典分類判準或外部網路行為。<span class="src-program"> [dead-field cleanup / CSS cleanup / accessibility / semantic clarity]</span></div>`);  historyLines.push(`<div>   • <span class="hl3">[3.31.68]</span> 工程與顯示一致性：①修正手機六步雙欄擠壓與置頂章節導覽錨點；②年份格式器拒絕非整數；③資料速查模式不再誤顯 ΔT／太陽黃經計算警示；④區分傳統交司精確近似與純天文黃經年界；⑤校正固定典籍參照的 OCR／字形誤植；⑥主運／客運顯示五音標籤與五運時間窗；⑦觀察日期 DOM、時間基準快照及歲半代理取樣分列。未更動靜態平氣矩陣、核心五行關係、數值權重或正式修復窗口判準。<span class="src-program"> [engineering / display / snapshot semantics]</span></div>`);
+  historyLines.push(`<div>   • <span class="hl3">[3.33.2]</span> 修正靈龜八法日期適配器：先以既有 sexagenaryDay(date) 計算日干支，再傳入開穴模組；原先直接讀取 Date.index／gan／zhi 造成日干支驗證失敗與整區中止。同步加入安全檢查防止適配器退化。<span class="src-program"> [bugfix / integration regression]</span></div>`);
   historyLines.push(`<div>   • <span class="hl3">[3.33.1]</span> 修正九宮太一日期推算的冬至起算：補足節氣搜尋表黃經 270°（冬至）窗口，避免指定日期區塊在計算太一三軌時因找不到搜尋視窗而中斷；主五運六氣核心演算不變。<span class="src-program"> [bugfix / regression]</span></div>`);
   historyLines.push(`<div>   • <span class="hl3">[3.33.0]</span> 整合九宮太一與靈龜八法獨立模組：加入目標運氣年災宮／所勝受乘／條件復氣參照、太一三軌與十二時辰開穴表；本模組與原五運六氣核心運算分離，保留原典／模型延伸之區分及非處方安全提示。<span class="src-program"> [module / UI / CSP]</span></div>`);
   historyLines.push(`<div>   • <span class="hl3">[3.32.0]</span> 第二階段跨模組修補：①新增與主分類閘門分離的同歲會／類歲會／運氣相生結構標籤，未擴充固定平氣矩陣；②十級嚴重度保留次級不利候選並過濾太乙天符組成格局重複項；③五鬱制鬱方向按太過／不及分支；④跨年勝復模式不再由出生鬱氣單獨觸發，改核對目標年有效復氣；⑤本氣不及年修復窗口保持嚴格 eligible，僅為正／次平氣另列非正式平調候選；⑥九模式弱強重複角色去重、母氣扶核兼克連帶弱臟雙方向標記；⑦九模式將疾病預測與固定治則改為機制候選／解讀限制。未將未定義的太過反侮條件新增為自動命中，也未更動權重與靜態平氣矩陣；另補充高階天符窗口雙面機制、太過出生逢天符／同天符級之反侮審計備註、陰干天符／太乙天符三派詮釋與表 8-1 爭議年份考辨。<span class="src-program"> [cross-module semantics / conservative theory boundary]</span></div>`);

@@ -44,6 +44,7 @@ check(len(styles)==1, "exactly one inline style block")
 if len(scripts)==1:
     solstice_window = re.search(r"const SOLAR_TERM_WINDOW\s*=\s*\{([\s\S]*?)\};", scripts[0][1])
     check(bool(solstice_window and re.search(r"(?m)^\s*270\s*:", solstice_window.group(1))), "SOLAR_TERM_WINDOW includes 270° winter-solstice search window")
+    check("WYLQNinePalaceModule.computeLingguiBafaForDate(date,function(d){const day=sexagenaryDay(d);return {index:day.index,stem:day.gan,branch:day.zhi};},hourGan)" in scripts[0][1], "Linggui Bafa adapter calculates sexagenary day from Date before mapping fields")
 check(len(p.csp)==1, "exactly one parseable CSP meta")
 d={}
 if len(p.csp)==1:
