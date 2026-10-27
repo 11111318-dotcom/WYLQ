@@ -102,10 +102,11 @@ check(not re.search(r"\btypeof\s+table\s*!==\s*['\"]undefined['\"]",script), "no
 check("SAFETY: txt is generated only by precisionNoticeText()" in script, "precisionNotice HTML sink has safety annotation")
 for pat,label in [(r"\beval\s*\(","eval()"),(r"\bnew\s+Function\b","new Function"),(r"\bXMLHttpRequest\b","XMLHttpRequest"),(r"\bWebSocket\s*\(","WebSocket"),(r"\bEventSource\s*\(","EventSource"),(r"\bsendBeacon\s*\(","sendBeacon"),(r"\blocalStorage\b|\bsessionStorage\b|\bindexedDB\b|document\.cookie","persistence API")]:
     check(not re.search(pat,script), f"no {label} in main script")
-# Reviewed ceiling for the compact 3.32.0 artifact; any increase requires
-# a fresh review of every dynamic HTML sink rather than an automatic bump.
+# Reviewed ceiling for v3.33.0: the five added sinks in the Nine-Palace UI
+# were reviewed; every dynamic value is escaped with escapeAttr via lpSafe().
+# Any further increase requires a fresh review of every dynamic HTML sink.
 count=len(re.findall(r"\.innerHTML\s*=",script))
-check(count<=41, f"innerHTML sink count remains within reviewed baseline (41; current {count})")
+check(count<=46, f"innerHTML sink count remains within reviewed baseline (46; current {count})")
 if len(scripts)==1 and shutil.which("node"):
     with tempfile.NamedTemporaryFile("w",encoding="utf-8",suffix=".js",delete=False) as f: f.write(script); js=Path(f.name)
     try:
