@@ -59,7 +59,6 @@ if len(p.csp)==1:
     check("'unsafe-inline'" not in d.get("script-src",set()) and "'unsafe-eval'" not in d.get("script-src",set()), "script-src does not allow unsafe-inline/unsafe-eval")
     if len(scripts)==1:
         h=base64.b64encode(hashlib.sha256(scripts[0][1].encode("utf-8")).digest()).decode()
-        print("DEBUG computed script CSP hash: "+h)
         check(d.get("script-src")=={"'sha256-"+h+"'"}, "CSP script SHA-256 matches exact UTF-8 content")
     if len(styles)==1:
         h=base64.b64encode(hashlib.sha256(styles[0][1].encode("utf-8")).digest()).decode()
