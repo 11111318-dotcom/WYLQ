@@ -22,7 +22,7 @@ assert.ok(helperStart >= 0 && helperEnd > helperStart && liveHelperStart >= 0 &&
 assert.equal(live.slice(liveHelperStart, liveHelperEnd), legacy.slice(helperStart, helperEnd), 'DOM renderer must be copied without edits');
 assert.ok(!live.slice(liveHelperStart, liveHelperEnd).includes('.innerHTML') && !live.slice(liveHelperStart, liveHelperEnd).includes('insertAdjacentHTML'), 'transplanted renderer must not add HTML-string sinks');
 const baselineYq14 = fs.readFileSync(path.join(root, 'versions', 'yq14.html'), 'utf8');
-const sinkCount = source => (source.match(/\\.innerHTML\\s*=/g) || []).length;
+const sinkCount = source => (source.match(/\.innerHTML\s*=/g) || []).length;
 assert.equal(sinkCount(live), sinkCount(baselineYq14), 'transplant must not increase yq14 innerHTML sink count');
 assert.equal((live.slice(liveDataStart,liveDataEnd).match(/pairIndex:\s*\d+/g)||[]).length, 30, 'all 30 paired records must be retained');
 const years = [...live.slice(liveDataStart,liveDataEnd).matchAll(/years: Object\.freeze\(\["([^"]+)",\s*"([^"]+)"\]\)/g)].flatMap(m=>[m[1],m[2]]);
