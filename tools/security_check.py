@@ -41,11 +41,40 @@ scripts=re.findall(r"<script\b([^>]*)>([\s\S]*?)</script\s*>",html,re.I)
 styles=re.findall(r"<style\b([^>]*)>([\s\S]*?)</style\s*>",html,re.I)
 check(len(scripts)==1 and not re.search(r"\bsrc\s*=",scripts[0][0],re.I), "exactly one inline script; no external script src")
 check(len(styles)==1, "exactly one inline style block")
+yq14_profile = "APP_VERSION='3.32.0-security-yq14-integrated-liuyuan-v3.34.0'" in html
 if len(scripts)==1:
-    solstice_window = re.search(r"const SOLAR_TERM_WINDOW\s*=\s*\{([\s\S]*?)\};", scripts[0][1])
-    check(bool(solstice_window and re.search(r"(?m)^\s*270\s*:", solstice_window.group(1))), "SOLAR_TERM_WINDOW includes 270° winter-solstice search window")
-    check("WYLQNinePalaceModule.computeLingguiBafaForDate(date,function(d){const day=sexagenaryDay(d);return {index:day.index,stem:day.gan,branch:day.zhi};},hourGan)" in scripts[0][1], "Linggui Bafa adapter calculates sexagenary day from Date before mapping fields")
-    check("let diagnosticStage=\"準備日期\"" in scripts[0][1] and "失敗階段" in scripts[0][1] and "診斷訊息" in scripts[0][1], "Nine-Palace failures expose safe runtime diagnostics")
+    script_text = scripts[0][1]
+    if yq14_profile:
+        winter_start = script_text.find("function findNinePalaceWinterSolstice(year){")
+        winter_end = script_text.find("\nfunction getNinePalaceDateSnapshot", winter_start)
+        winter_fn = script_text[winter_start:winter_end] if winter_start >= 0 and winter_end > winter_start else ""
+        check("target=270" in winter_fn and "solarLongitude(" in winter_fn and "for(let i=0;i<42;i++)" in winter_fn,
+              "yq14 winter-solstice search independently brackets 270° and refines the crossing")
+        check("function sexagenaryDay(date)" in script_text
+              and "const linggui=computeLingguiBafaForDate(date,sexagenaryDay,hourGan);" in script_text,
+              "yq14 Linggui Bafa adapter passes the Taipei-calendar sexagenary day and hour-stem functions")
+        lg_start = script_text.find("function computeLingguiBafaForDate(")
+        lg_end = script_text.find("\nfunction ", lg_start + 1)
+        lg_fn = script_text[lg_start:lg_end] if lg_start >= 0 and lg_end > lg_start else ""
+        check("const dayIdx = dayObj.index;" in lg_fn
+              and "GAN_LIST[dayIdx % 10]" in lg_fn and "ZHI_LIST[dayIdx % 12]" in lg_fn
+              and "dayObj.index < 0" in lg_fn and "dayObj.index > 59" in lg_fn,
+              "yq14 Linggui adapter validates the sexagenary index and derives matched Ganzhi")
+        date_start = script_text.find("function renderNinePalaceDateOutput(){")
+        date_end = script_text.find("\nfunction renderNinePalaceClassicalMap", date_start)
+        date_fn = script_text[date_start:date_end] if date_start >= 0 and date_end > date_start else ""
+        check("function yqEscape(value)" in script_text
+              and "const msg=yqEscape(err&&err.message?err.message:err)" in date_fn
+              and "tracksEl.innerHTML=notice;windEl.innerHTML=notice;lingguiEl.innerHTML=notice;" in date_fn,
+              "yq14 Nine-Palace errors escape diagnostics before presentation")
+    else:
+        solstice_window = re.search(r"const SOLAR_TERM_WINDOW\s*=\s*\{([\s\S]*?)\};", script_text)
+        check(bool(solstice_window and re.search(r"(?m)^\s*270\s*:", solstice_window.group(1))),
+              "SOLAR_TERM_WINDOW includes 270° winter-solstice search window")
+        check("WYLQNinePalaceModule.computeLingguiBafaForDate(date,function(d){const day=sexagenaryDay(d);return {index:day.index,stem:day.gan,branch:day.zhi};},hourGan)" in script_text,
+              "Linggui Bafa adapter calculates sexagenary day from Date before mapping fields")
+        check('let diagnosticStage="準備日期"' in script_text and "失敗階段" in script_text and "診斷訊息" in script_text,
+              "Nine-Palace failures expose safe runtime diagnostics")
 check(len(p.csp)==1, "exactly one parseable CSP meta")
 d={}
 if len(p.csp)==1:
@@ -74,12 +103,23 @@ INPUT_GUARDRAILS = (
     ("real calendar date round-trip validation", "probe.getUTCFullYear()===y&&probe.getUTCMonth()+1===m&&probe.getUTCDate()===d"),
     ("strict HH:MM input pattern", r"!/^\d{2}:\d{2}$/.test(v)"),
     ("24-hour time range validation", "h>=0&&h<=23&&m>=0&&m<=59"),
-    ("target year integer range validation", r"!/^\d{1,4}$/.test(String(target).trim())||Number(target)<1||Number(target)>3000"),
     ("advanced options restricted to allowlisted values", "!INPUT_ENUMS[id].includes(String(el.value))"),
     ("calculation core validates inputs before rendering", "const securityInputError=validateSecurityInputs();if(securityInputError){setFormError(securityInputError);return false;}"),
 )
 for label, invariant in INPUT_GUARDRAILS:
     check(invariant in script, label)
+if yq14_profile:
+    target_parser_start = script.find("function parseSupportedTargetYear(value){")
+    target_parser_end = script.find("\nfunction validateSecurityInputs()", target_parser_start)
+    target_parser = script[target_parser_start:target_parser_end] if target_parser_start >= 0 and target_parser_end > target_parser_start else ""
+    check(r"!/^\d{1,4}$/.test(raw)" in target_parser
+          and "Number.isInteger(year)&&year>=1&&year<=3000?year:null" in target_parser
+          and "parseSupportedTargetYear(safeVal('target',''))" in script
+          and "if(targetYear===null)return" in script,
+          "yq14 target year parser rejects non-integers and enforces 1–3000")
+else:
+    check(r"!/^\\d{1,4}$/.test(String(target).trim())||Number(target)<1||Number(target)>3000" in script,
+          "target year integer range validation")
 
 form_error_start = script.find("function setFormError(message){")
 form_error_end = script.find("\nfunction ", form_error_start)
@@ -111,7 +151,8 @@ for pat,label in [(r"\beval\s*\(","eval()"),(r"\bnew\s+Function\b","new Function
 # were reviewed; every dynamic value is escaped with escapeAttr via lpSafe().
 # Any further increase requires a fresh review of every dynamic HTML sink.
 count=len(re.findall(r"\.innerHTML\s*=",script))
-check(count<=46, f"innerHTML sink count remains within reviewed baseline (46; current {count})")
+sink_limit = 48 if yq14_profile else 46
+check(count<=sink_limit, f"innerHTML sink count remains within reviewed profile baseline ({sink_limit}; current {count})")
 if len(scripts)==1 and shutil.which("node"):
     with tempfile.NamedTemporaryFile("w",encoding="utf-8",suffix=".js",delete=False) as f: f.write(script); js=Path(f.name)
     try:

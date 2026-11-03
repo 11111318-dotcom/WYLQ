@@ -2,7 +2,9 @@
 
 線上入口：[https://11111318-dotcom.github.io/WYLQ/](https://11111318-dotcom.github.io/WYLQ/)
 
-並行版本預覽：[WYLQ-Audit 3.32.0-security-yq14](https://11111318-dotcom.github.io/WYLQ/versions/yq14.html)（獨立版本路徑，不取代目前正式首頁）。
+整合後正式版本：[yq14 + 六元正紀 v3.34.0](https://11111318-dotcom.github.io/WYLQ/)。
+
+原始 yq14 基準檔：[versions/yq14.html](https://11111318-dotcom.github.io/WYLQ/versions/yq14.html)（整合前快照）。舊正式首頁快照：[versions/current-legacy.html](https://11111318-dotcom.github.io/WYLQ/versions/current-legacy.html)（回溯用，不作為現行部署來源）。
 
 本 repository 提供 WYLQ-Audit 單檔 HTML 研究工具。網站與程式原始碼是公開的；請勿在 repository 放入個人資料、出生資料、私密筆記、憑證或存取 token。
 
@@ -16,7 +18,7 @@
 
 ## 修改與驗證
 
-根目錄 `index.html` 是**正式發布檔案**：GitHub Actions 會先通過安全檢查，再把它複製到 `_site/index.html` 部署到 GitHub Pages。`docs/index.html` 不是發布來源，而是 CI 目前要求與根目錄保持位元組一致的同步副本（工作流程中的 `cmp index.html docs/index.html`）。`versions/yq14.html` 是獨立的版本預覽，不會取代正式首頁；CI 另以 `tools/audit_csp_versioned_preview.py` 核對其 CSP 與靜態安全邊界。修改 HTML 後執行：
+根目錄 `index.html` 是**正式發布檔案**：GitHub Actions 會先通過安全檢查，再把它複製到 `_site/index.html` 部署到 GitHub Pages。`docs/index.html` 不是發布來源，而是 CI 目前要求與根目錄保持位元組一致的同步副本（工作流程中的 `cmp index.html docs/index.html`）。`versions/yq14.html` 是整合前的原始 yq14 基準快照；`versions/current-legacy.html` 是本次切換前的舊首頁快照。正式首頁 `index.html` 以 yq14 為主體，向前移植六元正紀 v3.34.0，並保留兩份快照供回溯。CI 以 CSP／安全檢查與六元正紀測試驗證正式首頁，另以 `tools/audit_csp_versioned_preview.py` 核對 yq14 原始基準檔。修改 HTML 後執行：
 
 ```sh
 python3 tools/update_csp_hashes.py index.html
