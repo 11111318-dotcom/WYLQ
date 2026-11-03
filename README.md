@@ -2,6 +2,8 @@
 
 線上入口：[https://11111318-dotcom.github.io/WYLQ/](https://11111318-dotcom.github.io/WYLQ/)
 
+並行版本預覽：[WYLQ-Audit 3.32.0-security-yq14](https://11111318-dotcom.github.io/WYLQ/versions/yq14.html)（獨立版本路徑，不取代目前正式首頁）。
+
 本 repository 提供 WYLQ-Audit 單檔 HTML 研究工具。網站與程式原始碼是公開的；請勿在 repository 放入個人資料、出生資料、私密筆記、憑證或存取 token。
 
 ## 隱私與安全邊界
@@ -14,7 +16,7 @@
 
 ## 修改與驗證
 
-根目錄 `index.html` 是**正式發布檔案**：GitHub Actions 會先通過安全檢查，再把它複製到 `_site/index.html` 部署到 GitHub Pages。`docs/index.html` 不是發布來源，而是 CI 目前要求與根目錄保持位元組一致的同步副本（工作流程中的 `cmp index.html docs/index.html`）。修改 HTML 後執行：
+根目錄 `index.html` 是**正式發布檔案**：GitHub Actions 會先通過安全檢查，再把它複製到 `_site/index.html` 部署到 GitHub Pages。`docs/index.html` 不是發布來源，而是 CI 目前要求與根目錄保持位元組一致的同步副本（工作流程中的 `cmp index.html docs/index.html`）。`versions/yq14.html` 是獨立的版本預覽，不會取代正式首頁；CI 另以 `tools/audit_csp_versioned_preview.py` 核對其 CSP 與靜態安全邊界。修改 HTML 後執行：
 
 ```sh
 python3 tools/update_csp_hashes.py index.html
@@ -23,6 +25,7 @@ python3 tools/test_security_tools.py index.html
 cp index.html docs/index.html
 python3 tools/security_check.py docs/index.html
 cmp index.html docs/index.html
+python3 tools/audit_csp_versioned_preview.py versions/yq14.html
 ```
 
 不要只更新其中一份。GitHub Actions 會在對 `main` 的 PR 與推送時自動檢查 CSP 雜湊、必要防護標記、外部資源與可疑 API，以及過期雜湊是否正確 fail closed。
