@@ -39,6 +39,8 @@ jobs:
         run: node tools/test-liuyuan-zhengji-v3.34.js
       - name: Verify automatic Liu-Yuan results follow selected target year
         run: node tools/test-liuyuan-ui-placement-v3.34.js
+      - name: Verify yq14 Liu-Yuan source parity and state wiring
+        run: node tools/test-liuyuan-integration-yq14.js
 
   build:
     name: build-static-site
@@ -59,6 +61,7 @@ jobs:
           mkdir -p _site/versions
           cp index.html _site/index.html
           cp versions/yq14.html _site/versions/yq14.html
+          cp versions/current-legacy.html _site/versions/current-legacy.html
           touch _site/.nojekyll
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0 (Node.js 24)
