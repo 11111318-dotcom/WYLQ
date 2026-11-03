@@ -13,7 +13,7 @@ assert.ok(dataStart >= 0 && dataEnd > dataStart && liveDataStart >= 0 && liveDat
 let expected = legacy.slice(dataStart, dataEnd);
 expected = expected.replace(/const FALLBACK_GAN = Object\.freeze\([\s\S]*?const FALLBACK_ZHI = Object\.freeze\([\s\S]*?\);\s*\n\s*let GAN_LIST, ZHI_LIST;\s*\ntry \{ GAN_LIST = Array\.isArray\(GAN\) \? GAN : FALLBACK_GAN; \} catch \(_\) \{ GAN_LIST = FALLBACK_GAN; \}\s*\ntry \{ ZHI_LIST = Array\.isArray\(ZHI\) \? ZHI : FALLBACK_ZHI; \} catch \(_\) \{ ZHI_LIST = FALLBACK_ZHI; \}\s*\n/, '');
 expected = expected.replace(/\bGAN_LIST\b/g, 'GAN').replace(/\bZHI_LIST\b/g, 'ZHI');
-assert.equal(live.slice(liveDataStart, liveDataEnd), expected, 'integrated data and pure calculation block must match archived module except shared GAN/ZHI binding');
+assert.equal(live.slice(liveDataStart, liveDataEnd).trimEnd(), expected.trimEnd(), 'integrated data and pure calculation block must match archived module except shared GAN/ZHI binding; trailing blank lines are non-semantic');
 const helperStart = legacy.indexOf('function liuyuanMakeElement');
 const helperEnd = legacy.indexOf('function setFormError', helperStart);
 const liveHelperStart = live.indexOf('function liuyuanMakeElement');
