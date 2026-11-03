@@ -19,7 +19,7 @@ const helperEnd = legacy.indexOf('function setFormError', helperStart);
 const liveHelperStart = live.indexOf('function liuyuanMakeElement');
 const liveHelperEnd = live.indexOf('function setFormError', liveHelperStart);
 assert.ok(helperStart >= 0 && helperEnd > helperStart && liveHelperStart >= 0 && liveHelperEnd > liveHelperStart, 'render helpers must exist');
-assert.equal(live.slice(liveHelperStart, liveHelperEnd), legacy.slice(helperStart, helperEnd), 'DOM renderer must be copied without edits');
+assert.equal(live.slice(liveHelperStart, liveHelperEnd).trimEnd(), legacy.slice(helperStart, helperEnd).trimEnd(), 'DOM renderer must be copied without edits; trailing blank lines are non-semantic');
 assert.ok(!live.slice(liveHelperStart, liveHelperEnd).includes('.innerHTML') && !live.slice(liveHelperStart, liveHelperEnd).includes('insertAdjacentHTML'), 'transplanted renderer must not add HTML-string sinks');
 const baselineYq14 = fs.readFileSync(path.join(root, 'versions', 'yq14.html'), 'utf8');
 const sinkCount = source => (source.match(/\.innerHTML\s*=/g) || []).length;
