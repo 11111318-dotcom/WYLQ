@@ -37,8 +37,25 @@ raw=path.read_bytes()
 try: html=raw.decode("utf-8")
 except UnicodeDecodeError: raise SystemExit("FAIL  HTML must be valid UTF-8")
 p=Parser(); p.feed(html); p.close()
-scripts=re.findall(r"<script\b([^>]*)>([\s\S]*?)</script\s*>",html,re.I)
-styles=re.findall(r"<style\b([^>]*)>([\s\S]*?)</style\s*>",html,re.I)
+from html.parser import HTMLParser
+class _TagBlockExtractor(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=False)
+        self.scripts, self.styles, self._cur, self._has_src, self._buf = [], [], None, False, []
+    def handle_starttag(self, tag, attrs):
+        t = tag.lower()
+        if t in ("script", "style"):
+            self._cur, self._has_src, self._buf = t, any(k.lower() == "src" for k, _ in attrs), []
+    def handle_data(self, data):
+        if self._cur is not None:
+            self._buf.append(data)
+    def handle_endtag(self, tag):
+        if tag.lower() == self._cur:
+            entry = ("src=" if self._has_src else "", "".join(self._buf))
+            (self.scripts if self._cur == "script" else self.styles).append(entry)
+            self._cur, self._has_src, self._buf = None, False, []
+_ext = _TagBlockExtractor(); _ext.feed(html); _ext.close()
+scripts, styles = _ext.scripts, _ext.styles
 check(len(scripts)==1 and not re.search(r"\bsrc\s*=",scripts[0][0],re.I), "exactly one inline script; no external script src")
 check(len(styles)==1, "exactly one inline style block")
 yq14_profile = "APP_VERSION='3.32.0-security-yq14-integrated-liuyuan-v3.34.0'" in html
