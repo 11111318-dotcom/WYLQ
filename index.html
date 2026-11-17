@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-KqSioEgMds+QabButWrpgIoFLute1qsTkunqfdQiAG8='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-elem 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-JchQdCyKe/1uIeEi95LcQ5mCIc+zdPN7AFmsUlQZqFA='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-elem 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -5235,7 +5235,29 @@ historyLines.push(`<div>   • <span class="hl3">[3.31.45]</span> 低優先級�
   lines.push(`<details class="audit-history"><summary>開發者版本維護紀錄（${historyLines.length} 項，依版本排序，預設收合）</summary>${historyLines.join('')}</details>`);
   const auditLogEl=document.getElementById('auditLog');
   if(auditLogEl){
-    auditLogEl.innerHTML=lines.join('');
+    const ALLOWED_TAGS={div:'div',span:'span',b:'b',code:'code',details:'details',summary:'summary'};
+    const ALLOWED_CLS=new Set(['title','hl','hl2','hl3','hl4','src-classical','src-imprint','src-program','dim','audit-history','js-audit-obs-date','u-style-1eb1f73d']);
+    const decodeText=s=>s.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+    const appendSafeAuditMarkup=(root,markup)=>{
+      const stack=[root];
+      const tokenRe=/<(\/?)(div|span|b|code|details|summary)(?:\s+class="([^"]*)")?>/gi;
+      let lastIdx=0,m;
+      while((m=tokenRe.exec(markup))!==null){
+        if(m.index>lastIdx)stack[stack.length-1].appendChild(document.createTextNode(decodeText(markup.slice(lastIdx,m.index))));
+        const isClose=m[1]==='/',tag=ALLOWED_TAGS[m[2].toLowerCase()];
+        if(!isClose&&tag){
+          const el=document.createElement(tag);
+          if(m[3]){const cls=m[3].split(/\s+/).filter(c=>ALLOWED_CLS.has(c)).join(' ');if(cls)el.className=cls;}
+          stack[stack.length-1].appendChild(el);
+          stack.push(el);
+        }else if(isClose&&stack.length>1){stack.pop();}
+        lastIdx=tokenRe.lastIndex;
+      }
+      if(lastIdx<markup.length)stack[stack.length-1].appendChild(document.createTextNode(decodeText(markup.slice(lastIdx))));
+    };
+    const frag=document.createDocumentFragment();
+    lines.forEach(lineMarkup=>appendSafeAuditMarkup(frag,lineMarkup));
+    auditLogEl.replaceChildren(frag);
     const obsDateVal=document.getElementById('observeDate')?.value||document.getElementById('globalObservationDate')?.value||'';
     auditLogEl.querySelectorAll('.js-audit-obs-date').forEach(el=>{el.textContent=obsDateVal;});
   }
