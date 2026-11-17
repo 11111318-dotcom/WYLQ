@@ -186,7 +186,7 @@ unsafe_renderer = original_html.replace(summary_sink, summary_sink + "$" + "{tar
 checker_rejects_after_hash_repair(
     "raw form value interpolated into HTML renderer",
     unsafe_renderer,
-    "HTML renderers do not directly reference raw form input values",
+    "RC13 renderers only read allowlisted enum controls; raw text/date/target inputs stay outside renderers",
 )
 
 # Execute the production validator functions themselves with a mocked DOM in Node.
