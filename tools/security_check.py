@@ -64,7 +64,7 @@ if len(scripts)==1:
         lg_start = script_text.find("function computeLingguiBafaForDate(")
         lg_end = script_text.find("\nfunction ", lg_start + 1)
         lg_fn = script_text[lg_start:lg_end] if lg_start >= 0 and lg_end > lg_start else ""
-        check(bool(re.search(r"typeof sexagenaryDayFn\\s*!==\\s*['\"]function['\"]", lg_fn))
+        check(bool(re.search(r"typeof sexagenaryDayFn\s*!==\s*['\"]function['\"]", lg_fn))
               and "Number.isInteger(dayObj.index)" in lg_fn
               and "dayObj.index < 0" in lg_fn and "dayObj.index > 59" in lg_fn
               and "const dayIdx = dayObj.index;" in lg_fn
