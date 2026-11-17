@@ -27,6 +27,8 @@ jobs:
           persist-credentials: false
       - name: Verify root and branch-source site are identical
         run: cmp index.html docs/index.html
+      - name: Verify production deployment is restricted to main
+        run: python3 tools/test_deploy_guard.py .github/workflows/jekyll-gh-pages.yml
       - name: Verify CSP hashes and security invariants
         run: python3 tools/security_check.py index.html
       - name: Verify negative CSP hash tests
@@ -44,7 +46,8 @@ jobs:
 
   build:
     name: build-static-site
-    if: github.event_name != 'pull_request'
+    # Pages artifacts may only be built from the production branch.
+    if: github.ref == 'refs/heads/main'
     needs: security
     runs-on: ubuntu-24.04
     permissions:
@@ -69,7 +72,8 @@ jobs:
           path: _site
 
   deploy:
-    if: github.event_name != 'pull_request'
+    # The production environment must never receive a non-main dispatch.
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-24.04
     permissions:
