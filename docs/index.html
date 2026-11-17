@@ -997,7 +997,8 @@ html.yq-font-lecture #summary,html.yq-font-lecture #globalObservationControls,ht
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
-.result-perspective-tab {  min-height: 42px;
+.result-perspective-tab {
+  min-height: 42px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1996,7 +1997,8 @@ class SuwenYipianEngine {
         '回溯時間窗': arrivalType, '失守肇始年（種子年）': seedMeta['年份標籤'],
         '種子年運氣與剛柔對位': `上位天甲子：${seedMeta['干支']}（上剛干${seedMeta['天干']}，${seedMeta['司天']}司天） ⇄ 下位地甲子：${earthJiazi}（下柔干${earthJiazi[0]}，${seedMeta['在泉']}在泉）`,
         '經典考據定位': prefix,
-        '【路徑 A：上位剛柔失守 ➔ 化大疫】': {'路徑 A 觀測狀態': gateA, '應發疫名': p.yi_name, '跨年失守結構': `若 ${prevMeta['年份標籤']}（${prevMeta['司天']}司天）天數有餘不退位，交入 ${seedMeta['干支']} 年新司天（${seedMeta['司天']}）未得遷正，而下位在泉（${earthJiazi}）已遷正，形成『天${prevMeta['天干']}・地${earthJiazi[0]}』二柔相會（按：六十甲子陽干太過年之前一歲必為陰干柔年，故去歲天干恆為柔干，與今歲地下甲子柔干構成二柔相會）。`, '病機與音律勝復': p.upper_loss_mechanism},        '【路徑 B：下位地甲子失守 ➔ 化癘病】': {'路徑 B 觀測狀態': gateB, '應發癘名': p.li_name, '跨年失守結構': `若 ${seedMeta['干支']} 司天已遷正治天，但去歲在泉（${prevEarthJiazi}）未退位，致下位地甲子（${earthJiazi}）未得遷正，形成『上${seedMeta['天干']}獨治、下${earthJiazi[0]}失剛』之剛柔不合德。`, '病機與小虛勝復': p.lower_loss_mechanism},
+        '【路徑 A：上位剛柔失守 ➔ 化大疫】': {'路徑 A 觀測狀態': gateA, '應發疫名': p.yi_name, '跨年失守結構': `若 ${prevMeta['年份標籤']}（${prevMeta['司天']}司天）天數有餘不退位，交入 ${seedMeta['干支']} 年新司天（${seedMeta['司天']}）未得遷正，而下位在泉（${earthJiazi}）已遷正，形成『天${prevMeta['天干']}・地${earthJiazi[0]}』二柔相會（按：六十甲子陽干太過年之前一歲必為陰干柔年，故去歲天干恆為柔干，與今歲地下甲子柔干構成二柔相會）。`, '病機與音律勝復': p.upper_loss_mechanism},
+        '【路徑 B：下位地甲子失守 ➔ 化癘病】': {'路徑 B 觀測狀態': gateB, '應發癘名': p.li_name, '跨年失守結構': `若 ${seedMeta['干支']} 司天已遷正治天，但去歲在泉（${prevEarthJiazi}）未退位，致下位地甲子（${earthJiazi}）未得遷正，形成『上${seedMeta['天干']}獨治、下${earthJiazi[0]}失剛』之剛柔不合德。`, '病機與小虛勝復': p.lower_loss_mechanism},
         '〈刺法論〉預刺與調養逃門': {'五疫刺法': p.acupuncture_protocol, '靜神調養與禁忌': p.regimen_taboo}
       };
     }
@@ -2995,7 +2997,8 @@ function resolveClassicalValueOrigin(pair, positionKey, classicalVal) {
   const duiGz = zhengGz === gzA ? gzB : gzA;
 
   if (positionKey === "MIDDLE") {
-    return `兩歲同值（同干中運，正化歲${zhengGz}與對化歲${duiGz}分論皆為 ${classicalVal}）`;  }
+    return `兩歲同值（同干中運，正化歲${zhengGz}與對化歲${duiGz}分論皆為 ${classicalVal}）`;
+  }
 
   const field = positionKey === "UPPER" ? "司天數" : "在泉數";
   const zhengVal = BRANCH_ZHENG_DUI_META[zhengGz.charAt(1)][field];
@@ -3994,7 +3997,8 @@ function buildSixStepForces(target,phaseIndex){
   const isBalanced=isBalancedPingQiAnnualYun(target);
   const tSiEl=ELEMENT_OF_QI[target.siTian];
   const tZqEl=ELEMENT_OF_QI[target.zaiQuan];
-  const hostEl=ELEMENT_OF_QI[HOST_QI[phaseIndex]];  const guestEl=ELEMENT_OF_QI[target.qi[phaseIndex]];
+  const hostEl=ELEMENT_OF_QI[HOST_QI[phaseIndex]];
+  const guestEl=ELEMENT_OF_QI[target.qi[phaseIndex]];
   const forces=[];
   forces.push({
     name:isDeficient?'歲運（本氣不及）':isBalanced?'歲運（平氣／次平氣）':'歲運',el:tYunEl,period:'全年',
@@ -4993,7 +4997,8 @@ function condenseSummary(birth,target){
   const weak=birth.roles&&birth.roles.effectiveWeak?birth.roles.effectiveWeak:{};
   const base=(birth.roles&&birth.roles.baseWeak||[]).map(x=>x.organ).filter(Boolean);
   const imprint=(birth.roles&&birth.roles.imprintWeak||[]).map(x=>x.organ).filter(Boolean);
-  const mainOrgan=weak.organ||base[0]||'未取得';  const repair=birth.repairWindow;
+  const mainOrgan=weak.organ||base[0]||'未取得';
+  const repair=birth.repairWindow;
   let repairLabel='未取得修復窗口資料',repairNote='';
   if(repair){
     if(target.year===birth.by.year){repairLabel='同一運氣年';repairNote='出生年與目標年相同，不作後天修復窗口判定。';}
@@ -5992,7 +5997,8 @@ const MONTH_JIEQI_NAMES = ['正月（立春～驚蟄前）','二月（驚蟄～�
 
 function approxLunarSolarMonthIdx(dt){
   const tp = taipeiDateParts(dt);
-  const m = tp.month, d = tp.day;  const md = m * 100 + d;
+  const m = tp.month, d = tp.day;
+  const md = m * 100 + d;
   if(md >= 204 && md < 306) return 0;
   if(md >= 306 && md < 405) return 1;
   if(md >= 405 && md < 506) return 2;
@@ -6991,7 +6997,8 @@ function buildExportPromptBase(state, options) {
     ? `歲半前（初至三氣）=${target.southNorthHalf.first.classification.politics}（不應位：${target.southNorthHalf.first.effective?.pulse ?? '—'}；代理取樣日 3/1）／歲半後（四至終氣）=${target.southNorthHalf.second.classification.politics}（不應位：${target.southNorthHalf.second.effective?.pulse ?? '—'}；代理取樣日 10/1）`
     : `${target.southNorth.classification.politics}（不應位：${target.southNorth.effective?.pulse ?? '—'}）`;
   lines.push('【南北政脈診與方藥文獻對照】');
-  lines.push(`- 南北政體系：${SOUTH_NORTH_SYSTEMS[birth.southNorthMode]?.name || birth.southNorthMode}｜出生歲次：${birth.southNorth.classification.politics}（不應位：${birth.southNorth.effective?.pulse ?? '—'}）｜目標歲次：${targetSnStr}｜病理反型：${target.southNorth.reverseType || '—'}`);  if(target.southNorthObserved)lines.push(`- 指定觀察日南北政：${anonymize?'（日期已匿名）':target.southNorthObserved.observationDate}｜${target.southNorthObserved.classification.politics}｜不應位：${target.southNorthObserved.effective?.pulse||'—'}｜病理反型：${target.southNorthObserved.reverseType||'—'}（獨立於年度代理值）`);
+  lines.push(`- 南北政體系：${SOUTH_NORTH_SYSTEMS[birth.southNorthMode]?.name || birth.southNorthMode}｜出生歲次：${birth.southNorth.classification.politics}（不應位：${birth.southNorth.effective?.pulse ?? '—'}）｜目標歲次：${targetSnStr}｜病理反型：${target.southNorth.reverseType || '—'}`);
+  if(target.southNorthObserved)lines.push(`- 指定觀察日南北政：${anonymize?'（日期已匿名）':target.southNorthObserved.observationDate}｜${target.southNorthObserved.classification.politics}｜不應位：${target.southNorthObserved.effective?.pulse||'—'}｜病理反型：${target.southNorthObserved.reverseType||'—'}（獨立於年度代理值）`);
   lines.push(`- 三因司天方對照：出生年干=${SANYIN_FORMULAS[birth.by.gan]?.formula || '—'}、出生歲支=${SANYIN_QI_FORMULAS[qiGroupOf(birth.by.zhi)]?.formula || '—'}；目標年干=${SANYIN_FORMULAS[target.gz.gan]?.formula || '—'}、目標歲支=${SANYIN_QI_FORMULAS[qiGroupOf(target.gz.zhi)]?.formula || '—'}`);
   lines.push('');
 
@@ -7990,7 +7997,8 @@ function computeLingguiBafaForDate(date, sexagenaryDayFn, hourGanFn) {
   const computedGan = GAN_LIST[dayIdx % 10];
   const computedZhi = ZHI_LIST[dayIdx % 12];
 
-  if (dayObj.stem && dayObj.stem !== computedGan) {    throw new Error(`computeLingguiBafaForDate: dayObj.stem (${dayObj.stem}) 與 index (${dayIdx}) 推算之天干 (${computedGan}) 不符`);
+  if (dayObj.stem && dayObj.stem !== computedGan) {
+    throw new Error(`computeLingguiBafaForDate: dayObj.stem (${dayObj.stem}) 與 index (${dayIdx}) 推算之天干 (${computedGan}) 不符`);
   }
   if (dayObj.branch && dayObj.branch !== computedZhi) {
     throw new Error(`computeLingguiBafaForDate: dayObj.branch (${dayObj.branch}) 與 index (${dayIdx}) 推算之地支 (${computedZhi}) 不符`);
@@ -8989,7 +8997,8 @@ function renderNinePalaceDateOutput(){
     const t=snapshot.taiyi,astro=t.軌道1_天文黃經定氣,ancient=t.軌道2_古法八節歲遊,daily=t.軌道3_太一日遊;
     const trackMarkers=new Map();
     yqAddMarker(trackMarkers,astro.所居宮數,'天文黃經','track');
-    yqAddMarker(trackMarkers,ancient.所居宮數,'古法歲遊','track');    yqAddMarker(trackMarkers,daily.所居宮數,'太一日遊','track');
+    yqAddMarker(trackMarkers,ancient.所居宮數,'古法歲遊','track');
+    yqAddMarker(trackMarkers,daily.所居宮數,'太一日遊','track');
     const selected=[astro.所居宮數,ancient.所居宮數,daily.所居宮數];
     const tianji=evaluateTianjiTabooForDate(snapshot.date,t);
     const tianjiHtml=tianji.matched.length?`<div class="notice caution-layer"><b>⚠ 太一遊宮人神避忌（天忌日）提示（${yqEscape(tianji.dGz)}日）：</b><br>${tianji.matched.map(yqEscape).join("<br>")}</div>`:`<div class="notice source-layer"><b>太一遊宮人神避忌檢查（${yqEscape(tianji.dGz)}日）：</b>本日未命中八節天忌日或諸戊己中州大禁。</div>`;
@@ -9988,7 +9997,8 @@ const LIUYUAN_30_YUN_HEADERS_RAW = liuyuanDeepFreeze([
     header: "太陽 太羽 太陰",
     section1TagByYear: { "丙辰": "天符", "丙戌": "天符" },
     tongZhengByYear: { "丙辰": null, "丙戌": null },
-    specialToneNoteByYear: { "丙辰": null, "丙戌": null },    shengFuTong: null,
+    specialToneNoteByYear: { "丙辰": null, "丙戌": null },
+    shengFuTong: null,
     qiYun: "寒",
     qiHua: "凝慘慄冽",
     qiBian: "冰雪霜雹",
@@ -10987,7 +10997,8 @@ function runLiuYuanStage1TimingResolverContractCases() {
       `PINGQI_MATRIX_60.zhengSub[${gz}] 與主程式不一致`
     );
   }
-  for (const [gz, expObj] of Object.entries(LIUYUAN_STAGE1_DEFAULT_PINGQI_MATRIX_60.ciSub)) {    liuyuanAcceptanceAssert(
+  for (const [gz, expObj] of Object.entries(LIUYUAN_STAGE1_DEFAULT_PINGQI_MATRIX_60.ciSub)) {
+    liuyuanAcceptanceAssert(
       PINGQI_MATRIX_60.ciSub?.[gz]?.sub === expObj.sub &&
         PINGQI_MATRIX_60.ciSub?.[gz]?.note === expObj.note,
       `PINGQI_MATRIX_60.ciSub[${gz}] 與主程式不一致`
@@ -11986,7 +11997,8 @@ const LIUYUAN_SITIAN_POLITICS_DB = liuyuanDeepFreeze({
         step: "四之氣",
         stepRole: "司天左間",
         climate: "涼乃至，炎暑間化，白露降。",
-        peopleResponse: "民氣和平。",        diseaseCourse: null,
+        peopleResponse: "民氣和平。",
+        diseaseCourse: null,
         symptoms: "其病滿身重。",
         prognosis: null,
         fullText: "四之氣，涼乃至，炎暑間化，白露降，民氣和平，其病滿身重。",
@@ -12985,7 +12997,8 @@ const LIUYUAN_ACCEPTANCE_EXPECTED_STEP_VARIANTS = liuyuanDeepFreeze({
     expectedSources: [
       { sourceId: "zhuShiHuiCui", witnessSourceId: null, page: "p. 343", location: "巳亥四之氣原文（作「相薄」）" },
       { sourceId: "wuYunLiuQiYanJiu", witnessSourceId: null, page: "p. 152", location: "表5-6 巳亥四之氣（作「相搏」）" }
-    ]  }
+    ]
+  }
 });
 
 const LIUYUAN_ACCEPTANCE_EXPECTED_UNVERIFIED_READINGS = liuyuanDeepFreeze({
@@ -13984,7 +13997,8 @@ const LIUYUAN_WUYU_DB = liuyuanStage3DeepFreeze({
       "王冰釋「雷殷氣交」為土雖獨怒而木尚制之，故雷聲震於山谷氣交之間；高世栻釋「田牧土駒」為洪水退後泥土結塊如馬駒牧於田間。",
     therapyRule: "土鬱奪之",
     therapyExplanation:
-      "劫除壅滯、疏通脾胃濕實（王冰註「奪，謂下之，令無擁礙也」；張介賓補明「奪，直取之也」，濕滯在上者吐以奪之、在中者伐以奪之、在下者瀉以奪之，非獨止於攻下）。"  },
+      "劫除壅滯、疏通脾胃濕實（王冰註「奪，謂下之，令無擁礙也」；張介賓補明「奪，直取之也」，濕滯在上者吐以奪之、在中者伐以奪之、在下者瀉以奪之，非獨止於攻下）。"
+  },
   金: {
     element: "金",
     title: "金鬱之發・金鬱泄之",
@@ -14983,7 +14997,8 @@ var VERNACULAR_UPGRADE_GUIDES = {
       "② 區分「年度錨點」與「日曆運位」：表格中的「★ 錨點」代表當年歲運五行在五步中的固定位置（整年屬性）；而「出生／目標時點主運」則是該日期實際落在哪一個季節運段（日曆屬性），兩者切勿混同。"
     ],
     src: "依據：《素問·六元正紀大論》《類經圖翼》五音建運與主運交司曆法"
-  },  fetalYunSection: {
+  },
+  fetalYunSection: {
     title: "📖 白話導讀：本區如何回溯「受孕 280 日主感歲運」與「十月分經養胎」",
     paras: [
       "① 汪德云跨年受孕定位律：從您的出生日期往前推算約 280 日受孕期，若懷胎橫跨兩個運氣年，系統會自動計算兩年各自佔懷胎天數的比例，並依汪德云律取「天數佔比較大之年」作為胎兒期主感歲運，標出對應的病理內臟定位。",
@@ -15982,7 +15997,8 @@ var LIUYUAN_30_PAIRS_CLINICAL_DB = {
     regimen: '【《六元正紀》藥食宜「上鹹寒、中酸和、下辛涼」與在地加減鐵律】《內經》針對風火太過之常氣，立「上鹹寒（清降相火）、中酸和（以白芍、烏梅、五味子等酸味收斂太角過亢之木氣，免其橫克脾土）、下辛涼（疏散在泉風木）」。但在東南／台灣臨床應用時，必須緊扣「見肝之病，知肝傳脾，當先實脾」與「外熱內寒」兩大樞機：若屬風火實亢自當辛涼酸收清降；但若患者因木乘土虛已見「腹脹便溏、胃脘冷痛而上衝口瘡虛火（寒中泄滿）」，或下半年終之氣寒水反克相火致浮陽不藏，則決不可一味寒涼，必須合《三因方》苓朮湯（茯苓、白朮、乾薑、炙草實土）或烏梅丸、引火歸元之法，以甘溫實脾、酸收斂火、溫中納下！'
   },
   10: {
-    years: ['癸酉', '癸卯'],    title: '癸酉・癸卯歲（上陽明燥金司天・中少徵火運不及・下少陰君火在泉｜燥化九・熱化二｜寒化雨化勝復同・同歲會・災九宮｜上苦小溫・中鹹溫・下鹹寒）',
+    years: ['癸酉', '癸卯'],
+    title: '癸酉・癸卯歲（上陽明燥金司天・中少徵火運不及・下少陰君火在泉｜燥化九・熱化二｜寒化雨化勝復同・同歲會・災九宮｜上苦小溫・中鹹溫・下鹹寒）',
     pathology: '【三氣交爭與真假寒熱病機】本年中運為「少徵火運不及（熱化二，伏明之紀，陽氣屈伏，災九宮正南離心）」，上半年又逢「陽明燥金司天（燥化九）」清肅於上（火不及反受金侮），且火運不及必招來「寒水勝氣」乘虛大行（「寒化雨化勝復同」）。因此上半年屬於典型的「心腎陽虛、外涼燥而內寒水乘火」，極易引發胸背攣痛、心悸怔忡、手足寒厥，以及寒水逼迫微弱心陽浮越之「虛煩躁熱、失眠鬱冒」；到了下半年，濕土復氣起而制水，且「少陰君火在泉（熱化二，同歲會）」當令，若火氣得助則轉平，若濕鬱伏熱或少陰從標寒化則見下焦寒熱交爭、腹鳴氣上衝胸。',
     regimen: '【《六元正紀》藥食宜「上苦小溫、中鹹溫、下鹹寒」與在地加減鐵律】請特別注意《內經》對癸卯、癸酉年的立法：因為上半年燥金司天（燥化九）且中運少徵火運不及（寒水勝氣乘心），故上焦與中樞全部用「溫」——「上苦小溫（溫宣陽明清燥）、中鹹溫（以鹹入腎交心、以溫熱藥溫扶少徵心陽與命門真火，制寒水之勝，如《三因方》六癸年黃芪茯神湯溫補心血心陽，甚者佐附子、肉桂溫通心腎）」！至於「下鹹寒」僅針對下半年少陰在泉從本熱化之伏火；在東南／台灣若患者本身心脾腎陽氣不足（尺脈沉微、畏寒心悸而見口瘡失眠之虛火），全年皆應以「中鹹溫」溫養心腎、引火歸元為主，切忌誤用苦寒傷及少徵微弱之陽氣！'
   },
@@ -16981,7 +16997,8 @@ function buildMultiOrganRepairRoles(birth) {
 }
 
 function evaluateTargetYearForRoleItem(roleItem, targetModel) {
-  if (!roleItem || !targetModel || !targetModel.yunAnnual) return { matched: [], relSummary: '—', tone: 'neutral' };  var tGan = targetModel.gz.gan;
+  if (!roleItem || !targetModel || !targetModel.yunAnnual) return { matched: [], relSummary: '—', tone: 'neutral' };
+  var tGan = targetModel.gz.gan;
   var tEl = targetModel.yunAnnual.element;
   var tDeg = targetModel.yunAnnual.degree;
   var balanced = typeof isBalancedPingQiAnnualYun === 'function' ? isBalancedPingQiAnnualYun(targetModel) : false;
@@ -17980,7 +17997,8 @@ document.getElementById('resultPerspectiveTabs')?.addEventListener('mouseenter',
   if (typeof syncTopNavActiveSection === 'function') syncTopNavActiveSection();
 }, true);
 document.getElementById('resultPerspectiveTabs')?.addEventListener('focusin', () => {
-  if (typeof syncTopNavActiveSection === 'function') syncTopNavActiveSection();});
+  if (typeof syncTopNavActiveSection === 'function') syncTopNavActiveSection();
+});
 
 document.getElementById('backToTopBtn')?.addEventListener('click', () => {
   const behavior = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
