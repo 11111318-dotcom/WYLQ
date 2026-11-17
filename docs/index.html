@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-kjmWy6jKjALLwNJAsC7L9ff6hAZY1YeNz2v0n1+ZEX8='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-elem 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-KqSioEgMds+QabButWrpgIoFLute1qsTkunqfdQiAG8='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-elem 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -5149,7 +5149,7 @@ function renderAudit(birth,target){
       lines.push(`<div>⑫ <b>觀察日期、四柱同源基準、九宮三軌與養子時刻一時五穴審計</b>：</div>`);
       if (obsStepInfo.hasValidDate) {
         const isCrossObs = obsStepInfo.regimeYear !== target.year;
-        lines.push(`<div>   • 觀察日期定位：<span class="hl4">${escapeHtml(obsRaw)}</span> → 所屬運氣年：<span class="${isCrossObs?'hl3':'hl2'}">${fmtYearWithGZ(obsStepInfo.regimeYear, gzForYear(obsStepInfo.regimeYear).gz)}${isCrossObs ? `（與目標年 ${target.year} 不同；當季匯出自動退回目標年全歲六步，四柱與當日五運統一以觀察日自身運氣年為準）` : `（與目標年一致；落入 ${obsStepInfo.step ? obsStepInfo.step.phase : '—'}）`}</span></div>`);
+        lines.push(`<div>   • 觀察日期定位：<span class="hl4 js-audit-obs-date"></span> → 所屬運氣年：<span class="${isCrossObs?'hl3':'hl2'}">${fmtYearWithGZ(obsStepInfo.regimeYear, gzForYear(obsStepInfo.regimeYear).gz)}${isCrossObs ? `（與目標年 ${target.year} 不同；當季匯出自動退回目標年全歲六步，四柱與當日五運統一以觀察日自身運氣年為準）` : `（與目標年一致；落入 ${obsStepInfo.step ? obsStepInfo.step.phase : '—'}）`}</span></div>`);
       } else {
         lines.push(`<div>   • 觀察日期定位：<span class="hl4">未指定觀察日期</span>（當季分析預設展示目標年完整六步序列，不混入系統當下日期）</div>`);
       }
@@ -5233,7 +5233,12 @@ historyLines.push(`<div>   • <span class="hl3">[3.31.45]</span> 低優先級�
   historyLinesStable.sort((a,b)=>{const v=x=>{const m=x.match(/\[(\d+)\.(\d+)\.(\d+)([^\]]*)\]/i);return m?{a:+m[1],b:+m[2],c:+m[3],s:m[4].trim().toLowerCase()}:null;};const x=v(a.line),y=v(b.line);if(!x&&!y)return a.index-b.index;if(!x)return 1;if(!y)return -1;if(x.a!==y.a)return x.a-y.a;if(x.b!==y.b)return x.b-y.b;if(x.c!==y.c)return x.c-y.c;if(x.s!==y.s)return x.s.localeCompare(y.s,undefined,{numeric:true,sensitivity:'base'});return a.index-b.index;});
   historyLines.length=0;historyLinesStable.forEach(x=>historyLines.push(x.line));
   lines.push(`<details class="audit-history"><summary>開發者版本維護紀錄（${historyLines.length} 項，依版本排序，預設收合）</summary>${historyLines.join('')}</details>`);
-  document.getElementById('auditLog').innerHTML=lines.join('');
+  const auditLogEl=document.getElementById('auditLog');
+  if(auditLogEl){
+    auditLogEl.innerHTML=lines.join('');
+    const obsDateVal=document.getElementById('observeDate')?.value||document.getElementById('globalObservationDate')?.value||'';
+    auditLogEl.querySelectorAll('.js-audit-obs-date').forEach(el=>{el.textContent=obsDateVal;});
+  }
 }
 function renderBirthSection(birth){
   const annualYunYearLabel=birth.annualYun?fmtYearWithGZ(birth.annualYun.year,birth.annualYun.gz):'—';
