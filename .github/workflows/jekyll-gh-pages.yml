@@ -44,7 +44,8 @@ jobs:
 
   build:
     name: build-static-site
-    if: github.event_name != 'pull_request'
+    # Pages artifacts may only be built from the production branch.
+    if: github.ref == 'refs/heads/main'
     needs: security
     runs-on: ubuntu-24.04
     permissions:
@@ -69,7 +70,8 @@ jobs:
           path: _site
 
   deploy:
-    if: github.event_name != 'pull_request'
+    # The production environment must never receive a non-main dispatch.
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-24.04
     permissions:
