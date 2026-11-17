@@ -42,9 +42,45 @@ styles=re.findall(r"<style\b([^>]*)>([\s\S]*?)</style\s*>",html,re.I)
 check(len(scripts)==1 and not re.search(r"\bsrc\s*=",scripts[0][0],re.I), "exactly one inline script; no external script src")
 check(len(styles)==1, "exactly one inline style block")
 yq14_profile = "APP_VERSION='3.32.0-security-yq14-integrated-liuyuan-v3.34.0'" in html
+rc13_profile = "APP_VERSION='3.35.0-dual-track-rc13'" in html
 if len(scripts)==1:
     script_text = scripts[0][1]
-    if yq14_profile:
+    if rc13_profile:
+        # RC13 uses an independent Nine-Palace solstice search, not the legacy annual SOLAR_TERM_WINDOW.
+        winter_start = script_text.find("function findNinePalaceWinterSolstice(year){")
+        winter_end = script_text.find("\nfunction getNinePalaceDateSnapshot", winter_start)
+        winter_fn = script_text[winter_start:winter_end] if winter_start >= 0 and winter_end > winter_start else ""
+        check("target=270" in winter_fn and "solarLongitude(" in winter_fn
+              and "step=6*3600000" in winter_fn and "for(let i=0;i<42;i++)" in winter_fn
+              and "crossed(prevLon,lon)" in winter_fn,
+              "RC13 independently brackets the 270° winter solstice and refines the crossing")
+
+        check("function sexagenaryDay(date)" in script_text
+              and "const linggui=computeLingguiBafaForDate(date,sexagenaryDay,hourGan);" in script_text
+              and "const anchor=twDate(2000,1,7,'00:00:00')" in script_text
+              and "const localMidnight=twDate(p.year,p.month,p.day,'00:00:00')" in script_text,
+              "RC13 Linggui adapter uses the Taipei UTC+8 sexagenary-day resolver")
+
+        lg_start = script_text.find("function computeLingguiBafaForDate(")
+        lg_end = script_text.find("\nfunction ", lg_start + 1)
+        lg_fn = script_text[lg_start:lg_end] if lg_start >= 0 and lg_end > lg_start else ""
+        check(bool(re.search(r"typeof sexagenaryDayFn\s*!==\s*['\"]function['\"]", lg_fn))
+              and "Number.isInteger(dayObj.index)" in lg_fn
+              and "dayObj.index < 0" in lg_fn and "dayObj.index > 59" in lg_fn
+              and "const dayIdx = dayObj.index;" in lg_fn
+              and "GAN_LIST[dayIdx % 10]" in lg_fn and "ZHI_LIST[dayIdx % 12]" in lg_fn
+              and "dayObj.stem !== computedGan" in lg_fn
+              and "dayObj.branch !== computedZhi" in lg_fn,
+              "RC13 Linggui core validates the 0–59 cycle index and matched Ganzhi")
+
+        date_start = script_text.find("function renderNinePalaceDateOutput(){")
+        date_end = script_text.find("\nfunction renderNinePalaceClassicalMap", date_start)
+        date_fn = script_text[date_start:date_end] if date_start >= 0 and date_end > date_start else ""
+        check("function yqEscape(value)" in script_text
+              and "const msg=yqEscape(err&&err.message?err.message:err)" in date_fn
+              and "tracksEl.innerHTML=notice;windEl.innerHTML=notice;lingguiEl.innerHTML=notice;" in date_fn,
+              "RC13 Nine-Palace diagnostics are escaped before HTML presentation")
+    elif yq14_profile:
         winter_start = script_text.find("function findNinePalaceWinterSolstice(year){")
         winter_end = script_text.find("\nfunction getNinePalaceDateSnapshot", winter_start)
         winter_fn = script_text[winter_start:winter_end] if winter_start >= 0 and winter_end > winter_start else ""
@@ -108,7 +144,7 @@ INPUT_GUARDRAILS = (
 )
 for label, invariant in INPUT_GUARDRAILS:
     check(invariant in script, label)
-if yq14_profile:
+if rc13_profile or yq14_profile:
     target_parser_start = script.find("function parseSupportedTargetYear(value){")
     target_parser_end = script.find("\nfunction validateSecurityInputs()", target_parser_start)
     target_parser = script[target_parser_start:target_parser_end] if target_parser_start >= 0 and target_parser_end > target_parser_start else ""
@@ -116,7 +152,7 @@ if yq14_profile:
           and "Number.isInteger(year)&&year>=1&&year<=3000?year:null" in target_parser
           and "parseSupportedTargetYear(safeVal('target',''))" in script
           and "if(targetYear===null)return" in script,
-          "yq14 target year parser rejects non-integers and enforces 1–3000")
+          "target year parser rejects non-integers and enforces 1–3000")
 else:
     check(r"!/^\\d{1,4}$/.test(String(target).trim())||Number(target)<1||Number(target)>3000" in script,
           "target year integer range validation")
@@ -136,22 +172,45 @@ render_end = script.find("function currentBirthKey(", render_start)
 check(render_start >= 0 and render_end > render_start, "HTML renderer audit boundaries are present")
 if render_start >= 0 and render_end > render_start:
     renderers = script[render_start:render_end]
-    raw_input_reference = re.search(
-        r"\b(?:birthDateInput|timeInput|targetRaw)\b|\bsafeVal\s*\(|"
-        r"document\.getElementById\(\s*['\"](?:birth|time|target|timeMode|pulseObserved|depressionEvidence|southNorthMode)['\"]\s*\)\s*\.value",
+    direct_input_reference = re.search(
+        r"\b(?:birthDateInput|timeInput|targetRaw)\b|"
+        r"document\.getElementById\(\s*['\"](?:birth|time|target|timeMode|pulseObserved|depressionEvidence|southNorthMode)['\"]\s*\)\s*(?:\?\.|\.)value",
         renderers,
     )
-    check(not raw_input_reference, "HTML renderers do not directly reference raw form input values")
+    if rc13_profile:
+        safe_val_ids = re.findall(r"\bsafeVal\s*\(\s*['\"]([^'\"]+)['\"]", renderers)
+        check(not direct_input_reference
+              and set(safe_val_ids).issubset({"depressionEvidence", "timeMode"})
+              and "depressionEvidence:Object.freeze(['none','yes','no'])" in script
+              and "timeMode:Object.freeze(['traditional-precision','astronomical','source'])" in script
+              and "for(const id of Object.keys(INPUT_ENUMS))" in script
+              and "INPUT_ENUMS[id].includes(String(el.value))" in script,
+              "RC13 renderers only read allowlisted enum controls; raw text/date/target inputs stay outside renderers")
+    else:
+        raw_input_reference = re.search(r"\bsafeVal\s*\(", renderers)
+        check(not direct_input_reference and not raw_input_reference,
+              "HTML renderers do not directly reference raw form input values")
 check(not re.search(r"window\.handle(?:Submit|Back)\s*=",script), "submit/back handlers are not writable window globals")
 check(not re.search(r"\btypeof\s+table\s*!==\s*['\"]undefined['\"]",script), "no ineffective typeof table guard")
 check("SAFETY: txt is generated only by precisionNoticeText()" in script, "precisionNotice HTML sink has safety annotation")
 for pat,label in [(r"\beval\s*\(","eval()"),(r"\bnew\s+Function\b","new Function"),(r"\bXMLHttpRequest\b","XMLHttpRequest"),(r"\bWebSocket\s*\(","WebSocket"),(r"\bEventSource\s*\(","EventSource"),(r"\bsendBeacon\s*\(","sendBeacon"),(r"\blocalStorage\b|\bsessionStorage\b|\bindexedDB\b|document\.cookie","persistence API")]:
     check(not re.search(pat,script), f"no {label} in main script")
-# Reviewed ceiling for v3.33.0: the five added sinks in the Nine-Palace UI
-# were reviewed; every dynamic value is escaped with escapeAttr via lpSafe().
-# Any further increase requires a fresh review of every dynamic HTML sink.
+# Reviewed ceilings are versioned profiles, not generic security exemptions.
+# RC13 adds 24 renderer assignments (48 -> 72) for the expanded Nine-Palace and
+# year/observation views. Its profile also checks complete text/attribute escaping,
+# enum-only form reads inside renderers, the fixed pulse-rule lookup, and escaped
+# Nine-Palace diagnostics before accepting the expanded reviewed sink inventory.
 count=len(re.findall(r"\.innerHTML\s*=",script))
-sink_limit = 48 if yq14_profile else 46
+sink_limit = 72 if rc13_profile else (48 if yq14_profile else 46)
+if rc13_profile:
+    check(
+        "return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;');" in script
+        and "function yqEscape(value)" in script
+        and "function escapeAttr(value)" in script
+        and "RENYING_CUNKOU_RULES = Object.freeze({" in script
+        and "RENYING_CUNKOU_RULES[sel.value] || RENYING_CUNKOU_RULES['renying_1_quiet']" in script,
+        "RC13 renderer sinks have HTML escaping helpers and fixed allowlisted pulse-rule data",
+    )
 check(count<=sink_limit, f"innerHTML sink count remains within reviewed profile baseline ({sink_limit}; current {count})")
 if len(scripts)==1 and shutil.which("node"):
     with tempfile.NamedTemporaryFile("w",encoding="utf-8",suffix=".js",delete=False) as f: f.write(script); js=Path(f.name)

@@ -29,5 +29,5 @@ assert.ok(html.includes("['summary','liuYuanTargetSection','auditLog'"), 'calcul
 assert.equal((html.match(/id="liuYuanTargetSection"/g)||[]).length, 1, 'exactly one panel must exist');
 assert.ok(html.includes("sections:['sixSection','targetSection','liuYuanTargetSection','shengFuYuFaSection'"), 'panel must be in the annual result tab');
 assert.ok(html.includes("liuYuanTargetSection:'六元正紀・正化／對化'"), 'section jump label must be present');
-assert.ok(html.includes("APP_VERSION='3.32.0-security-yq14-integrated-liuyuan-v3.34.0'"), 'integrated version marker must be present');
-console.log('PASS: integrated yq14 Liu-Yuan panel, target-year binding, annual navigation, reset and rollback wiring.');
+assert.ok(html.includes("APP_VERSION='3.35.0-dual-track-rc13'"), 'RC13 integrated version marker must be present');
+console.log('PASS: integrated RC13 Liu-Yuan panel, target-year binding, annual navigation, reset and rollback wiring.');
