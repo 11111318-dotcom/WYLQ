@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-2ugxoj10rwZ9FV0YaqiSztOjmIOPsZX3Cu8OH0RFAsI='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-YQiyncLBCUAAxLJmWHXL+2AY8izo27bMU2uOYICwvMw='; style-src-elem 'sha256-YQiyncLBCUAAxLJmWHXL+2AY8izo27bMU2uOYICwvMw='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-jAmhvF5xNiw3Aa/aeCgjN5shPX5EpmFnHjI3fBTIlqQ='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-kuhzFFvKxMX1mrAA7BEBFL9Q+e0t/SRjpu9fVs3+YVA='; style-src-elem 'sha256-kuhzFFvKxMX1mrAA7BEBFL9Q+e0t/SRjpu9fVs3+YVA='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -1481,6 +1481,49 @@ tr.is-unmatched-hidden {
   .yq-observation-body>.field{width:100%;max-width:none;}
 }
 
+
+/* Task-oriented navigation and searchable glossary */
+.result-reading-guide{margin:0 0 10px!important;font-size:13px!important;line-height:1.65!important;}
+.result-mode-control{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fffdf8;}
+.result-mode-copy{display:grid;gap:2px;min-width:180px;}
+.result-mode-copy strong{font-size:13px;color:var(--accent);}
+.result-mode-copy span{font-size:11.5px;color:var(--muted);}
+.result-mode-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+#professionalModeToggle{font-weight:800;border-color:var(--accent-2);color:var(--accent);}
+#professionalModeToggle[aria-expanded="true"]{background:#f3e8d8;}
+.term-glossary{position:relative;}
+.term-glossary>summary{list-style:none;cursor:pointer;padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:#f8f4eb;color:var(--accent);font-size:12.5px;font-weight:800;white-space:nowrap;}
+.term-glossary>summary::-webkit-details-marker{display:none;}
+.term-glossary[open]>summary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.term-glossary-body{position:absolute;right:0;top:calc(100% + 7px);z-index:90;width:min(420px,calc(100vw - 28px));max-height:min(68vh,620px);overflow:auto;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);box-shadow:0 12px 32px rgba(45,35,22,.2);}
+.term-glossary-body label{margin:0 0 5px;color:var(--accent);font-size:12px;font-weight:800;}
+.term-glossary-body input{width:100%;min-height:40px;padding:8px 10px;font-size:14px;}
+.term-glossary-results{margin-top:9px;}
+.term-glossary-count,.term-glossary-empty{margin:4px 0 8px;color:var(--muted);font-size:11.5px;}
+.term-glossary-item{padding:9px 0;border-top:1px solid var(--line);}
+.term-glossary-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.term-glossary-heading strong{font-size:13px;color:var(--accent);}
+.term-glossary-heading span{font-size:10.5px;color:var(--muted);padding:2px 6px;border-radius:99px;background:#f0e9dc;}
+.term-glossary-item p{margin:4px 0;font-size:12.5px;line-height:1.6;color:var(--ink);}
+.term-glossary-item small{display:block;color:var(--muted);font-size:11px;line-height:1.45;}
+.result-disclaimer{padding:9px 12px!important;font-size:12.5px!important;line-height:1.6!important;}
+.result-disclaimer-details{margin-top:5px;}
+.result-disclaimer-details>summary{cursor:pointer;color:var(--accent);font-weight:800;font-size:11.5px;}
+.result-disclaimer-details p{margin:6px 0 0;font-size:12px;line-height:1.65;}
+.result-perspective-nav:not(.is-professional){grid-template-columns:repeat(3,minmax(0,1fr));}
+.result-perspective-nav.is-professional{grid-template-columns:repeat(6,minmax(0,1fr));}
+@media(max-width:900px){
+  .result-perspective-nav.is-professional{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .result-perspective-nav:not(.is-professional){grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media(max-width:560px){
+  .result-mode-control{align-items:stretch;}
+  .result-mode-copy{min-width:0;}
+  .result-mode-actions{width:100%;justify-content:space-between;}
+  .term-glossary-body{position:static;width:100%;max-height:55vh;margin-top:7px;box-shadow:none;}
+  .result-perspective-nav.is-professional,.result-perspective-nav:not(.is-professional){grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+
 </style>
 </head>
 <body>
@@ -1612,15 +1655,30 @@ tr.is-unmatched-hidden {
   </div>
   <main>
     <div class="wrap">
-      <div class="notice caution-layer u-style-a82d7062" id="resultDisclaimer" role="note"><b>⚠ 安全提示：</b>本結果為傳統五運六氣模型推演，不是醫療診斷，亦非個人化處方；不應僅憑推算結果自行用藥、停藥或延誤就醫。此單檔版本不主動發送網路請求；請仍以可信來源取得檔案。</div>
+      <div class="notice caution-layer result-disclaimer" id="resultDisclaimer" role="note"><b>⚠ 重要：本結果是傳統模型推演，不是醫療診斷或處方。</b> 請勿僅憑推算自行用藥、停藥或延誤就醫。<details class="result-disclaimer-details"><summary>查看完整使用限制與隱私說明</summary><p>本工具的弱臟定位、格局判定、脈位與方藥內容，均依特定傳統文獻與程式規則呈現，不代表現代臨床診斷、個人化處方或療效保證。未實際觀察的脈象、風向與病候，不應當作已發生的事實。涉及症狀、用藥或治療決策，請諮詢合格醫療專業人員。此單檔版本在瀏覽器本機計算，不主動傳送出生資料；複製或下載後自行交給第三方 AI，則受該服務的資料處理政策約束。</p></details></div>
       <div class="notice transition u-style-a82d7062" id="precisionNotice" role="status" hidden></div>
-      <div class="notice transition" id="resultReadingGuide" role="note">
-        <b>快速閱讀路線：</b>
-        先看「先看結論」掌握重點；要理解出生資料，再看「出生與先天」；要查某一年的變化，再看「流年與九宮」。
-        指定日期、時辰或查閱脈象與方藥時，再進入「觀察、脈診與方藥」；需要核對古籍與算法時，才看「原典與計算依據」。
-        若沒有輸入出生資料，使用「客觀歲氣七步導覽」即可，不必讀完所有分頁。
+      <div class="notice transition result-reading-guide" id="resultReadingGuide" role="note">
+        <b>建議閱讀順序：</b>①「今年怎麼樣」先看年度重點；②「我的體質」理解先天背景；③「需要留意什麼」查看注意事項。
+        這三個分頁足以完成一般速讀。想追查公式、原典、九宮、脈診或完整專題，再開啟下方「專業分析」。
       </div>
-      <nav id="resultPerspectiveTabs" class="result-perspective-nav" role="tablist" aria-label="結果六大視角"></nav>
+      <div id="resultModeControl" class="result-mode-control">
+        <div class="result-mode-copy">
+          <strong id="resultModeStatus">一般閱讀｜先使用 3 個主要視角</strong>
+          <span>完整研究內容仍保留，不會因切換模式而刪除。</span>
+        </div>
+        <div class="result-mode-actions">
+          <button type="button" id="professionalModeToggle" class="back-btn" aria-expanded="false" aria-controls="resultPerspectiveTabs">顯示專業分析</button>
+          <details id="termGlossary" class="term-glossary">
+            <summary>🔎 查詞彙</summary>
+            <div class="term-glossary-body">
+              <label for="termGlossarySearch">搜尋五運六氣常用術語</label>
+              <input id="termGlossarySearch" type="search" placeholder="輸入：司天、客氣、平氣……" autocomplete="off" />
+              <div id="termGlossaryResults" class="term-glossary-results" role="status" aria-live="polite">可搜尋常見術語、別名與白話解釋。</div>
+            </div>
+          </details>
+        </div>
+      </div>
+      <nav id="resultPerspectiveTabs" class="result-perspective-nav" role="tablist" aria-label="一般閱讀與專業分析視角"></nav>
       <div id="resultPerspectivePanels"></div>
       <div class="card summary" id="summary"></div>
       <div class="card panel section target-section" id="dualTrackGuideSection"></div>
@@ -4621,13 +4679,90 @@ const SECTION_JUMP_LABELS=Object.freeze({
   pingQiMatrixSection:'平氣固定矩陣',auditSection:'推步審計軌跡'
 });
 const RESULT_TAB_DEFS=[
-  {id:'overview',label:'📊 先看結論',shortLabel:'📊 總覽',intro:'建議從這裡開始。先看先天與流年的重點摘要，再依需要進入其他分頁；不必一次讀完所有內容。',sections:['interactionSection','sixStepFortuneSection','repairWindowSection','yearTimelineSection','chronicleSection','daSiTianSection']},
-  {id:'constitution',label:'👤 出生與先天',shortLabel:'👤 先天',intro:'查看出生年形成的歲運、司天在泉與體質角色。這是傳統模型的先天結構，不等於疾病診斷。',sections:['birthSection','hostYunSection','fetalYunSection','constitutionSection','tenGanConstitutionSection','constitutionTypeSection','pattern9Section','specialDualPathologySection']},
-  {id:'annual',label:'🌦 流年與九宮',shortLabel:'🌦 流年九宮',intro:'查看目標年歲運、六步時序、勝復與九宮。若只想了解某一年的客觀歲氣，可使用「客觀歲氣七步導覽」。',sections:['sixSection','targetSection','liuYuanTargetSection','shengFuYuFaSection','liuYuanExpandedSection','kangHaiSection','houQiGeoSection','ninePalaceSection','yipianSection'],subJumps:['lingguiBafaDetail','chronoAcupDetail','yunqiAcupDetail','lunarAcupDetail','yipianCifaDetail','yipianTwelveOrgansDetail']},
-  {id:'pulse',label:'🩺 觀察、脈診與方藥',shortLabel:'🩺 觀察脈診',intro:'指定觀察日期與時辰後，查看脈位、六步脈象、針法與方藥文獻。未實測的資料不要當成實際觀測；方藥內容不是自動處方。',sections:['observationSection','dayHourYunSection','southNorthSection','pulseSixStepSection','pulseBenMaiSection','renYingPulseSection','herbDirectionSection','herbsSection','xuanzhuSixSoupsSection','clinicalCautionSection']},
-  {id:'references',label:'📚 原典與計算依據',shortLabel:'📚 原典依據',intro:'需要追查依據時再開啟：查閱典籍、分類矩陣、參照資料與程式推步紀錄。',sections:['classicProfilesSection','matrix30Section','pingQiMatrixSection','wuyun15JiSection','auditSection']},
-  {id:'guide7step',label:'🧭 客觀歲氣七步導覽',shortLabel:'🧭 七步導覽',intro:'不需要出生資料。依《素問·六元正紀大論》七步解讀目標年的客觀歲氣；每一步先看結論，再按需展開原典與白話說明。',sections:['dualTrackGuideSection']}
+  {id:'overview',advanced:false,label:'今年怎麼樣',shortLabel:'今年概況',intro:'從年度重點開始：先看先天與流年的交互、六步變化及修復窗口。摘要卡是速讀入口；各區塊仍保留詳細判定。',sections:['interactionSection','sixStepFortuneSection','repairWindowSection','yearTimelineSection']},
+  {id:'constitution',advanced:false,label:'我的體質',shortLabel:'我的體質',intro:'查看出生年歲次與五氣強弱的主要結果。這是傳統運氣模型中的先天結構，不是疾病診斷。',sections:['birthSection','constitutionSection']},
+  {id:'care',advanced:false,label:'需要留意什麼',shortLabel:'注意事項',intro:'先看模型提示的五臟注意事項與五味補瀉參照。這些內容用於閱讀與研究，不是可直接照做的用藥或治療指示。',sections:['clinicalCautionSection','herbDirectionSection']},
+  {id:'annual',advanced:true,label:'年度氣化與六步專題',shortLabel:'年度專題',intro:'專業視角：查看目標年歲運、主客六氣、勝復鬱發、正化／對化、候氣校準與跨年對照。',sections:['sixSection','targetSection','liuYuanTargetSection','shengFuYuFaSection','liuYuanExpandedSection','kangHaiSection','houQiGeoSection','chronicleSection','daSiTianSection']},
+  {id:'constitutionDetails',advanced:true,label:'先天結構與辨證細節',shortLabel:'先天細節',intro:'專業視角：深入主客五運、胎孕回溯、十干與地支分型、九大交感模式及雙向病機。',sections:['hostYunSection','fetalYunSection','tenGanConstitutionSection','constitutionTypeSection','pattern9Section','specialDualPathologySection']},
+  {id:'spacetime',advanced:true,label:'九宮、太一與時空針法',shortLabel:'九宮針法',intro:'專業視角：查閱九宮、太一遊宮、虛風條件及靈龜、飛騰、子午流注與活子午等時間方法。',sections:['ninePalaceSection'],subJumps:['lingguiBafaDetail','chronoAcupDetail','yunqiAcupDetail','lunarAcupDetail']},
+  {id:'pulse',advanced:true,label:'觀察日期與脈診',shortLabel:'觀察脈診',intro:'專業視角：設定觀察日期與時辰，對照南北政、六步脈候及人迎—寸口資料。沒有實測資料時，不代表實際脈象。',sections:['observationSection','dayHourYunSection','southNorthSection','pulseSixStepSection','pulseBenMaiSection','renYingPulseSection']},
+  {id:'formulary',advanced:true,label:'方藥典籍參照',shortLabel:'方藥參照',intro:'專業視角：查閱《三因方》與《玄珠密語》等方藥文獻。此處為典籍參照，不是個人化處方。',sections:['herbsSection','xuanzhuSixSoupsSection']},
+  {id:'references',advanced:true,label:'原典、遺篇與計算審計',shortLabel:'原典審計',intro:'專業視角：查閱五態與二十五人、分類矩陣、固定典籍資料、《素問遺篇》及程式推步審計。',sections:['classicProfilesSection','matrix30Section','pingQiMatrixSection','wuyun15JiSection','yipianSection','auditSection'],subJumps:['yipianCifaDetail','yipianTwelveOrgansDetail']},
+  {id:'guide7step',advanced:true,label:'客觀歲氣七步導覽',shortLabel:'七步導覽',intro:'不需要出生資料。依《素問·六元正紀大論》七步解讀目標年的客觀歲氣；每一步先看結論，再按需展開原典與白話說明。',sections:['dualTrackGuideSection']}
 ];
+const WYLQ_GLOSSARY=Object.freeze([
+  {term:'五運',aliases:'木運、火運、土運、金運、水運',category:'基本概念',meaning:'以木、火、土、金、水五行描述年度運化的五類變化；本工具依歲干推演相關歲運。'},
+  {term:'六氣',aliases:'風、寒、暑、濕、燥、火',category:'基本概念',meaning:'以風、寒、暑、濕、燥、火描述時令氣化，並分主氣、客氣與六步加臨等層次。'},
+  {term:'歲運／中運',aliases:'年運、歲干之運',category:'年度氣化',meaning:'依歲干推定、用來描述該運氣年的五行運化背景；不等同實際天氣觀測。'},
+  {term:'司天',aliases:'司天之氣',category:'年度氣化',meaning:'六氣年度結構中的上半年主導背景之一；須與主氣、客氣及實際六步時序合看。'},
+  {term:'在泉',aliases:'在泉之氣',category:'年度氣化',meaning:'六氣年度結構中的下半年主導背景之一；不應把它簡化為全年唯一氣候。'},
+  {term:'主氣',aliases:'六步主氣',category:'年度氣化',meaning:'每年依固定季節次序運行的六氣，作為六步比較的基準。'},
+  {term:'客氣',aliases:'六步客氣',category:'年度氣化',meaning:'依歲支等規則排定、加臨於主氣的六氣；用來比較當步客主關係。'},
+  {term:'主運',aliases:'五步主運',category:'年度氣化',meaning:'一年五段固定次序的運行分段，與每年變化的客運相對。'},
+  {term:'客運',aliases:'五步客運',category:'年度氣化',meaning:'依年干排定的一年五段運序，與固定次序的主運相對。'},
+  {term:'六步',aliases:'初之氣、二之氣、三之氣、四之氣、五之氣、終之氣',category:'時間分段',meaning:'將一年氣化分為六個時段，用於對照主氣、客氣及其先後變化。'},
+  {term:'交司',aliases:'交氣、交運',category:'時間分段',meaning:'運或氣由前一段轉入下一段的交接時點；不同推算口徑可能採用不同年界或交司方法。'},
+  {term:'太過',aliases:'有餘',category:'運氣判讀',meaning:'指歲運相對常規呈有餘的一類分類；不能單憑此詞判定某人必然有病或某地必然出現極端天氣。'},
+  {term:'不及',aliases:'不足',category:'運氣判讀',meaning:'指歲運相對常規呈不足的一類分類；仍須結合司天、在泉、主客氣及交司條件解讀。'},
+  {term:'平氣',aliases:'正平氣、次平氣',category:'運氣判讀',meaning:'描述歲運偏勝偏衰受到條件調節、呈較平和狀態的分類；不同文獻體系與判定層級須分開。'},
+  {term:'勝氣',aliases:'勝',category:'運氣判讀',meaning:'運氣偏勝時所呈現的主導或勝勢之氣；其具體來源與後續判定須依所採理論規則。'},
+  {term:'復氣',aliases:'復',category:'運氣判讀',meaning:'在勝氣之後出現、與勝勢形成制約或復應關係的氣化；不應將其簡化為必然發生的天氣事件。'},
+  {term:'同化',aliases:'天符、歲會等相關格局',category:'運氣判讀',meaning:'運與氣在特定組合下呈現相同或相應的氣化關係；具體分類依典籍定義，不以名稱相似就視為同一制度。'},
+  {term:'異化',aliases:'同化之對照',category:'運氣判讀',meaning:'運與氣呈現不同屬性或作用方向的關係；需依具體干支及所採文獻分類判斷。'},
+  {term:'正化／對化',aliases:'生數、成數',category:'典籍術語',meaning:'部分運氣文獻用來區分不同位置或關係下的氣化取數與判讀方式；各家說法不宜混為單一通則。'},
+  {term:'南北政',aliases:'甲己南政、戊癸南政等',category:'脈候術語',meaning:'用來劃分南政、北政並推論相關脈位應否的理論體系；歷代對劃分方法有異說，須先確認採用哪一說。'},
+  {term:'不應脈',aliases:'脈不應、不應位置',category:'脈候術語',meaning:'運氣理論所描述、在特定歲氣條件下脈位可能不呈通常反應的現象；理論不應不等於疾病，也不能代替實際診脈。'},
+  {term:'九宮',aliases:'洛書九宮',category:'時空方法',meaning:'以九個方位宮位組織空間位置的傳統術數架構；本工具用於呈現相關典籍中的九宮定位。'},
+  {term:'太一',aliases:'太乙、太一遊宮',category:'時空方法',meaning:'傳統文獻中按特定規則巡行九宮的概念；本工具呈現其模型推算，不代表實際天體觀測。'},
+  {term:'虛風',aliases:'賊風',category:'時空方法',meaning:'部分典籍依太一所在宮位與風向關係界定的風類；若沒有實際風向觀測，僅能顯示理論條件，不能說虛風已發生。'},
+  {term:'靈龜八法',aliases:'靈龜、奇經八脈開穴',category:'時空方法',meaning:'依特定日期與時辰等條件推算奇經八脈開穴的傳統時間方法；結果供典籍研究對照，不構成個人化針灸處方。'},
+  {term:'標本中氣',aliases:'標、本、中氣',category:'典籍術語',meaning:'用來說明六氣標、本與中見之氣之間從化關係的理論框架；需結合具體六氣及臨床條件，不宜只看單一名詞。'},
+  {term:'天符',aliases:'同天符、太乙天符',category:'典籍術語',meaning:'運氣文獻中的特定干運與司天等條件組合名稱；同名相近的格局仍須依原典條件逐項核對。'},
+  {term:'歲會',aliases:'同歲會',category:'典籍術語',meaning:'運氣文獻中依歲運與特定氣化位置相會而命名的格局；具體條件以所引用典籍為準。'}
+]);
+function renderWylqGlossary(query){
+  const host=document.getElementById('termGlossaryResults');if(!host)return;
+  const q=String(query||'').trim().toLowerCase();
+  const rows=WYLQ_GLOSSARY.filter(x=>!q||[x.term,x.aliases,x.category,x.meaning].join(' ').toLowerCase().includes(q));
+  host.replaceChildren();
+  if(!rows.length){const empty=document.createElement('p');empty.className='term-glossary-empty';empty.textContent='沒有找到相符詞彙。可改用術語的一部分或別名搜尋。';host.appendChild(empty);return;}
+  const count=document.createElement('p');count.className='term-glossary-count';count.textContent=q?'符合 '+rows.length+' 個詞彙':'常用詞彙 '+rows.length+' 個';host.appendChild(count);
+  rows.forEach(item=>{
+    const entry=document.createElement('article');entry.className='term-glossary-item';
+    const head=document.createElement('div');head.className='term-glossary-heading';
+    const title=document.createElement('strong');title.textContent=item.term;
+    const category=document.createElement('span');category.textContent=item.category;
+    head.append(title,category);
+    const meaning=document.createElement('p');meaning.textContent=item.meaning;
+    const alias=document.createElement('small');alias.textContent='別名／相關詞：'+item.aliases;
+    entry.append(head,meaning,alias);host.appendChild(entry);
+  });
+}
+function initializeWylqGlossary(){
+  const input=document.getElementById('termGlossarySearch');if(!input)return;
+  if(input.dataset.ready!=='1'){input.addEventListener('input',()=>renderWylqGlossary(input.value));input.dataset.ready='1';}
+  renderWylqGlossary(input.value);
+}
+function setProfessionalMode(enabled,announce=true){
+  const on=!!enabled;
+  window.__wylqProfessionalMode=on;
+  RESULT_TAB_DEFS.forEach(def=>{
+    const tab=document.getElementById('result-tab-btn-'+def.id);
+    if(tab)tab.hidden=!!def.advanced&&!on;
+  });
+  const button=document.getElementById('professionalModeToggle');
+  if(button){button.textContent=on?'收合專業分析':'顯示專業分析';button.setAttribute('aria-expanded',String(on));}
+  const status=document.getElementById('resultModeStatus');
+  if(status&&announce)status.textContent=on?'專業分析已展開：可查年度專題、先天細節、九宮、脈診、方藥與原典審計。':'一般閱讀：先使用 3 個主要視角；推算細節仍完整保留。';
+  const nav=document.getElementById('resultPerspectiveTabs');
+  if(nav)nav.classList.toggle('is-professional',on);
+  const active=document.querySelector('#resultPerspectiveTabs [role="tab"][aria-selected="true"]');
+  const activeId=active?.dataset?.tab||'';
+  const activeDef=RESULT_TAB_DEFS.find(x=>x.id===activeId);
+  if(!on&&activeDef?.advanced)selectResultTab('overview',false);
+  if(typeof populateNavDrawer==='function'&&!document.getElementById('navDrawer')?.hidden)populateNavDrawer();
+}
+
 function initializeYipianAdvancedSettings(){
   const host=document.getElementById('yipianSection');if(!host||host.querySelector('#yipianAdvancedSettings'))return;
   const blocks=[...host.querySelectorAll(':scope > .yq-input-block')];
@@ -4647,7 +4782,16 @@ function initializeResultPerspectiveTabs(){
   const nav=document.getElementById('resultPerspectiveTabs'),panelsHost=document.getElementById('resultPerspectivePanels');
   if(!wrap||!nav||!panelsHost||nav.dataset.ready==='1')return;
   nav.replaceChildren();panelsHost.replaceChildren();
-  const summary=document.getElementById('summary');if(summary){wrap.insertBefore(nav,summary.nextSibling);wrap.insertBefore(panelsHost,nav.nextSibling);}
+  const summary=document.getElementById('summary');
+  const readingGuide=document.getElementById('resultReadingGuide');
+  const modeControl=document.getElementById('resultModeControl');
+  if(summary){
+    let anchor=summary;
+    if(readingGuide){wrap.insertBefore(readingGuide,anchor.nextSibling);anchor=readingGuide;}
+    if(modeControl){wrap.insertBefore(modeControl,anchor.nextSibling);anchor=modeControl;}
+    wrap.insertBefore(nav,anchor.nextSibling);
+    wrap.insertBefore(panelsHost,nav.nextSibling);
+  }
   let sharedControls=document.getElementById('globalObservationControls');
   if(!sharedControls){
     sharedControls=document.createElement('details');sharedControls.id='globalObservationControls';sharedControls.className='yq-shared-observation-toolbar yq-observation-details';
@@ -4695,6 +4839,10 @@ function initializeResultPerspectiveTabs(){
     const intro=yqElement('p','result-tab-intro',def.intro);panel.appendChild(intro);
     def.sections.forEach(id=>{const node=document.getElementById(id);if(node)panel.appendChild(node);});panelsHost.appendChild(panel);
   });
+  const proToggle=document.getElementById('professionalModeToggle');
+  if(proToggle&&!proToggle.dataset.ready){proToggle.addEventListener('click',()=>setProfessionalMode(!window.__wylqProfessionalMode));proToggle.dataset.ready='1';}
+  setProfessionalMode(false,false);
+  initializeWylqGlossary();
   const descriptions={
     chronicleSection:'並列對照出生年與目標年的歲運紀名、司天在泉與十級格局。',
     hostYunSection:'查看出生年與目標年的主運、客運五步時序與交司起點。',
@@ -4829,6 +4977,7 @@ function syncTopNavActiveSection(){
 }
 function selectResultTab(id,scroll){
   const def=RESULT_TAB_DEFS.find(x=>x.id===id);if(!def)return;
+  if(def.advanced&&!window.__wylqProfessionalMode&&!(window.__objectiveGuideMode&&id==='guide7step'))setProfessionalMode(true,false);
   document.querySelectorAll('#resultPerspectiveTabs [role="tab"]').forEach(b=>{const active=b.dataset.tab===id;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;if(active&&typeof b.scrollIntoView==='function')try{b.scrollIntoView({block:'nearest',inline:'nearest'});}catch(_){}});
   RESULT_TAB_DEFS.forEach(x=>{const panel=document.getElementById(`result-tab-panel-${x.id}`);if(panel)panel.hidden=x.id!==id;});
   syncTopNavActiveSection();
@@ -5052,7 +5201,7 @@ function _calculateCore(){
   document.getElementById('resultMeta').innerHTML=`出生所屬運氣年 <b>${fmtYearWithGZ(by.year,by.gz)}</b>｜目標 <b>${targetYear}（${tgz.gz}）</b>｜<span class="u-style-34d22304">WYLQ-Audit ${APP_VERSION}</span>`;
   try{
     {const pn=document.getElementById('precisionNotice');if(pn){const txt=precisionNoticeText(by.year,targetYear);/* SAFETY: txt is generated only by precisionNoticeText() from numbers and fixed literals; never concatenate user-controlled text here. */pn.innerHTML=txt?('<b>ℹ 精度提示：</b>'+txt):'';pn.hidden=!txt;}}
-    renderObservationPanel(target,preservedObservationDate);updateTargetSouthNorthObservation(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??preservedObservationDate??'');syncSharedObservationControls();renderGlobalObservationStatus(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??'');renderNinePalaceSection(target);renderYipianSection(target);renderSummary(birth,target);condenseSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderFetalYunSection(birth);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderWuyun15JiSection(birth,target);renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderLiuYuanTargetSection(target);renderLiuYuanExpandedSection(target);renderKangHaiSection(target);renderHouQiGeoSection(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??preservedObservationDate??'');const _wasObjOrFromInput=!!(window.__objectiveGuideMode||document.getElementById("view-input")?.hidden===false);window.__objectiveGuideMode=false;const _sumCard=document.getElementById("summary");if(_sumCard)_sumCard.hidden=false;const _precEl=document.getElementById("precisionNotice");if(_precEl)_precEl.hidden=!_precEl.textContent;document.querySelectorAll("#resultPerspectiveTabs [role=tab]").forEach(btn=>{btn.hidden=false;});const _so=document.getElementById("globalObservationControls");if(_so)_so.hidden=false;renderDualTrackGuideSection(target);renderChronicleSection(birth,target);renderDaSiTianSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);window.__lastWylqBirth=birth;window.__lastWylqTarget=target;renderDayHourYunSection(target,preservedObservationDate);renderPulseBenMai(target);renderRenYingPulseSection(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderXuanzhuSixSoupsSection(target);renderHerbDirection(birth);tagReferenceDetails();renderTargetYearTimeline(birth,target);collapseSectionSourceNotes();normalizeResultHeadings();tagSectionPurposes();groupOverviewTrendSections();if(_wasObjOrFromInput&&typeof selectResultTab==='function')selectResultTab('overview',false);if(typeof applyPostRenderEnhancements==='function')applyPostRenderEnhancements();
+    renderObservationPanel(target,preservedObservationDate);updateTargetSouthNorthObservation(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??preservedObservationDate??'');syncSharedObservationControls();renderGlobalObservationStatus(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??'');renderNinePalaceSection(target);renderYipianSection(target);renderSummary(birth,target);condenseSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderFetalYunSection(birth);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderWuyun15JiSection(birth,target);renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderLiuYuanTargetSection(target);renderLiuYuanExpandedSection(target);renderKangHaiSection(target);renderHouQiGeoSection(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??preservedObservationDate??'');const _wasObjOrFromInput=!!(window.__objectiveGuideMode||document.getElementById("view-input")?.hidden===false);window.__objectiveGuideMode=false;const _sumCard=document.getElementById("summary");if(_sumCard)_sumCard.hidden=false;const _precEl=document.getElementById("precisionNotice");if(_precEl)_precEl.hidden=!_precEl.textContent;const _proToggle=document.getElementById("professionalModeToggle");if(_proToggle)_proToggle.hidden=false;setProfessionalMode(false,false);const _so=document.getElementById("globalObservationControls");if(_so)_so.hidden=false;renderDualTrackGuideSection(target);renderChronicleSection(birth,target);renderDaSiTianSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);window.__lastWylqBirth=birth;window.__lastWylqTarget=target;renderDayHourYunSection(target,preservedObservationDate);renderPulseBenMai(target);renderRenYingPulseSection(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderXuanzhuSixSoupsSection(target);renderHerbDirection(birth);tagReferenceDetails();renderTargetYearTimeline(birth,target);collapseSectionSourceNotes();normalizeResultHeadings();tagSectionPurposes();groupOverviewTrendSections();if(_wasObjOrFromInput&&typeof selectResultTab==='function')selectResultTab('overview',false);if(typeof applyPostRenderEnhancements==='function')applyPostRenderEnhancements();
   }catch(renderErr){console.error('[WYLQ] 渲染失敗（E-CALC-002）：',renderErr);setFormError('推算未完成（錯誤代碼 E-CALC-002）。輸出生成時發生錯誤；技術細節已記錄於開發者主控台。');return false;}
   /* Export only the state that produced the visible results; never re-read edited form fields from the export dialog. */
   const quickYearEl=document.getElementById('quickTargetYear');if(quickYearEl)quickYearEl.value=String(targetYear);
@@ -5129,7 +5278,7 @@ function condenseSummary(birth,target){
     `五要素烙印：${imprint.length?imprint.join('、'):'未達門檻'}`,
     '這是傳統模型的體質定位，不是疾病診斷。'
   ]);
-  make('annual','今年氣候重點',`${target.gz.gz}｜${target.severity.label}`,[
+  make('overview','今年氣候重點',`${target.gz.gz}｜${target.severity.label}`,[
     `${target.year} 運氣年：${target.yunAnnual.element}運${target.yunAnnual.degree}`,
     `上半年主氣：${escapeHtml(target.siTian)}｜下半年主氣：${escapeHtml(target.zaiQuan)}`,
     target.severity.patternName||target.eras.finalType||'年度結構詳見下方分項'
@@ -14998,6 +15147,10 @@ function runObjectiveGuideOnly(yearOverride) {
   document.querySelectorAll("#resultPerspectiveTabs [role='tab']").forEach(btn => {
     btn.hidden = (btn.dataset.tab !== "guide7step");
   });
+  const proToggle = document.getElementById("professionalModeToggle");
+  if (proToggle) proToggle.hidden = true;
+  const modeStatus = document.getElementById("resultModeStatus");
+  if (modeStatus) modeStatus.textContent = "客觀歲氣導覽：不含個人生辰；完整專業分頁可由個人化分析進入。";
   const sharedObs = document.getElementById("globalObservationControls");
   if (sharedObs) sharedObs.hidden = false;
   renderGlobalObservationStatus(target, obsVal);
