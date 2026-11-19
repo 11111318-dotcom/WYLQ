@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Zu+WrbeiKqdc4Qh082BFOk11v21W1hUIbIQkQLEfZtc='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-elem 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-xTuw7ArbOL92kfI/rLqB5679lHEK9ZH5OM10moFEa6A='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-elem 'sha256-83ns5640BVWJAGcIN+g+fIo0lM0b0bOLmSqtxg8v+74='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -1434,24 +1434,55 @@ tr.is-unmatched-hidden {
 <body>
 <div id="scriptStartupWarning" role="alert" class="script-startup-warning">⚠ 本工具需要 JavaScript。若瀏覽器已啟用 JavaScript，但介面仍無法操作，可能是安全政策阻止程式啟動；請從可信來源重新取得完整檔案，不要為了啟動而關閉 CSP。</div>
 
-<section id="view-input">
+ <section id="view-input">
   <div class="input-wrap">
     <div class="input-hero">
       <div class="eyebrow" id="appVersionBadge">WYLQ-AUDIT</div>
       <h1>五運六氣推算</h1>
-      <p class="subtitle">輸入生辰與分析目標年份，取得五運六氣推演結果。</p>
+      <p class="subtitle">先選你要回答的問題。系統會帶你進入相應的分析路徑；不必一次讀完所有專業模組。</p>
     </div>
 
     <form id="birthForm" class="input-card" autocomplete="off">
-      <h2>輸入生辰與目標</h2>
-      <div class="field"><label for="birth">出生日期（公曆）</label><input id="birth" type="date" value="2004-06-15" min="0001-01-01" max="3000-12-31" /></div>
-      <div class="field"><label for="time">出生時間（台北時間 UTC+8）</label><input id="time" type="time" value="12:00" /></div>
-      <p class="hint">日柱換日口徑：程式內部以台北固定 UTC+8 民用午夜 00:00 換日；23:00–23:59 仍歸當日，不採子初 23:00 提前換日。此規則適用於日柱推算，以及由日柱推導的日干、時干與干德符審計；出生輸入時間本身用於時點分析，本工具不直接輸出完整出生四柱。</p>
+      <h2>第一步｜設定分析目標年份</h2>
+      <div class="field">
+        <label for="target">分析目標年份（公元 1–3000）</label>
+        <input id="target" type="number" min="1" max="3000" step="1" value="2026" />
+        <p class="hint">兩種分析都會使用這個年份。這裡的「運氣年」依年界規則判定，不一定從公曆 1 月 1 日開始。</p>
+      </div>
+      <details class="input-advanced">
+        <summary>運氣年如何判定？</summary>
+        <p class="hint">目標年份是所選年界模式下的運氣年標籤，不直接等同公曆 1/1–12/31：傳統交司模式依大寒日與歲支組時刻，純天文模式依黃經 300° 大寒瞬間，資料速查模式採固定 1/21 00:00 近似。若日期位於該模式的年界前，可能仍屬上一運氣年。</p>
+      </details>
+
+      <div class="notice transition">
+        <b>路徑 A｜只看某一年的客觀歲氣</b>
+        <p class="hint">不需要出生日期或時間。適合初次使用，先依經文七步了解該年的歲運、司天在泉與六氣變化；不會混入個人本命資料。</p>
+        <button type="button" id="objectiveGuideBtn" class="primary-btn secondary-btn">只看目標年客觀歲氣（不需出生資料）→</button>
+      </div>
+
+      <div class="input-advanced">
+        <h2>路徑 B｜個人化分析（需要出生資料）</h2>
+        <p class="hint">只有在你要比較「出生年先天結構」與「目標年流年變化」時，才需要填寫。若只想看年度歲氣，使用上方路徑 A 即可。</p>
+      </div>
+      <div class="field">
+        <label for="birth">出生日期（公曆）</label>
+        <input id="birth" type="date" value="2004-06-15" min="0001-01-01" max="3000-12-31" />
+      </div>
+      <div class="field">
+        <label for="time">出生時間（台北時間 UTC+8）</label>
+        <input id="time" type="time" value="12:00" />
+        <p class="hint">畫面目前預填 2004-06-15、12:00；請核對並改為本次要分析的實際資料，再按確認。</p>
+      </div>
       <button type="button" id="confirmBirth" class="primary-btn secondary-btn">確認出生資料</button>
       <div id="birthConfirmStatus" class="confirm-status unconfirmed" aria-live="polite">尚未確認出生資料</div>
-      <div class="field"><label for="target">分析目標年份（整數，1–3000）</label><input id="target" type="number" min="1" max="3000" step="1" value="2026" /><p class="hint">目標年份是所選年界模式下的運氣年標籤，不直接等同公曆 1/1–12/31：傳統交司模式依大寒日與歲支組時刻，純天文模式依黃經 300° 大寒瞬間，資料速查模式採固定 1/21 00:00 近似。若日期位於該模式的年界前，可能仍屬上一運氣年。</p></div>
+
       <details class="input-advanced">
-        <summary>進階選項</summary>
+        <summary>出生日期與時間的判定規則</summary>
+        <p class="hint">日柱換日口徑：程式內部以台北固定 UTC+8 民用午夜 00:00 換日；23:00–23:59 仍歸當日，不採子初 23:00 提前換日。此規則適用於日柱推算，以及由日柱推導的日干、時干與干德符審計；出生輸入時間本身用於時點分析，本工具不直接輸出完整出生四柱。</p>
+      </details>
+
+      <details class="input-advanced">
+        <summary>專業設定（一般使用者保持預設即可）</summary>
         <div class="field u-style-9374e842"><label for="timeMode">時間／交司基準</label>
           <select id="timeMode">
             <option value="traditional-precision" selected>傳統交司精確近似（原 precision）</option>
@@ -1490,12 +1521,11 @@ tr.is-unmatched-hidden {
           </select>
         </div>
       </details>
-      <button type="submit" id="runBtn" class="primary-btn" disabled>開始推算 →</button>
-      <button type="button" id="objectiveGuideBtn" class="primary-btn secondary-btn dt-btn-gap">直接看目標年客觀歲氣（經文七步導覽）→</button>
+      <button type="submit" id="runBtn" class="primary-btn" disabled>開始個人化推算 →</button>
       <div id="formError" class="notice caution-layer form-error" role="alert" aria-live="assertive" hidden></div>
     </form>
 
-    <div class="input-notice">⚠️ 安全提示：本系統產出之弱臟定位、格局劇烈度、脈位推算均屬傳統模型推演，不可替代醫療診斷。本單檔版本不主動發送網路請求；出生資料在本頁計算，不由程式上傳。</div>
+    <div class="input-notice">⚠️ 安全與使用界線：本工具的先天強弱、病機與脈位均屬傳統模型推演，不是醫療診斷或個人化處方；不可據此自行用藥、停藥或延誤就醫。單檔版本在瀏覽器本機計算，不主動上傳出生資料。</div>
   </div>
 </section>
 
@@ -1527,6 +1557,12 @@ tr.is-unmatched-hidden {
     <div class="wrap">
       <div class="notice caution-layer u-style-a82d7062" id="resultDisclaimer" role="note"><b>⚠ 安全提示：</b>本結果為傳統五運六氣模型推演，不是醫療診斷，亦非個人化處方；不應僅憑推算結果自行用藥、停藥或延誤就醫。此單檔版本不主動發送網路請求；請仍以可信來源取得檔案。</div>
       <div class="notice transition u-style-a82d7062" id="precisionNotice" role="status" hidden></div>
+      <div class="notice transition" id="resultReadingGuide" role="note">
+        <b>快速閱讀路線：</b>
+        先看「先看結論」掌握重點；要理解出生資料，再看「出生與先天」；要查某一年的變化，再看「流年與九宮」。
+        指定日期、時辰或查閱脈象與方藥時，再進入「觀察、脈診與方藥」；需要核對古籍與算法時，才看「原典與計算依據」。
+        若沒有輸入出生資料，使用「客觀歲氣七步導覽」即可，不必讀完所有分頁。
+      </div>
       <nav id="resultPerspectiveTabs" class="result-perspective-nav" role="tablist" aria-label="結果六大視角"></nav>
       <div id="resultPerspectivePanels"></div>
       <div class="card summary" id="summary"></div>
@@ -1636,11 +1672,11 @@ tr.is-unmatched-hidden {
     </div>
   </main>
   <button type="button" id="backToTopBtn" class="back-to-top-btn" aria-label="回到頁面最上方">↑ 回到最上方</button>
-  <button type="button" id="navDrawerToggleBtn" class="nav-drawer-toggle-btn" aria-label="開啟分頁與快捷導覽選單" aria-expanded="false" aria-controls="navDrawer" hidden>☰ 分頁導覽</button>
+  <button type="button" id="navDrawerToggleBtn" class="nav-drawer-toggle-btn" aria-label="開啟分頁與快捷導覽選單" aria-expanded="false" aria-controls="navDrawer" hidden>☰ 功能索引</button>
   <div id="navDrawerBackdrop" class="nav-drawer-backdrop" hidden></div>
-  <aside id="navDrawer" class="nav-drawer" aria-label="分頁與小標快捷導覽" hidden>
+  <aside id="navDrawer" class="nav-drawer" aria-label="結果功能快速索引" hidden>
     <div class="nav-drawer-header">
-      <strong>📑 分頁與小標導覽</strong>
+      <strong>📑 功能快速索引</strong>
       <button type="button" id="navDrawerCloseBtn" class="nav-drawer-close-btn" aria-label="關閉導覽選單">✕ 關閉</button>
     </div>
     <div id="navDrawerBody" class="nav-drawer-body"></div>
@@ -4518,12 +4554,12 @@ const SECTION_JUMP_LABELS=Object.freeze({
   pingQiMatrixSection:'平氣固定矩陣',auditSection:'推步審計軌跡'
 });
 const RESULT_TAB_DEFS=[
-  {id:'guide7step',label:'🧭 經文七步導覽（客觀歲氣）',shortLabel:'🧭 七步導覽',intro:'先不涉個人生辰，依《素問·六元正紀大論》七步由淺入深掌握本年客觀歲氣、完整經文與零斷層白話機理。',sections:['dualTrackGuideSection']},
-  {id:'overview',label:'📊 總覽與流年',shortLabel:'📊 總覽流年',intro:'先看今年氣化大勢、先天與流年交互，以及六步吉凶與修復窗口。',sections:['interactionSection','sixStepFortuneSection','repairWindowSection','yearTimelineSection','chronicleSection','daSiTianSection']},
-  {id:'constitution',label:'🧬 先天本命',shortLabel:'🧬 先天本命',intro:'集中查看出生歲次、主客運、五要素體質、十干病機與地支氣化分型。',sections:['birthSection','hostYunSection','fetalYunSection','constitutionSection','tenGanConstitutionSection','constitutionTypeSection','pattern9Section','specialDualPathologySection']},
-  {id:'annual',label:'⚡ 流年與九宮遺篇',shortLabel:'⚡ 九宮遺篇',intro:'查看流年六步、勝復鬱發、九宮災宮／太一／天忌／虛風、時間與運氣針法（靈龜／飛騰／子午流注／養子時刻／活子午／四時分刺），以及《素問遺篇》刺法論與標本中氣。',sections:['sixSection','targetSection','liuYuanTargetSection','shengFuYuFaSection','liuYuanExpandedSection','kangHaiSection','houQiGeoSection','ninePalaceSection','yipianSection'],subJumps:['lingguiBafaDetail','chronoAcupDetail','yunqiAcupDetail','lunarAcupDetail','yipianCifaDetail','yipianTwelveOrgansDetail']},
-  {id:'pulse',label:'🩺 脈診與方藥',shortLabel:'🩺 脈診方藥',intro:'先看指定觀察日期與今年不應脈位，再查看六步脈象、方藥方向及五臟禁例。',sections:['observationSection','dayHourYunSection','southNorthSection','pulseSixStepSection','pulseBenMaiSection','renYingPulseSection','herbDirectionSection','herbsSection','xuanzhuSixSoupsSection','clinicalCautionSection']},
-  {id:'references',label:'📚 古籍參照與審計',shortLabel:'📚 古籍審計',intro:'固定典籍字典、矩陣與運算紀要集中在此；需要核對來源時再展開。',sections:['classicProfilesSection','matrix30Section','pingQiMatrixSection','wuyun15JiSection','auditSection']}
+  {id:'overview',label:'📊 先看結論',shortLabel:'📊 總覽',intro:'建議從這裡開始。先看先天與流年的重點摘要，再依需要進入其他分頁；不必一次讀完所有內容。',sections:['interactionSection','sixStepFortuneSection','repairWindowSection','yearTimelineSection','chronicleSection','daSiTianSection']},
+  {id:'constitution',label:'👤 出生與先天',shortLabel:'👤 先天',intro:'查看出生年形成的歲運、司天在泉與體質角色。這是傳統模型的先天結構，不等於疾病診斷。',sections:['birthSection','hostYunSection','fetalYunSection','constitutionSection','tenGanConstitutionSection','constitutionTypeSection','pattern9Section','specialDualPathologySection']},
+  {id:'annual',label:'🌦 流年與九宮',shortLabel:'🌦 流年九宮',intro:'查看目標年歲運、六步時序、勝復與九宮。若只想了解某一年的客觀歲氣，可使用「客觀歲氣七步導覽」。',sections:['sixSection','targetSection','liuYuanTargetSection','shengFuYuFaSection','liuYuanExpandedSection','kangHaiSection','houQiGeoSection','ninePalaceSection','yipianSection'],subJumps:['lingguiBafaDetail','chronoAcupDetail','yunqiAcupDetail','lunarAcupDetail','yipianCifaDetail','yipianTwelveOrgansDetail']},
+  {id:'pulse',label:'🩺 觀察、脈診與方藥',shortLabel:'🩺 觀察脈診',intro:'指定觀察日期與時辰後，查看脈位、六步脈象、針法與方藥文獻。未實測的資料不要當成實際觀測；方藥內容不是自動處方。',sections:['observationSection','dayHourYunSection','southNorthSection','pulseSixStepSection','pulseBenMaiSection','renYingPulseSection','herbDirectionSection','herbsSection','xuanzhuSixSoupsSection','clinicalCautionSection']},
+  {id:'references',label:'📚 原典與計算依據',shortLabel:'📚 原典依據',intro:'需要追查依據時再開啟：查閱典籍、分類矩陣、參照資料與程式推步紀錄。',sections:['classicProfilesSection','matrix30Section','pingQiMatrixSection','wuyun15JiSection','auditSection']},
+  {id:'guide7step',label:'🧭 客觀歲氣七步導覽',shortLabel:'🧭 七步導覽',intro:'不需要出生資料。依《素問·六元正紀大論》七步解讀目標年的客觀歲氣；每一步先看結論，再按需展開原典與白話說明。',sections:['dualTrackGuideSection']}
 ];
 function initializeYipianAdvancedSettings(){
   const host=document.getElementById('yipianSection');if(!host||host.querySelector('#yipianAdvancedSettings'))return;
