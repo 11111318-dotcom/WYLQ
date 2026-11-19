@@ -15,7 +15,8 @@ REQUIRED = {
 }
 MARKERS = ("INPUT_ENUMS", "strictDateValue", "strictTimeValue",
            "validateSecurityInputs", "validateBirthInputs", "scriptStartupWarning",
-           "function deepFreeze", "CONFIRM_COOLDOWN_MS=500", "SUBMIT_COOLDOWN_MS=500")
+           "function deepFreeze", "CONFIRM_COOLDOWN_MS=500", "SUBMIT_COOLDOWN_MS=500",
+           "function updateBirthPreview", "function renderMarkdownEmphasisInTextNodes")
 failures = []
 def check(ok, msg):
     print(("PASS  " if ok else "FAIL  ") + msg)
@@ -150,6 +151,17 @@ check(not re.search(r"\sstyle\s*=", html, re.I), "no inline style attributes")
 check(not p.resources, "no external/media resource URL attributes")
 check('name="referrer"' in html and 'content="no-referrer"' in html, "Referrer-Policy meta is no-referrer")
 for marker in MARKERS: check(marker in html, f"required protection present: {marker}")
+check(not re.search(r'<input\b[^>]*\bid="(?:birth|time|target)"[^>]*\bvalue=', html, re.I),
+      "birth, time and target fields do not ship hard-coded personal or year values")
+check('id="confirmBirth"' not in html
+      and "if(!birthConfirmed||confirmedBirthKey!==currentKey){if(!confirmBirthData())return false;}" in html,
+      "personalized calculation uses one submit action with validation on submit")
+check("det.open = Object.prototype.hasOwnProperty.call(openStateMap, secId) ? Boolean(openStateMap[secId]) : false;" in html
+      and "return '<details class=" in html and "dt-dynamic-vernacular" in html,
+      "long vernacular guides are collapsed by default")
+check("function renderMarkdownEmphasisInTextNodes" in html
+      and "renderMarkdownEmphasisInTextNodes(document.getElementById('view-result'));" in html,
+      "rendered Markdown emphasis is converted through safe DOM text nodes")
 script=scripts[0][1] if len(scripts)==1 else ""
 INPUT_GUARDRAILS = (
     ("strict YYYY-MM-DD input pattern", r"!/^\d{4}-\d{2}-\d{2}$/.test(v)"),
