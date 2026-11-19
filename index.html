@@ -6882,13 +6882,15 @@ function invalidateBirthConfirmation(){
 }
 function updateInputTargetToCurrentRegime(force=false){
   const input=document.getElementById('target');if(!input)return null;
-  const previous=input.dataset.autoRegimeYear||'';
-  if(!force&&previous&&input.value!==previous)return null;
+  if(!force&&input.dataset.userEdited==='1')return null;
   const oldMode=CALC_TIME_MODE;let year=null;
   try{CALC_TIME_MODE=normalizeCalcTimeMode(safeVal('timeMode','traditional-precision'));year=safeObservationRegimeYear(new Date());}
   catch(err){year=null;}
   finally{CALC_TIME_MODE=oldMode;}
-  if(Number.isInteger(year)&&year>=1&&year<=3000){input.value=String(year);input.dataset.autoRegimeYear=String(year);return year;}
+  if(Number.isInteger(year)&&year>=1&&year<=3000){
+    input.value=String(year);input.dataset.autoRegimeYear=String(year);delete input.dataset.userEdited;
+    return year;
+  }
   return null;
 }
 let _lastSubmitTs=0;
@@ -6914,7 +6916,7 @@ document.getElementById('birthForm').addEventListener('reset',()=>invalidateBirt
 document.getElementById('backToInput').addEventListener('click',handleBack);
 document.getElementById('birth').addEventListener('input',()=>{setFormError('');invalidateBirthConfirmation();});
 document.getElementById('time').addEventListener('input',()=>{setFormError('');invalidateBirthConfirmation();});
-document.getElementById('target').addEventListener('input',()=>{delete document.getElementById('target').dataset.autoRegimeYear;setFormError('');});
+document.getElementById('target').addEventListener('input',()=>{const input=document.getElementById('target');delete input.dataset.autoRegimeYear;input.dataset.userEdited='1';setFormError('');});
 document.getElementById('targetYearCurrentInput')?.addEventListener('click',()=>{const y=updateInputTargetToCurrentRegime(true);if(!y)setFormError('目前日期無法定位於支援範圍內的運氣年。');else setFormError('');});
 /* 交司基準切換會改變運氣年判定；若目標年仍為自動值，同步更新目前運氣年。 */
 document.getElementById('timeMode').addEventListener('change',()=>{setFormError('');invalidateBirthConfirmation();updateInputTargetToCurrentRegime(false);});
@@ -7580,6 +7582,7 @@ document.addEventListener('change',e=>{
   }else if(e.target?.id==='ninePalaceShichen'||e.target?.id==='ninePalaceShichenMirror'){
     const selector=document.getElementById('ninePalaceShichen');
     if(selector&&e.target.id==='ninePalaceShichenMirror')selector.value=e.target.value;
+    updateObservationDetailsSummary(document.getElementById('globalObservationDate')?.value||document.getElementById('observeDate')?.value||'');
     syncSharedObservationControls();renderNinePalaceDateOutput();
   }else if(e.target?.id==='ninePalaceSubSlot'||e.target?.id==='ninePalaceSubSlotMirror'){
     const subSel=document.getElementById('ninePalaceSubSlot');
