@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-XetWUARSOrwqEiXEYOqRwhOAn3P+Kd1x3UkxYJreEv4='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-i1l//tYWrMXSHb2xtn9ExGM0YONd3bHdyqTRGNagrNk='; style-src-elem 'sha256-i1l//tYWrMXSHb2xtn9ExGM0YONd3bHdyqTRGNagrNk='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-55EG9ds9gpxot7yIsae3G7h77lE8bJSNLm0Xt/fkRbE='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-Bwt2wU7cDzsTFAR6Lw0zSrr1mUkPWCBtIAkEmkgS/Kg='; style-src-elem 'sha256-Bwt2wU7cDzsTFAR6Lw0zSrr1mUkPWCBtIAkEmkgS/Kg='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -967,8 +967,7 @@ html.yq-font-lecture #summary,html.yq-font-lecture #globalObservationControls,ht
 }
 
 /* === Top-Right Floating Nav Drawer === */
-.nav-drawer-toggle-btn{position:fixed;top:12px;right:12px;z-index:65;padding:9px 14px;border:1px solid var(--accent-2);border-radius:999px;background:rgba(255,253,248,.96);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--accent);font:800 13px/1 "Noto Sans TC",sans-serif;box-shadow:0 6px 18px rgba(57,43,25,.18);cursor:pointer;touch-action:manipulation;transition:transform .15s,background .15s;}
-.nav-drawer-toggle-btn:hover{background:#f8f1e4;transform:translateY(-1px);}
+.nav-drawer-toggle-btn{display:inline-flex;align-items:center;white-space:nowrap;}
 .nav-drawer-toggle-btn[hidden],.nav-drawer-backdrop[hidden],.nav-drawer[hidden]{display:none!important;}
 .nav-drawer-backdrop{position:fixed;inset:0;z-index:75;background:rgba(34,26,18,.42);touch-action:none;}
 .nav-drawer{position:fixed;top:0;right:0;bottom:0;height:100dvh;max-height:100vh;width:min(340px,86vw);z-index:80;background:var(--paper);border-left:1px solid var(--line);box-shadow:-8px 0 28px rgba(34,26,18,.22);display:flex;flex-direction:column;overflow:hidden;}
@@ -1628,6 +1627,7 @@ tr.is-unmatched-hidden {
   <div class="result-sticky-shell">
   <header class="result-header">
     <button type="button" id="backToInput" class="back-btn">← 返回</button>
+    <button type="button" id="navDrawerToggleBtn" class="back-btn nav-drawer-toggle-btn" aria-label="開啟分頁與快捷導覽選單" aria-expanded="false" aria-controls="navDrawer" hidden>☰ 功能索引</button>
     <div class="result-meta" id="resultMeta" aria-live="polite"></div>
     <div class="form-error result-error" id="resultError" role="alert" aria-live="assertive" hidden></div>
     <div class="result-tools" aria-label="結果頁工具列">
@@ -1787,7 +1787,6 @@ tr.is-unmatched-hidden {
     </div>
   </main>
   <button type="button" id="backToTopBtn" class="back-to-top-btn" aria-label="回到頁面最上方">↑ 回到最上方</button>
-  <button type="button" id="navDrawerToggleBtn" class="nav-drawer-toggle-btn" aria-label="開啟分頁與快捷導覽選單" aria-expanded="false" aria-controls="navDrawer" hidden>☰ 功能索引</button>
   <div id="navDrawerBackdrop" class="nav-drawer-backdrop" hidden></div>
   <aside id="navDrawer" class="nav-drawer" aria-label="結果功能快速索引" hidden>
     <div class="nav-drawer-header">
@@ -5205,7 +5204,7 @@ function _calculateCore(){
   document.getElementById('resultMeta').innerHTML=`出生所屬運氣年 <b>${fmtYearWithGZ(by.year,by.gz)}</b>｜目標 <b>${targetYear}（${tgz.gz}）</b>｜<span class="u-style-34d22304">WYLQ-Audit ${APP_VERSION}</span>`;
   try{
     {const pn=document.getElementById('precisionNotice');if(pn){const txt=precisionNoticeText(by.year,targetYear);/* SAFETY: txt is generated only by precisionNoticeText() from numbers and fixed literals; never concatenate user-controlled text here. */pn.innerHTML=txt?('<b>ℹ 精度提示：</b>'+txt):'';pn.hidden=!txt;}}
-    renderObservationPanel(target,preservedObservationDate);updateTargetSouthNorthObservation(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??preservedObservationDate??'');syncSharedObservationControls();renderGlobalObservationStatus(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??'');renderNinePalaceSection(target);renderYipianSection(target);renderSummary(birth,target);condenseSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderFetalYunSection(birth);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderWuyun15JiSection(birth,target);renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderLiuYuanTargetSection(target);renderLiuYuanExpandedSection(target);renderKangHaiSection(target);renderHouQiGeoSection(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??preservedObservationDate??'');const _wasObjOrFromInput=!!(window.__objectiveGuideMode||document.getElementById("view-input")?.hidden===false);window.__objectiveGuideMode=false;const _sumCard=document.getElementById("summary");if(_sumCard)_sumCard.hidden=false;const _precEl=document.getElementById("precisionNotice");if(_precEl)_precEl.hidden=!_precEl.textContent;const _proToggle=document.getElementById("professionalModeToggle");if(_proToggle)_proToggle.hidden=false;setProfessionalMode(false,false);const _so=document.getElementById("globalObservationControls");if(_so)_so.hidden=false;renderDualTrackGuideSection(target);renderChronicleSection(birth,target);renderDaSiTianSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);window.__lastWylqBirth=birth;window.__lastWylqTarget=target;renderDayHourYunSection(target,preservedObservationDate);renderPulseBenMai(target);renderRenYingPulseSection(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderXuanzhuSixSoupsSection(target);renderHerbDirection(birth);tagReferenceDetails();renderTargetYearTimeline(birth,target);collapseSectionSourceNotes();normalizeResultHeadings();tagSectionPurposes();groupOverviewTrendSections();if(_wasObjOrFromInput&&typeof selectResultTab==='function')selectResultTab('overview',false);if(typeof applyPostRenderEnhancements==='function')applyPostRenderEnhancements();
+    renderObservationPanel(target,preservedObservationDate);updateTargetSouthNorthObservation(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??preservedObservationDate??'');syncSharedObservationControls();renderGlobalObservationStatus(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??'');renderNinePalaceSection(target);renderYipianSection(target);renderSummary(birth,target);condenseSummary(birth,target);renderAudit(birth,target);renderBirthSection(birth);renderHostYunSection(birth,target);renderFetalYunSection(birth);renderConstitutionSection(birth);renderClassicProfilesSection(birth);renderTenGanConstitutionSection(birth);renderConstitutionTypeSection(birth);renderSpecialDualPathologySection(birth);renderMatrix30Section(birth,target);renderPingQiMatrixSection();renderWuyun15JiSection(birth,target);renderPattern9Section(birth,target);renderSixStepFortuneSection(birth,target);renderShengFuYuFaSection(birth);renderSixSection(target);renderTargetSection(target);renderLiuYuanTargetSection(target);renderLiuYuanExpandedSection(target);renderKangHaiSection(target);renderHouQiGeoSection(target,document.getElementById('observeDate')?.value??document.getElementById('globalObservationDate')?.value??preservedObservationDate??'');const _wasObjOrFromInput=!!(window.__objectiveGuideMode||document.getElementById("view-input")?.hidden===false);window.__objectiveGuideMode=false;const _sumCard=document.getElementById("summary");if(_sumCard)_sumCard.hidden=false;const _precEl=document.getElementById("precisionNotice");if(_precEl)_precEl.hidden=!_precEl.textContent;const _proToggle=document.getElementById("professionalModeToggle");if(_proToggle)_proToggle.hidden=false;const _readingGuide=document.getElementById("resultReadingGuide");if(_readingGuide)_readingGuide.hidden=false;setProfessionalMode(false,false);const _so=document.getElementById("globalObservationControls");if(_so)_so.hidden=false;renderDualTrackGuideSection(target);renderChronicleSection(birth,target);renderDaSiTianSection(birth,target);renderInteractionSection(birth,target);renderRepairWindowSection(birth,target);renderClinicalCautionSection(birth,target);window.__lastWylqBirth=birth;window.__lastWylqTarget=target;renderDayHourYunSection(target,preservedObservationDate);renderPulseBenMai(target);renderRenYingPulseSection(target);renderPulseSixStep(target);renderSouthNorth(birth,target,pulseObserved,southNorthMode);renderHerbs(birth,target);renderXuanzhuSixSoupsSection(target);renderHerbDirection(birth);tagReferenceDetails();renderTargetYearTimeline(birth,target);collapseSectionSourceNotes();normalizeResultHeadings();tagSectionPurposes();groupOverviewTrendSections();if(_wasObjOrFromInput&&typeof selectResultTab==='function')selectResultTab('overview',false);if(typeof applyPostRenderEnhancements==='function')applyPostRenderEnhancements();
   }catch(renderErr){console.error('[WYLQ] 渲染失敗（E-CALC-002）：',renderErr);setFormError('推算未完成（錯誤代碼 E-CALC-002）。輸出生成時發生錯誤；技術細節已記錄於開發者主控台。');return false;}
   /* Export only the state that produced the visible results; never re-read edited form fields from the export dialog. */
   const quickYearEl=document.getElementById('quickTargetYear');if(quickYearEl)quickYearEl.value=String(targetYear);
@@ -5282,12 +5281,12 @@ function condenseSummary(birth,target){
     `五要素烙印：${imprint.length?imprint.join('、'):'未達門檻'}`,
     '這是傳統模型的體質定位，不是疾病診斷。'
   ]);
-  make('overview','今年氣候重點',`${target.gz.gz}｜${target.severity.label}`,[
-    `${target.year} 運氣年：${target.yunAnnual.element}運${target.yunAnnual.degree}`,
-    `上半年主氣：${escapeHtml(target.siTian)}｜下半年主氣：${escapeHtml(target.zaiQuan)}`,
-    target.severity.patternName||target.eras.finalType||'年度結構詳見下方分項'
+  make('overview','今年的年度概況',`${target.year} 年`,[
+    `歲次與年度分類：${target.gz.gz}｜${target.severity.label}`,
+    `歲運：${target.yunAnnual.element}運${target.yunAnnual.degree}`,
+    `上半年主氣：${escapeHtml(target.siTian)}｜下半年主氣：${escapeHtml(target.zaiQuan)}`
   ]);
-  make('overview','今年有無修復窗口',repairLabel,[repairNote||'展開分項可查看判定條件。',`先天體質重點：${mainOrgan}`]);
+  make('overview','今年是否符合修復窗口條件',repairLabel,[repairNote||'展開分項可查看判定條件。',`先天體質重點：${mainOrgan}`]);
   host.appendChild(grid);
   const details=yqElement('details','summary-full-details');
   yqAppendText(details,'summary','','查看完整出生與流年分項（紀名、平氣、強弱集合、南北政及角色衝突）');
@@ -15155,6 +15154,8 @@ function runObjectiveGuideOnly(yearOverride) {
   if (proToggle) proToggle.hidden = true;
   const modeStatus = document.getElementById("resultModeStatus");
   if (modeStatus) modeStatus.textContent = "客觀歲氣導覽：不含個人生辰；完整專業分頁可由個人化分析進入。";
+  const readingGuide = document.getElementById("resultReadingGuide");
+  if (readingGuide) readingGuide.hidden = true;
   const sharedObs = document.getElementById("globalObservationControls");
   if (sharedObs) sharedObs.hidden = false;
   renderGlobalObservationStatus(target, obsVal);
