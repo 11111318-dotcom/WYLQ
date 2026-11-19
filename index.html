@@ -4506,7 +4506,6 @@ function renderGlobalObservationStatus(target,providedDate){
   const applyButton=document.getElementById('globalApplyObservationYearBtn');
   if(!status)return;
   if(applyButton){applyButton.hidden=true;delete applyButton.dataset.year;}
-  const dateText=arguments.length>1?String(providedDate||''):(document.getElementById('observeDate')?.value||document.getElementById('globalObservationDate')?.value||'');
   if(!dateText){status.textContent='📍 觀察日定位：尚未指定日期；六步時位高亮暫停。';return;}
   if(!strictDateValue(dateText)){status.textContent='📍 觀察日定位：日期無效或超出支援範圍（公元 1–3000 年）。';return;}
   const dt=new Date(`${dateText}T12:00:00+08:00`);
