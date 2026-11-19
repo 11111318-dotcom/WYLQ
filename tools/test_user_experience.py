@@ -64,6 +64,6 @@ require('id="termGlossarySearch"' in html and 'id="termGlossaryResults"' in html
 require('class="result-disclaimer-details"' in html and 'class="result-disclaimer-details" open' not in html,
         "full medical/scope disclaimer is available but collapsed by default")
 require("make('overview','今年氣候重點'" in html, "summary climate shortcut stays in the beginner year view")
-require("id='guide7step',advanced:true" in defs, "objective seven-step guide remains available as its own route")
+require(re.search(r"\{id:'guide7step',advanced:true,", defs) is not None, "objective seven-step guide remains available as its own route")
 
 print("Result: all user-experience architecture checks passed")
