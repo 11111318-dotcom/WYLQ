@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-jAmhvF5xNiw3Aa/aeCgjN5shPX5EpmFnHjI3fBTIlqQ='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-kuhzFFvKxMX1mrAA7BEBFL9Q+e0t/SRjpu9fVs3+YVA='; style-src-elem 'sha256-kuhzFFvKxMX1mrAA7BEBFL9Q+e0t/SRjpu9fVs3+YVA='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-SaFluoD6BosmP4j/0gLDxQkczXdppFRW6D/Dvdo5ij0='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-kuhzFFvKxMX1mrAA7BEBFL9Q+e0t/SRjpu9fVs3+YVA='; style-src-elem 'sha256-kuhzFFvKxMX1mrAA7BEBFL9Q+e0t/SRjpu9fVs3+YVA='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -4751,9 +4751,13 @@ function setProfessionalMode(enabled,announce=true){
     if(tab)tab.hidden=!!def.advanced&&!on;
   });
   const button=document.getElementById('professionalModeToggle');
-  if(button){button.textContent=on?'收合專業分析':'顯示專業分析';button.setAttribute('aria-expanded',String(on));}
+  if(button){button.hidden=!!window.__objectiveGuideMode;button.textContent=on?'收合專業分析':'顯示專業分析';button.setAttribute('aria-expanded',String(on));}
   const status=document.getElementById('resultModeStatus');
-  if(status&&announce)status.textContent=on?'專業分析已展開：可查年度專題、先天細節、九宮、脈診、方藥與原典審計。':'一般閱讀：先使用 3 個主要視角；推算細節仍完整保留。';
+  if(status){
+    status.textContent=window.__objectiveGuideMode
+      ?'客觀歲氣導覽：不含個人生辰；完整專業分頁可由個人化分析進入。'
+      :(on?'專業分析已展開：可查年度專題、先天細節、九宮、脈診、方藥與原典審計。':'一般閱讀：先使用 3 個主要視角；推算細節仍完整保留。');
+  }
   const nav=document.getElementById('resultPerspectiveTabs');
   if(nav)nav.classList.toggle('is-professional',on);
   const active=document.querySelector('#resultPerspectiveTabs [role="tab"][aria-selected="true"]');
