@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- SECURITY: all inline style attributes have been migrated to fixed utility classes or finite, allowlisted state classes. The style element is protected by a CSP SHA-256 hash; style-src-attr is none. -->
 <!-- SECURITY: runtime text inserted into HTML attributes must pass through escapeAttr; fixed labels alone are not a substitute for attribute-context escaping. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-55EG9ds9gpxot7yIsae3G7h77lE8bJSNLm0Xt/fkRbE='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-Bwt2wU7cDzsTFAR6Lw0zSrr1mUkPWCBtIAkEmkgS/Kg='; style-src-elem 'sha256-Bwt2wU7cDzsTFAR6Lw0zSrr1mUkPWCBtIAkEmkgS/Kg='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-55EG9ds9gpxot7yIsae3G7h77lE8bJSNLm0Xt/fkRbE='; script-src-attr 'none'; upgrade-insecure-requests; style-src 'sha256-NPsMw582z/0tR0o7Z42yap0+W+ZIRux6CKYTxNp1ggE='; style-src-elem 'sha256-NPsMw582z/0tR0o7Z42yap0+W+ZIRux6CKYTxNp1ggE='; style-src-attr 'none'; img-src 'none'; font-src 'none'; media-src 'none'; worker-src 'none'; manifest-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
 <meta name="referrer" content="no-referrer" />
 <title>五運六氣｜WYLQ-Audit</title>
 <style>
@@ -1523,6 +1523,546 @@ tr.is-unmatched-hidden {
   .result-perspective-nav.is-professional,.result-perspective-nav:not(.is-professional){grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 
+
+/* WYLQ-Audit｜Figma entry-flow redesign — presentation only */
+#view-input{
+  min-height:100vh;
+  display:block;
+  padding:34px 22px 56px;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(177,132,88,.065),transparent 42%),
+    var(--bg);
+}
+#view-input .input-wrap{width:100%;max-width:1040px;margin:0 auto;}
+#view-input .input-hero{
+  max-width:none;
+  margin:10px 0 25px;
+  text-align:left;
+}
+#view-input .input-hero .eyebrow{letter-spacing:.12em;font-size:11px;color:var(--accent-2);margin-bottom:9px;}
+#view-input .input-hero h1{
+  margin:0 0 9px;
+  color:var(--ink);
+  font-family:"Noto Serif TC","Noto Sans TC",serif;
+  font-size:clamp(27px,3.3vw,35px);
+  line-height:1.35;
+}
+#view-input .input-hero .subtitle{max-width:760px;font-size:14px;line-height:1.8;color:var(--muted);}
+#birthForm.entry-form{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.entry-year-card{
+  padding:20px 22px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(255,253,248,.97);
+  box-shadow:0 5px 18px rgba(57,43,25,.035);
+}
+.entry-year-main{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(300px,350px);
+  align-items:center;
+  gap:26px;
+}
+.entry-step-copy{display:flex;align-items:flex-start;gap:12px;min-width:0;}
+.entry-step-number{
+  flex:0 0 auto;
+  margin-top:4px;
+  color:var(--accent-2);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.entry-step-copy h2{
+  margin:0 0 5px;
+  color:var(--ink);
+  font-family:"Noto Serif TC","Noto Sans TC",serif;
+  font-size:17px;
+  line-height:1.45;
+}
+.entry-step-copy p{margin:0;color:var(--muted);font-size:12px;line-height:1.75;}
+.entry-year-field .field{margin:0;}
+.entry-year-field label{margin-bottom:6px;color:var(--ink);font-size:12px;}
+.entry-year-field input{
+  min-height:44px;
+  padding:10px 13px;
+  border:1px solid #d9cfbd;
+  border-radius:10px;
+  background:#fffefa;
+}
+.entry-year-field .field-inline-actions{margin-top:5px;}
+.entry-year-field .field-inline-actions .back-btn{padding:5px 9px;font-size:11px;}
+.entry-year-field .hint{margin-top:6px;font-size:10.5px;line-height:1.6;}
+.entry-year-field details.input-advanced{
+  margin-top:8px;
+  padding:0;
+  border:0;
+}
+.entry-year-field details.input-advanced>summary{
+  padding:3px 0;
+  color:var(--accent);
+  font-size:11px;
+}
+.entry-year-field details.input-advanced p{margin:6px 0 0;font-size:11px;line-height:1.7;}
+.entry-path-section{display:grid;gap:13px;}
+.entry-path-heading{margin:0 0 2px;}
+.entry-path-heading .entry-step-number{margin-top:5px;}
+.entry-path-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  align-items:start;
+  gap:18px;
+}
+.entry-objective-card,
+.entry-personal-card{
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(255,253,248,.98);
+  box-shadow:0 6px 20px rgba(57,43,25,.04);
+}
+.entry-objective-card{display:flex;flex-direction:column;gap:12px;padding:22px;}
+.entry-path-kicker{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.entry-path-badge{
+  display:inline-flex;
+  align-items:center;
+  min-height:23px;
+  padding:4px 9px;
+  border-radius:999px;
+  font-size:10.5px;
+  font-weight:800;
+}
+.objective-badge{background:#e8eee5;color:var(--green);}
+.personal-badge{background:#f2e6dd;color:var(--accent);}
+.entry-path-index{color:var(--accent-2);font-size:10.5px;font-weight:700;letter-spacing:.04em;}
+.entry-objective-card h3,
+.entry-personal-card .entry-personal-title{
+  display:block;
+  margin:0;
+  color:var(--ink);
+  font-family:"Noto Serif TC","Noto Sans TC",serif;
+  font-size:20px;
+  font-weight:800;
+  line-height:1.4;
+}
+.entry-objective-card>p,
+.entry-personal-card .entry-personal-description{
+  display:block;
+  margin:0;
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.8;
+}
+.entry-topic-list{display:flex;gap:8px;flex-wrap:wrap;color:var(--accent);font-size:11px;font-weight:700;}
+.entry-topic-list span+span::before{content:"／";margin-right:8px;color:#cbbda8;}
+#objectiveGuideBtn{
+  width:100%;
+  min-height:46px;
+  margin:2px 0 0;
+  padding:11px 15px;
+  border:0;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
+  font-size:13.5px;
+  font-weight:800;
+  text-align:left;
+  box-shadow:none;
+}
+#objectiveGuideBtn::after{content:"→";float:right;font-size:16px;line-height:1;}
+#objectiveGuideBtn:hover{background:#693527;filter:none;transform:translateY(-1px);}
+.entry-personal-card{overflow:hidden;}
+.entry-personal-card>summary{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:11px;
+  padding:22px;
+  cursor:pointer;
+  list-style:none;
+}
+.entry-personal-card>summary::-webkit-details-marker{display:none;}
+.entry-personal-card>summary::marker{content:"";}
+.entry-personal-card>summary:focus-visible{outline:3px solid rgba(123,63,47,.22);outline-offset:-4px;border-radius:15px;}
+.entry-personal-action{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:2px;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#f0e9dc;
+  color:var(--accent);
+  font-size:12.5px;
+  font-weight:800;
+}
+.entry-personal-card[open]{border-color:#bd9c84;box-shadow:0 8px 24px rgba(57,43,25,.07);}
+.entry-personal-card[open]>summary{border-bottom:1px solid var(--line);background:#fffefa;}
+.entry-personal-card[open] .entry-personal-action{background:var(--accent);border-color:var(--accent);color:#fff;}
+.entry-personal-card[open] .entry-personal-action span{transform:rotate(180deg);}
+.entry-personal-body{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:13px 16px;
+  padding:18px 22px 22px;
+}
+.entry-personal-body .field{margin:0;min-width:0;}
+.entry-personal-body .field:has(#birth),
+.entry-personal-body .field:has(#time){grid-column:span 1;}
+.entry-personal-body label{color:var(--ink);font-size:12px;}
+.entry-personal-body input,
+.entry-personal-body select{
+  min-height:43px;
+  padding:10px 12px;
+  border:1px solid #d9cfbd;
+  border-radius:10px;
+  background:#fffefa;
+}
+.entry-personal-body .hint{font-size:11px;line-height:1.7;}
+.entry-personal-body #birthConfirmStatus,
+.entry-personal-body details.input-advanced,
+.entry-personal-body #runBtn{grid-column:1/-1;}
+.entry-personal-body #birthConfirmStatus{margin:0;text-align:left;border-radius:9px;}
+.entry-personal-body details.input-advanced{
+  margin:0;
+  padding:0 13px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#faf7ef;
+}
+.entry-personal-body details.input-advanced>summary{padding:10px 0;color:var(--accent);font-size:12px;}
+.entry-personal-body details.input-advanced[open]{padding-bottom:12px;}
+.entry-personal-body #runBtn{
+  width:100%;
+  min-height:46px;
+  margin:0;
+  padding:11px 15px;
+  border:0;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
+  font-size:13.5px;
+}
+.entry-help-note{
+  padding:12px 15px;
+  border-radius:11px;
+  background:#f0e9dc;
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1.7;
+}
+.entry-help-note strong{color:var(--accent);}
+#birthForm #formError{margin:0;}
+#view-input .input-notice{
+  max-width:1040px;
+  margin:20px auto 0;
+  padding:12px 15px;
+  border-radius:10px;
+  font-size:11.5px;
+  line-height:1.75;
+}
+@media(max-width:760px){
+  #view-input{padding:23px 15px 38px;}
+  #view-input .input-hero{margin:4px 0 20px;}
+  #view-input .input-hero h1{font-size:27px;}
+  .entry-year-card{padding:16px;}
+  .entry-year-main{grid-template-columns:minmax(0,1fr);gap:13px;}
+  .entry-year-field{padding-left:0;}
+  .entry-path-grid{grid-template-columns:minmax(0,1fr);gap:13px;}
+  .entry-objective-card,.entry-personal-card>summary{padding:17px;}
+  .entry-personal-body{grid-template-columns:minmax(0,1fr);padding:15px 17px 18px;}
+  .entry-personal-body .field:has(#birth),
+  .entry-personal-body .field:has(#time){grid-column:1/-1;}
+  .entry-personal-body #birthConfirmStatus,
+  .entry-personal-body details.input-advanced,
+  .entry-personal-body #runBtn{grid-column:1/-1;}
+  .entry-objective-card h3,.entry-personal-card .entry-personal-title{font-size:18px;}
+}
+.result-sticky-shell{
+  position:sticky;
+  top:0;
+  z-index:50;
+  border-bottom:1px solid rgba(221,212,196,.9);
+  background:rgba(255,253,248,.94);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  box-shadow:0 5px 20px rgba(57,43,25,.055);
+}
+.result-header{
+  max-width:1320px;
+  margin:0 auto;
+  padding:11px 24px;
+  gap:9px;
+  background:transparent;
+  border:0;
+}
+.result-header .back-btn{border-radius:10px;background:#f6f1e7;}
+.result-header .result-meta{flex:1;min-width:180px;line-height:1.55;}
+.result-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-left:auto;}
+.result-tools .tool-label{font-size:11px;color:var(--muted);font-weight:700;}
+#quickTargetYear{width:92px;min-height:38px;padding:6px 8px;font-size:13px;text-align:center;}
+.result-more-tools>summary{border-radius:10px;padding:8px 12px;background:#f0e9dc;color:var(--accent);font-size:12.5px;font-weight:800;}
+main{padding:28px 24px 76px;}
+.wrap{max-width:1280px;}
+#resultDisclaimer{
+  margin:0 0 14px;
+  padding:12px 16px!important;
+  border:1px solid #e5d9c7;
+  border-left:3px solid var(--warn);
+  border-radius:12px;
+  background:#f8f1e5;
+  color:#5e5141;
+  box-shadow:none;
+}
+.result-reading-guide{
+  margin:0 0 12px!important;
+  padding:13px 16px!important;
+  border:1px solid var(--line);
+  border-left:3px solid var(--accent-2);
+  border-radius:12px;
+  background:#fffdf8;
+  color:var(--muted);
+  font-size:12.5px!important;
+  line-height:1.8!important;
+}
+.result-reading-guide b{color:var(--accent);}
+.result-mode-control{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:14px 0 10px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(255,253,248,.92);
+}
+.result-mode-copy{display:grid;gap:4px;min-width:220px;}
+.result-mode-copy strong{font-family:"Noto Serif TC",serif;font-size:14px;color:var(--accent);}
+.result-mode-copy span{font-size:11.5px;line-height:1.6;color:var(--muted);}
+.result-mode-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+#professionalModeToggle{border-color:#d6c4af;background:#f8f1e8;font-size:12.5px;}
+#professionalModeToggle[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+.term-glossary>summary{border-radius:10px;padding:9px 12px;font-size:12px;}
+.term-glossary-body{border-color:var(--line);box-shadow:0 16px 38px rgba(57,43,25,.13);}
+#termGlossarySearch{border-radius:9px;border-color:var(--line);}
+.result-perspective-nav{
+  top:74px;
+  z-index:35;
+  display:grid;
+  gap:8px;
+  margin:10px 0 16px;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+.result-perspective-nav:not(.is-professional){grid-template-columns:repeat(3,minmax(0,1fr));}
+.result-perspective-nav.is-professional{grid-template-columns:repeat(5,minmax(0,1fr));}
+.result-perspective-tab{
+  min-height:48px;
+  padding:11px 13px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:rgba(255,253,248,.96);
+  color:#62594c;
+  font-size:12.5px;
+  line-height:1.5;
+  transition:background .16s ease,border-color .16s ease,transform .16s ease;
+}
+.result-perspective-tab:hover{border-color:#c9b79f;background:#faf5ec;transform:translateY(-1px);}
+.result-perspective-tab[aria-selected="true"]{
+  border-color:var(--accent);
+  background:var(--accent);
+  color:#fff;
+  box-shadow:0 4px 12px rgba(123,63,47,.14);
+}
+.result-tab-intro{
+  margin:0 0 16px;
+  padding:12px 15px;
+  border:1px solid #e6d9c7;
+  border-left:3px solid var(--accent-2);
+  border-radius:0 11px 11px 0;
+  background:#f8f3e9;
+  color:#5f574c;
+  font-size:12.5px;
+  line-height:1.8;
+}
+#summary.card.summary{
+  margin:0 0 18px;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--paper);
+  box-shadow:0 7px 22px rgba(57,43,25,.045);
+}
+#resultPerspectivePanels .section{
+  margin-top:16px;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(255,253,248,.97);
+  box-shadow:0 6px 20px rgba(57,43,25,.035);
+}
+#resultPerspectivePanels .section h2{
+  margin-bottom:13px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--line);
+  color:var(--ink);
+  font-family:"Noto Serif TC","Noto Sans TC",serif;
+  font-size:19px;
+  line-height:1.5;
+}
+#resultPerspectivePanels .section h3{margin-top:18px;color:var(--accent);font-size:16px;line-height:1.55;}
+#resultPerspectivePanels .section h4{color:#76513c;font-size:14.5px;}
+#resultPerspectivePanels .section p{font-size:14px;line-height:1.85;color:#403b33;}
+#resultPerspectivePanels .section .section-purpose{
+  margin:0 0 15px!important;
+  padding:10px 13px;
+  border-left:3px solid var(--accent-2);
+  border-radius:0 9px 9px 0;
+  background:#f7f2e8;
+  color:#62594c;
+  font-size:12px!important;
+  line-height:1.75;
+}
+#resultPerspectivePanels .section details.reference-wrapper,
+#resultPerspectivePanels .section details.reference-detail,
+#resultPerspectivePanels .section details.section-evidence-detail{
+  margin:12px 0;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:#fffefa;
+  overflow:hidden;
+}
+#resultPerspectivePanels .section details.reference-wrapper>summary,
+#resultPerspectivePanels .section details.reference-detail>summary,
+#resultPerspectivePanels .section details.section-evidence-detail>summary{
+  padding:11px 14px;
+  background:#f7f2e8;
+  color:var(--accent);
+  font-size:12.5px;
+  line-height:1.65;
+}
+#resultPerspectivePanels .section details[open].reference-wrapper>summary,
+#resultPerspectivePanels .section details[open].reference-detail>summary,
+#resultPerspectivePanels .section details[open].section-evidence-detail>summary{
+  border-bottom:1px solid var(--line);
+}
+#resultPerspectivePanels .section .reference-content,
+#resultPerspectivePanels .section .yq-report-section-content{padding:14px 16px;}
+#resultPerspectivePanels .section .yq-report-section{
+  margin:13px 0;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fffefa;
+  box-shadow:none;
+}
+#resultPerspectivePanels .section .yq-report-section-heading{
+  padding:12px 15px;
+  background:#f6f0e6;
+  border-bottom:1px solid var(--line);
+}
+#resultPerspectivePanels .section .yq-report-section-heading h3{margin:0;font-size:14px;}
+#resultPerspectivePanels .section .yq-report-detail-body,
+#resultPerspectivePanels .section .yq-report-extra{
+  font-size:12.5px;
+  line-height:1.8;
+  overflow-wrap:anywhere;
+}
+#resultPerspectivePanels .section table{max-width:100%;font-size:12.5px;}
+#resultPerspectivePanels .section th{background:#f2ecdf;color:#55483b;}
+#resultPerspectivePanels .section td,
+#resultPerspectivePanels .section th{padding:8px 10px;line-height:1.65;}
+#resultPerspectivePanels .section .section-evidence-detail>summary{border-radius:0;}
+#resultPerspectivePanels .section .section-evidence-detail[open]>summary{border-radius:0;}
+.footer{max-width:920px;margin:40px auto 0;color:var(--muted);font-size:11.5px;line-height:1.8;}
+#backToTopBtn{border-radius:999px;box-shadow:0 6px 18px rgba(57,43,25,.14);}
+
+@media(max-width:900px){
+  #view-input{padding:30px 18px 42px;}
+  .input-wrap{max-width:760px;}
+  .input-hero{max-width:none;}
+  #birthForm{padding:22px;gap:13px;}
+  .result-header{padding:10px 16px;}
+  .result-header .result-meta{min-width:150px;}
+  .result-tools{gap:6px;}
+  .result-perspective-nav.is-professional{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .result-perspective-nav:not(.is-professional){grid-template-columns:repeat(3,minmax(0,1fr));}
+  #resultPerspectivePanels .section{padding:19px;}
+}
+@media(max-width:560px){
+  #view-input{padding:22px 13px 34px;}
+  .input-wrap{max-width:none;}
+  .input-hero{margin-bottom:20px;}
+  .input-hero h1{font-size:27px;}
+  .input-hero .subtitle{font-size:13px;}
+  #birthForm{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:
+      "form-heading"
+      "objective-route"
+      "personal-route"
+      "target-year"
+      "year-rule"
+      "birth-date"
+      "birth-time"
+      "birth-confirm"
+      "birth-rule"
+      "professional-settings"
+      "submit-action"
+      "form-error";
+    gap:12px;
+    padding:16px;
+    border-radius:16px;
+  }
+  #birthForm>h2{font-size:17px;}
+  #birthForm>.notice:has(#objectiveGuideBtn),
+  #birthForm>.input-advanced:has(h2){padding:15px;}
+  #birthForm>#runBtn{width:100%;min-width:0;justify-self:stretch;}
+  .result-sticky-shell{position:relative;}
+  .result-header{padding:10px 12px;gap:7px;}
+  .result-header .result-meta{order:3;flex-basis:100%;min-width:0;font-size:11.5px;}
+  .result-tools{order:4;width:100%;margin-left:0;gap:5px;}
+  .result-tools .tool-label{display:none;}
+  .result-tools .back-btn{padding:7px 9px;font-size:11.5px;}
+  #quickTargetYear{width:76px;min-height:34px;}
+  .result-more-tools>summary{padding:7px 9px;font-size:11.5px;}
+  main{padding:17px 12px 54px;}
+  .wrap{width:100%;}
+  #resultDisclaimer{font-size:11.5px!important;padding:10px 12px!important;}
+  .result-reading-guide{font-size:11.5px!important;padding:11px 12px!important;}
+  .result-mode-control{align-items:stretch;flex-direction:column;gap:10px;padding:12px;}
+  .result-mode-copy{min-width:0;}
+  .result-mode-actions{width:100%;justify-content:flex-start;}
+  #professionalModeToggle{flex:1;}
+  .term-glossary{flex:1;}
+  .term-glossary>summary{text-align:center;}
+  .result-perspective-nav{top:0;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px;margin:9px 0 13px;}
+  .result-perspective-tab{min-height:42px;padding:9px 7px;font-size:11.5px;}
+  #summary.card.summary{padding:15px;border-radius:14px;}
+  #resultPerspectivePanels .section{padding:15px;margin-top:12px;border-radius:13px;}
+  #resultPerspectivePanels .section h2{font-size:17px;}
+  #resultPerspectivePanels .section p{font-size:13px;line-height:1.85;}
+  #resultPerspectivePanels .section .reference-content,
+  #resultPerspectivePanels .section .yq-report-section-content{padding:11px;}
+  #resultPerspectivePanels .section table{display:block;overflow-x:auto;white-space:normal;}
+  #resultPerspectivePanels .section td,
+  #resultPerspectivePanels .section th{padding:7px 8px;font-size:11.5px;}
+  .result-tab-intro{font-size:11.5px;padding:10px 12px;}
+  .footer{margin-top:28px;padding:0 4px;}
+}
+
 </style>
 </head>
 <body>
@@ -1536,9 +2076,18 @@ tr.is-unmatched-hidden {
       <p class="subtitle">先選你要回答的問題。系統會帶你進入相應的分析路徑；不必一次讀完所有專業模組。</p>
     </div>
 
-    <form id="birthForm" class="input-card" autocomplete="off">
-      <h2>第一步｜設定分析目標年份</h2>
-      <div class="field">
+    <form id="birthForm" class="input-card entry-form" autocomplete="off">
+  <section class="entry-year-card" aria-labelledby="entryYearTitle">
+    <div class="entry-year-main">
+      <div class="entry-step-copy">
+        <span class="entry-step-number">STEP 01</span>
+        <div>
+          <h2 id="entryYearTitle">先設定目標運氣年</h2>
+          <p>系統會自動帶入目前運氣年；也可以自行輸入其他年份。這個設定同時適用於兩種分析方式。</p>
+        </div>
+      </div>
+      <div class="entry-year-field">
+        <div class="field">
         <label for="target">分析目標年份（公元 1–3000）</label>
         <input id="target" type="number" min="1" max="3000" step="1" placeholder="自動帶入目前運氣年" />
         <div class="field-inline-actions"><button type="button" id="targetYearCurrentInput" class="back-btn">帶入目前運氣年</button></div>
@@ -1549,17 +2098,46 @@ tr.is-unmatched-hidden {
         <p class="hint">目標年份是所選年界模式下的運氣年標籤，不直接等同公曆 1/1–12/31：傳統交司模式依大寒日與歲支組時刻，純天文模式依黃經 300° 大寒瞬間，資料速查模式採固定 1/21 00:00 近似。若日期位於該模式的年界前，可能仍屬上一運氣年。</p>
       </details>
 
-      <div class="notice transition">
-        <b>路徑 A｜只看某一年的客觀歲氣</b>
-        <p class="hint">不需要出生日期或時間。適合初次使用，先依經文七步了解該年的歲運、司天在泉與六氣變化；不會混入個人本命資料。</p>
-        <button type="button" id="objectiveGuideBtn" class="primary-btn secondary-btn">只看目標年客觀歲氣（不需出生資料）→</button>
+      
       </div>
+    </div>
+  </section>
 
-      <div class="input-advanced">
-        <h2>路徑 B｜個人化分析（需要出生資料）</h2>
-        <p class="hint">只有在你要比較「出生年先天結構」與「目標年流年變化」時，才需要填寫。若只想看年度歲氣，使用上方路徑 A 即可。</p>
+  <section class="entry-path-section" aria-labelledby="entryPathTitle">
+    <div class="entry-step-copy entry-path-heading">
+      <span class="entry-step-number">STEP 02</span>
+      <div>
+        <h2 id="entryPathTitle">選擇分析方式</h2>
+        <p>依你想回答的問題選一種即可。兩種方式不會混用出生資料。</p>
       </div>
-      <div class="field">
+    </div>
+
+    <div class="entry-path-grid">
+      <section class="entry-objective-card" aria-labelledby="objectivePathTitle">
+        <div class="entry-path-kicker">
+          <span class="entry-path-badge objective-badge">不需要出生資料</span>
+          <span class="entry-path-index">路徑 01</span>
+        </div>
+        <h3 id="objectivePathTitle">只查某一年的歲氣</h3>
+        <p>想知道指定運氣年的歲運、司天在泉、六步時序與典籍七步導覽。只要選年份，不必輸入生日。</p>
+        <div class="entry-topic-list" aria-label="分析內容">
+          <span>歲運</span><span>司天・在泉</span><span>六步時序</span>
+        </div>
+        <button type="button" id="objectiveGuideBtn" class="primary-btn secondary-btn">開始客觀歲氣分析</button>
+      </section>
+
+      <details id="personalPathDetails" class="entry-personal-card">
+        <summary>
+          <span class="entry-path-kicker">
+            <span class="entry-path-badge personal-badge">需要出生資料</span>
+            <span class="entry-path-index">路徑 02</span>
+          </span>
+          <span class="entry-personal-title" id="personalPathTitle">比較個人先天與流年</span>
+          <span class="entry-personal-description">想了解出生年先天結構，並與目標運氣年的變化交互對照。需要出生日期；出生時間可以留空。</span>
+          <span class="entry-personal-action">展開輸入出生資料 <span aria-hidden="true">↓</span></span>
+        </summary>
+        <div class="entry-personal-body" aria-labelledby="personalPathTitle">
+          <div class="field">
         <label for="birth">出生日期（公曆）</label>
         <input id="birth" type="date" min="0001-01-01" max="3000-12-31" />
       </div>
@@ -1615,9 +2193,16 @@ tr.is-unmatched-hidden {
           </select>
         </div>
       </details>
-      <button type="submit" id="runBtn" class="primary-btn">開始個人化推算 →</button>
-      <div id="formError" class="notice caution-layer form-error" role="alert" aria-live="assertive" hidden></div>
-    </form>
+      
+          <button type="submit" id="runBtn" class="primary-btn">開始個人化分析</button>
+      
+        </div>
+      </details>
+    </div>
+    <div class="entry-help-note"><strong>不確定怎麼選？</strong> 先選「只查某一年的歲氣」即可。它不需要生日，也不會混入個人本命資料。</div>
+  </section>
+  <div id="formError" class="notice caution-layer form-error" role="alert" aria-live="assertive" hidden></div>
+</form>
 
     <div class="input-notice">⚠️ 安全與使用界線：本工具的先天強弱、病機與脈位均屬傳統模型推演，不是醫療診斷或個人化處方；不可據此自行用藥、停藥或延誤就醫。單檔版本在瀏覽器本機計算，不主動上傳出生資料。</div>
   </div>
